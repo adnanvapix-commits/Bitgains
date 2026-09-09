@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 
 export async function GET(req: NextRequest) {
@@ -9,8 +9,8 @@ export async function GET(req: NextRequest) {
   try {
     const uid = user!.id;
     const [{ data: profile }, { data: wallet }] = await Promise.all([
-      supabaseAdmin.from('profiles').select('*').eq('id', uid).single(),
-      supabaseAdmin.from('wallets').select('*').eq('user_id', uid).single(),
+      getSupabaseAdmin().from('profiles').select('*').eq('id', uid).single(),
+      getSupabaseAdmin().from('wallets').select('*').eq('user_id', uid).single(),
     ]);
 
     // Level 1
@@ -21,13 +21,13 @@ export async function GET(req: NextRequest) {
 
     // Level 2
     const { data: level2Users } = l1Ids.length
-      ? await supabaseAdmin.from('profiles').select('id, name, email, created_at, referred_by').in('referred_by', l1Ids).order('created_at', { ascending: false })
+      ? await getSupabaseAdmin().from('profiles').select('id, name, email, created_at, referred_by').in('referred_by', l1Ids).order('created_at', { ascending: false })
       : { data: [] };
     const l2Ids = (level2Users || []).map((u: any) => u.id);
 
     // Level 3
     const { data: level3Users } = l2Ids.length
-      ? await supabaseAdmin.from('profiles').select('id, name, email, created_at, referred_by').in('referred_by', l2Ids).order('created_at', { ascending: false })
+      ? await getSupabaseAdmin().from('profiles').select('id, name, email, created_at, referred_by').in('referred_by', l2Ids).order('created_at', { ascending: false })
       : { data: [] };
 
     const l1 = level1Users || [], l2 = level2Users || [], l3 = level3Users || [];
@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
     // Referrer info
     let referrer = null;
     if (profile?.referred_by) {
-      const { data: ref } = await supabaseAdmin.from('profiles').select('id, name, email, referral_code').eq('id', profile.referred_by).single();
+      const { data: ref } = await getSupabaseAdmin().from('profiles').select('id, name, email, referral_code').eq('id', profile.referred_by).single();
       referrer = ref;
     }
 

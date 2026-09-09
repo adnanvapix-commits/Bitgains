@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 
 export async function GET(req: NextRequest) {
@@ -8,8 +8,8 @@ export async function GET(req: NextRequest) {
 
   try {
     const [{ data: profile }, { data: wallet }] = await Promise.all([
-      supabaseAdmin.from('profiles').select('*').eq('id', user!.id).single(),
-      supabaseAdmin.from('wallets').select('balance, staked_amount, total_earnings, total_deposited, total_withdrawn, apr').eq('user_id', user!.id).single(),
+      getSupabaseAdmin().from('profiles').select('*').eq('id', user!.id).single(),
+      getSupabaseAdmin().from('wallets').select('balance, staked_amount, total_earnings, total_deposited, total_withdrawn, apr').eq('user_id', user!.id).single(),
     ]);
 
     if (!profile) return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });

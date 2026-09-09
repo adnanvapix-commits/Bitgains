@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser, requireAdmin } from '../../../../lib/api-auth';
 
 export async function GET(req: NextRequest) {
@@ -20,15 +20,15 @@ export async function GET(req: NextRequest) {
       { data: walletStats },
       { data: recentPending },
     ] = await Promise.all([
-      supabaseAdmin.from('profiles').select('*', { count: 'exact', head: true }),
-      supabaseAdmin.from('profiles').select('*', { count: 'exact', head: true }).eq('is_active', true),
-      supabaseAdmin.from('transactions').select('*', { count: 'exact', head: true }).eq('type', 'deposit').eq('status', 'pending'),
-      supabaseAdmin.from('transactions').select('*', { count: 'exact', head: true }).eq('type', 'withdrawal').eq('status', 'pending'),
-      supabaseAdmin.from('transactions').select('*', { count: 'exact', head: true }),
-      supabaseAdmin.from('transactions').select('*', { count: 'exact', head: true }).eq('status', 'completed'),
-      supabaseAdmin.from('transactions').select('amount').in('type', ['deposit', 'withdrawal']).eq('status', 'completed'),
-      supabaseAdmin.from('wallets').select('balance, staked_amount, total_earnings, total_deposited, total_withdrawn'),
-      supabaseAdmin.from('transactions').select('*, profiles!transactions_user_id_fkey(name, email)').eq('status', 'pending').in('type', ['deposit', 'withdrawal']).order('created_at', { ascending: true }).limit(10),
+      getSupabaseAdmin().from('profiles').select('*', { count: 'exact', head: true }),
+      getSupabaseAdmin().from('profiles').select('*', { count: 'exact', head: true }).eq('is_active', true),
+      getSupabaseAdmin().from('transactions').select('*', { count: 'exact', head: true }).eq('type', 'deposit').eq('status', 'pending'),
+      getSupabaseAdmin().from('transactions').select('*', { count: 'exact', head: true }).eq('type', 'withdrawal').eq('status', 'pending'),
+      getSupabaseAdmin().from('transactions').select('*', { count: 'exact', head: true }),
+      getSupabaseAdmin().from('transactions').select('*', { count: 'exact', head: true }).eq('status', 'completed'),
+      getSupabaseAdmin().from('transactions').select('amount').in('type', ['deposit', 'withdrawal']).eq('status', 'completed'),
+      getSupabaseAdmin().from('wallets').select('balance, staked_amount, total_earnings, total_deposited, total_withdrawn'),
+      getSupabaseAdmin().from('transactions').select('*, profiles!transactions_user_id_fkey(name, email)').eq('status', 'pending').in('type', ['deposit', 'withdrawal']).order('created_at', { ascending: true }).limit(10),
     ]);
 
     const totalVolume = (volumeData || []).reduce((sum: number, t: any) => sum + parseFloat(t.amount), 0);

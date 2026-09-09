@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 import { getPaginationData } from '../../../../lib/server/helpers';
 
@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   const to = from + limit - 1;
 
   try {
-    let q = supabaseAdmin.from('issues').select('*', { count: 'exact' }).eq('user_id', user!.id).order('created_at', { ascending: false }).range(from, to);
+    let q = getSupabaseAdmin().from('issues').select('*', { count: 'exact' }).eq('user_id', user!.id).order('created_at', { ascending: false }).range(from, to);
     if (status) q = q.eq('status', status);
     const { data: issues, count, error: qError } = await q;
     if (qError) throw qError;

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 import { calculateVariableReward, getCurrentStakingMonth, getMonthlyRate } from '../../../../lib/server/stakingRates';
 
@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   if (error) return error;
 
   try {
-    const { data: wallet } = await supabaseAdmin.from('wallets').select('*, stakes(*)').eq('user_id', user!.id).single();
+    const { data: wallet } = await getSupabaseAdmin().from('wallets').select('*, stakes(*)').eq('user_id', user!.id).single();
     if (!wallet) return NextResponse.json({ success: false, message: 'Wallet not found' }, { status: 404 });
 
     const stakes = wallet.stakes || [];
@@ -21,17 +21,17 @@ export async function GET(req: NextRequest) {
       const { reward } = calculateVariableReward(stake.amount, stake.start_date, stake.start_date, now);
       recentReward += reward;
       if (reward > 0) {
-        await supabaseAdmin.from('wallets').update({
+        await getSupabaseAdmin().from('wallets').update({
           balance: wallet.balance + reward,
           total_earnings: wallet.total_earnings + reward,
           last_staking_update: now.toISOString(),
         }).eq('user_id', user!.id);
-        await supabaseAdmin.from('transactions').insert({
+        await getSupabaseAdmin().from('transactions').insert({
           user_id: user!.id, type: 'reward', amount: reward, currency: 'USDT', status: 'completed',
           description: `Staking rewards matured`, completed_at: now.toISOString(),
         });
       }
-      await supabaseAdmin.from('stakes').update({ status: 'matured', matured_at: now.toISOString() }).eq('stake_id', stake.stake_id);
+      await getSupabaseAdmin().from('stakes').update({ status: 'matured', matured_at: now.toISOString() }).eq('stake_id', stake.stake_id);
     }
 
     const currentMonth = wallet.staking_start_date ? getCurrentStakingMonth(wallet.staking_start_date) : 1;

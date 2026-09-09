@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../lib/supabase-server';
 import { getAuthUser, requireAdmin } from '../../../lib/api-auth';
 
 export async function GET(req: NextRequest) {
@@ -15,16 +15,16 @@ export async function GET(req: NextRequest) {
 
   try {
     // Individual notifications
-    let q = supabaseAdmin.from('notifications').select('*', { count: 'exact' })
+    let q = getSupabaseAdmin().from('notifications').select('*', { count: 'exact' })
       .eq('user_id', user!.id).eq('is_broadcast', false).order('created_at', { ascending: false }).range(from, to);
     if (unreadOnly) q = q.eq('is_read', false);
     const { data: individual } = await q;
 
     // Broadcasts not yet read
-    const { data: reads } = await supabaseAdmin.from('notification_reads').select('notification_id').eq('user_id', user!.id);
+    const { data: reads } = await getSupabaseAdmin().from('notification_reads').select('notification_id').eq('user_id', user!.id);
     const readIds = (reads || []).map((r: any) => r.notification_id);
 
-    let bq = supabaseAdmin.from('notifications').select('*').eq('is_broadcast', true).order('created_at', { ascending: false }).limit(limit);
+    let bq = getSupabaseAdmin().from('notifications').select('*').eq('is_broadcast', true).order('created_at', { ascending: false }).limit(limit);
     if (readIds.length && unreadOnly) bq = bq.not('id', 'in', `(${readIds.join(',')})`);
     const { data: broadcasts } = await bq;
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     if (!title || !message) return NextResponse.json({ success: false, message: 'Title and message are required' }, { status: 400 });
 
     const isBroadcast = !userId || userId === 'all';
-    const { data: notification } = await supabaseAdmin.from('notifications').insert({
+    const { data: notification } = await getSupabaseAdmin().from('notifications').insert({
       user_id: isBroadcast ? null : userId,
       title,
       message,

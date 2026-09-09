@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 import { validateTransactionAmount, calculateFee, getClientIP, getUserAgent } from '../../../../lib/server/helpers';
 
@@ -13,13 +13,13 @@ export async function POST(req: NextRequest) {
     const validation = validateTransactionAmount(numAmount, 'deposit');
     if (!validation.valid) return NextResponse.json({ success: false, message: validation.message }, { status: 400 });
 
-    const { data: wallet } = await supabaseAdmin.from('wallets').select('id').eq('user_id', user!.id).single();
+    const { data: wallet } = await getSupabaseAdmin().from('wallets').select('id').eq('user_id', user!.id).single();
     if (!wallet) return NextResponse.json({ success: false, message: 'Wallet not found' }, { status: 404 });
 
     const feePercentage = parseFloat(process.env.TRANSACTION_FEE_PERCENTAGE || '0');
     const feeAmount = calculateFee(numAmount, feePercentage);
 
-    const { data: tx, error: txError } = await supabaseAdmin.from('transactions').insert({
+    const { data: tx, error: txError } = await getSupabaseAdmin().from('transactions').insert({
       user_id: user!.id,
       type: 'deposit',
       amount: numAmount,
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     }).select().single();
     if (txError) throw txError;
 
-    await supabaseAdmin.from('wallet_pending_transactions').insert({ wallet_id: wallet.id, transaction_id: tx.id }).catch(() => {});
+    await getSupabaseAdmin().from('wallet_pending_transactions').insert({ wallet_id: wallet.id, transaction_id: tx.id }).catch(() => {});
 
     return NextResponse.json({
       success: true,

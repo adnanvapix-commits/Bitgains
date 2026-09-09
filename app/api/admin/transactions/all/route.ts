@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../../lib/supabase-server';
 import { getAuthUser, requireAdmin } from '../../../../../lib/api-auth';
 import { getPaginationData } from '../../../../../lib/server/helpers';
 
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
   const to = from + limit - 1;
 
   try {
-    let q = supabaseAdmin.from('transactions')
+    let q = getSupabaseAdmin().from('transactions')
       .select('*, profiles!transactions_user_id_fkey(name, email)', { count: 'exact' })
       .order('created_at', { ascending: false })
       .range(from, to);
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
     if (status) q = q.eq('status', status);
     if (userId) q = q.eq('user_id', userId);
     if (search) {
-      const { data: matchedUsers } = await supabaseAdmin.from('profiles').select('id').or(`email.ilike.%${search}%,name.ilike.%${search}%`);
+      const { data: matchedUsers } = await getSupabaseAdmin().from('profiles').select('id').or(`email.ilike.%${search}%,name.ilike.%${search}%`);
       const ids = (matchedUsers || []).map((u: any) => u.id);
       if (ids.length) {
         q = q.or(`user_id.in.(${ids.join(',')}),description.ilike.%${search}%`);

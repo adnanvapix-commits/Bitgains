@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { sendPasswordResetSuccessEmail } from '../../../../lib/server/emailService';
 
 export async function POST(req: NextRequest) {
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Verify the OTP/token
-    const { data: verifyData, error: verifyError } = await supabaseAdmin.auth.verifyOtp({
+    const { data: verifyData, error: verifyError } = await getSupabaseAdmin().auth.verifyOtp({
       token_hash: token,
       type: 'recovery',
     });
@@ -22,11 +22,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Update password
-    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(verifyData.user.id, { password });
+    const { error: updateError } = await getSupabaseAdmin().auth.admin.updateUserById(verifyData.user.id, { password });
     if (updateError) throw updateError;
 
     // Send success email in background
-    const { data: profile } = await supabaseAdmin.from('profiles').select('email, name').eq('id', verifyData.user.id).single();
+    const { data: profile } = await getSupabaseAdmin().from('profiles').select('email, name').eq('id', verifyData.user.id).single();
     if (profile) sendPasswordResetSuccessEmail(profile.email, profile.name).catch(() => {});
 
     return NextResponse.json({ success: true, message: 'Password has been reset successfully' });

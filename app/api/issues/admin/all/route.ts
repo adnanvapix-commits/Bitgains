@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../../lib/supabase-server';
 import { getAuthUser, requireAdmin } from '../../../../../lib/api-auth';
 import { getPaginationData } from '../../../../../lib/server/helpers';
 
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   const to = from + limit - 1;
 
   try {
-    let q = supabaseAdmin.from('issues').select('*, profiles!issues_user_id_fkey(name, email)', { count: 'exact' }).order('created_at', { ascending: false }).range(from, to);
+    let q = getSupabaseAdmin().from('issues').select('*, profiles!issues_user_id_fkey(name, email)', { count: 'exact' }).order('created_at', { ascending: false }).range(from, to);
     if (status) q = q.eq('status', status);
     if (priority) q = q.eq('priority', priority);
     const { data: issues, count, error: qError } = await q;
@@ -26,10 +26,10 @@ export async function GET(req: NextRequest) {
 
     // Stats
     const [{ count: openCount }, { count: inProgressCount }, { count: resolvedCount }, { count: urgentCount }] = await Promise.all([
-      supabaseAdmin.from('issues').select('*', { count: 'exact', head: true }).eq('status', 'open'),
-      supabaseAdmin.from('issues').select('*', { count: 'exact', head: true }).eq('status', 'in-progress'),
-      supabaseAdmin.from('issues').select('*', { count: 'exact', head: true }).eq('status', 'resolved'),
-      supabaseAdmin.from('issues').select('*', { count: 'exact', head: true }).eq('priority', 'urgent'),
+      getSupabaseAdmin().from('issues').select('*', { count: 'exact', head: true }).eq('status', 'open'),
+      getSupabaseAdmin().from('issues').select('*', { count: 'exact', head: true }).eq('status', 'in-progress'),
+      getSupabaseAdmin().from('issues').select('*', { count: 'exact', head: true }).eq('status', 'resolved'),
+      getSupabaseAdmin().from('issues').select('*', { count: 'exact', head: true }).eq('priority', 'urgent'),
     ]);
 
     return NextResponse.json({

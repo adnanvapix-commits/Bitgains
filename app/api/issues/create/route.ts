@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 import { getClientIP, getUserAgent } from '../../../../lib/server/helpers';
 
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     if (subject.length > 200) return NextResponse.json({ success: false, message: 'Subject must be 200 characters or less' }, { status: 400 });
     if (description.length > 2000) return NextResponse.json({ success: false, message: 'Description must be 2000 characters or less' }, { status: 400 });
 
-    const { data: issue, error: issueError } = await supabaseAdmin.from('issues').insert({
+    const { data: issue, error: issueError } = await getSupabaseAdmin().from('issues').insert({
       user_id: user!.id,
       subject: subject.trim(),
       description: description.trim(),

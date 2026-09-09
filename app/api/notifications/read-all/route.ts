@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 
 export async function PUT(req: NextRequest) {
@@ -8,13 +8,13 @@ export async function PUT(req: NextRequest) {
 
   try {
     // Mark individual notifications read
-    await supabaseAdmin.from('notifications').update({ is_read: true, read_at: new Date().toISOString() }).eq('user_id', user!.id).eq('is_read', false);
+    await getSupabaseAdmin().from('notifications').update({ is_read: true, read_at: new Date().toISOString() }).eq('user_id', user!.id).eq('is_read', false);
 
     // Upsert all broadcast IDs into reads
-    const { data: broadcasts } = await supabaseAdmin.from('notifications').select('id').eq('is_broadcast', true);
+    const { data: broadcasts } = await getSupabaseAdmin().from('notifications').select('id').eq('is_broadcast', true);
     if (broadcasts?.length) {
       const upserts = broadcasts.map((b: any) => ({ notification_id: b.id, user_id: user!.id, read_at: new Date().toISOString() }));
-      await supabaseAdmin.from('notification_reads').upsert(upserts, { onConflict: 'notification_id,user_id' });
+      await getSupabaseAdmin().from('notification_reads').upsert(upserts, { onConflict: 'notification_id,user_id' });
     }
 
     return NextResponse.json({ success: true, message: 'All notifications marked as read' });

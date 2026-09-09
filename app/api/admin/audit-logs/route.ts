@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser, requireAdmin } from '../../../../lib/api-auth';
 import { getPaginationData } from '../../../../lib/server/helpers';
 
@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   const to = from + limit - 1;
 
   try {
-    let q = supabaseAdmin.from('audit_logs').select('*', { count: 'exact' }).order('created_at', { ascending: false }).range(from, to);
+    let q = getSupabaseAdmin().from('audit_logs').select('*', { count: 'exact' }).order('created_at', { ascending: false }).range(from, to);
     if (action) q = q.eq('action', action);
     if (adminId) q = q.eq('admin_id', adminId);
     if (targetUserId) q = q.eq('target_user_id', targetUserId);

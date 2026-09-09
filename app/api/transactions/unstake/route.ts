@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 import { calculateVariableReward, getCurrentStakingMonth, getMonthlyRate } from '../../../../lib/server/stakingRates';
 
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const unstakeAmount = parseFloat(amount);
     if (!unstakeAmount || unstakeAmount <= 0) return NextResponse.json({ success: false, message: 'Invalid amount' }, { status: 400 });
 
-    const { data: wallet } = await supabaseAdmin.from('wallets').select('*').eq('user_id', user!.id).single();
+    const { data: wallet } = await getSupabaseAdmin().from('wallets').select('*').eq('user_id', user!.id).single();
     if (!wallet) return NextResponse.json({ success: false, message: 'Wallet not found' }, { status: 404 });
     if (wallet.staked_amount < unstakeAmount) return NextResponse.json({ success: false, message: `Insufficient staked amount. Staked: ${wallet.staked_amount} USDT` }, { status: 400 });
 
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
 
     const newStaked = wallet.staked_amount - unstakeAmount;
 
-    await supabaseAdmin.from('wallets').update({
+    await getSupabaseAdmin().from('wallets').update({
       staked_amount: newStaked,
       balance: wallet.balance + reward,
       total_earnings: wallet.total_earnings + reward,
@@ -32,13 +32,13 @@ export async function POST(req: NextRequest) {
       staking_start_date: newStaked === 0 ? null : wallet.staking_start_date,
     }).eq('user_id', user!.id);
 
-    const { data: tx } = await supabaseAdmin.from('transactions').insert({
+    const { data: tx } = await getSupabaseAdmin().from('transactions').insert({
       user_id: user!.id, type: 'unstake', amount: unstakeAmount, currency: 'USDT', status: 'completed',
       description: `Unstaked ${unstakeAmount} USDT`, completed_at: new Date().toISOString(),
     }).select().single();
 
     if (reward > 0) {
-      await supabaseAdmin.from('transactions').insert({
+      await getSupabaseAdmin().from('transactions').insert({
         user_id: user!.id, type: 'reward', amount: reward, currency: 'USDT', status: 'completed',
         description: `Staking rewards (Month ${currentMonth} @ ${(currentRate * 100).toFixed(0)}%)`,
         completed_at: new Date().toISOString(), related_transaction_id: tx!.id,

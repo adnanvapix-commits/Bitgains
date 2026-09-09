@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 import { sendEmailVerificationEmail } from '../../../../lib/server/emailService';
 
@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   if (error) return error;
 
   try {
-    const { data: linkData } = await supabaseAdmin.auth.admin.generateLink({
+    const { data: linkData } = await getSupabaseAdmin().auth.admin.generateLink({
       type: 'signup',
       email: user!.email,
       options: { redirectTo: `${process.env.FRONTEND_URL || 'https://bitgains.co'}/verify-email` },

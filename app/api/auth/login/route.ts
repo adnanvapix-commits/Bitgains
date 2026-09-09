@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 
 export async function POST(req: NextRequest) {
   try {
@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Email and password are required' }, { status: 400 });
     }
 
-    const { data, error } = await supabaseAdmin.auth.signInWithPassword({ email, password });
+    const { data, error } = await getSupabaseAdmin().auth.signInWithPassword({ email, password });
     if (error) {
       return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 401 });
     }
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Update last login in background
-    supabaseAdmin.from('profiles').update({ last_login: new Date().toISOString() }).eq('id', data.user.id).catch(() => {});
+    getSupabaseAdmin().from('profiles').update({ last_login: new Date().toISOString() }).eq('id', data.user.id).catch(() => {});
 
     return NextResponse.json({
       success: true,

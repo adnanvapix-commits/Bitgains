@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { sendEmailVerificationEmail } from '../../../../lib/server/emailService';
 
 export async function POST(req: NextRequest) {
@@ -35,14 +35,14 @@ export async function POST(req: NextRequest) {
         if (referrer.referred_by) {
           referredByLevel2 = referrer.referred_by;
           referralLevel = 2;
-          const { data: l2 } = await supabaseAdmin.from('profiles').select('referred_by').eq('id', referrer.referred_by).single();
+          const { data: l2 } = await getSupabaseAdmin().from('profiles').select('referred_by').eq('id', referrer.referred_by).single();
           if (l2?.referred_by) { referredByLevel3 = l2.referred_by; referralLevel = 3; }
         }
       }
     }
 
     // Create auth user
-    const { data: authData, error: signUpError } = await supabaseAdmin.auth.admin.createUser({
+    const { data: authData, error: signUpError } = await getSupabaseAdmin().auth.admin.createUser({
       email,
       password,
       email_confirm: false,
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
     const userId = authData.user.id;
 
     // Update profile with referral data
-    await supabaseAdmin.from('profiles').update({
+    await getSupabaseAdmin().from('profiles').update({
       name: name.trim(),
       referred_by: referredBy,
       referred_by_level2: referredByLevel2,
@@ -68,20 +68,20 @@ export async function POST(req: NextRequest) {
 
     // Update referrer count
     if (referredBy) {
-      const { data: refProfile } = await supabaseAdmin.from('profiles').select('referral_count').eq('id', referredBy).single();
+      const { data: refProfile } = await getSupabaseAdmin().from('profiles').select('referral_count').eq('id', referredBy).single();
       if (refProfile) {
-        await supabaseAdmin.from('profiles').update({ referral_count: (refProfile.referral_count || 0) + 1 }).eq('id', referredBy);
+        await getSupabaseAdmin().from('profiles').update({ referral_count: (refProfile.referral_count || 0) + 1 }).eq('id', referredBy);
       }
     }
 
     // Sign in to get session
-    const { data: sessionData, error: sessionError } = await supabaseAdmin.auth.signInWithPassword({ email, password });
+    const { data: sessionData, error: sessionError } = await getSupabaseAdmin().auth.signInWithPassword({ email, password });
     if (sessionError) throw sessionError;
 
-    const { data: profile } = await supabaseAdmin.from('profiles').select('id, email, name, role, referral_code').eq('id', userId).single();
+    const { data: profile } = await getSupabaseAdmin().from('profiles').select('id, email, name, role, referral_code').eq('id', userId).single();
 
     // Send verification email in background
-    supabaseAdmin.auth.admin.generateLink({
+    getSupabaseAdmin().auth.admin.generateLink({
       type: 'signup',
       email,
       options: { redirectTo: `${process.env.FRONTEND_URL || 'https://bitgains.co'}/verify-email` },

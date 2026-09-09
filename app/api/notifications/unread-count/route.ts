@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 
 export async function GET(req: NextRequest) {
@@ -8,9 +8,9 @@ export async function GET(req: NextRequest) {
 
   try {
     const [{ count: individualCount }, { data: reads }, { count: broadcastTotal }] = await Promise.all([
-      supabaseAdmin.from('notifications').select('*', { count: 'exact', head: true }).eq('user_id', user!.id).eq('is_broadcast', false).eq('is_read', false),
-      supabaseAdmin.from('notification_reads').select('notification_id').eq('user_id', user!.id),
-      supabaseAdmin.from('notifications').select('*', { count: 'exact', head: true }).eq('is_broadcast', true),
+      getSupabaseAdmin().from('notifications').select('*', { count: 'exact', head: true }).eq('user_id', user!.id).eq('is_broadcast', false).eq('is_read', false),
+      getSupabaseAdmin().from('notification_reads').select('notification_id').eq('user_id', user!.id),
+      getSupabaseAdmin().from('notifications').select('*', { count: 'exact', head: true }).eq('is_broadcast', true),
     ]);
 
     const readIds = (reads || []).map((r: any) => r.notification_id);

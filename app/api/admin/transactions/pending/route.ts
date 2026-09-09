@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../../lib/supabase-server';
 import { getAuthUser, requireAdmin } from '../../../../../lib/api-auth';
 import { getPaginationData } from '../../../../../lib/server/helpers';
 
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   const to = from + limit - 1;
 
   try {
-    let q = supabaseAdmin.from('transactions')
+    let q = getSupabaseAdmin().from('transactions')
       .select('*, profiles!transactions_user_id_fkey(name, email)', { count: 'exact' })
       .eq('status', 'pending')
       .in('type', type ? [type] : ['deposit', 'withdrawal'])

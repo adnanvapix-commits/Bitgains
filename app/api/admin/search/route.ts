@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser, requireAdmin } from '../../../../lib/api-auth';
 
 export async function GET(req: NextRequest) {
@@ -20,9 +20,9 @@ export async function GET(req: NextRequest) {
       { data: transactions },
       { data: issues },
     ] = await Promise.all([
-      supabaseAdmin.from('profiles').select('id, name, email, role, is_active, created_at, referral_code').or(`email.ilike.%${q}%,name.ilike.%${q}%,referral_code.ilike.%${q}%`).limit(limit),
-      supabaseAdmin.from('transactions').select('id, user_id, type, amount, status, created_at, description').or(`description.ilike.%${q}%,tx_hash.ilike.%${q}%`).limit(limit),
-      supabaseAdmin.from('issues').select('id, user_id, subject, status, priority, created_at').or(`subject.ilike.%${q}%,description.ilike.%${q}%`).limit(limit),
+      getSupabaseAdmin().from('profiles').select('id, name, email, role, is_active, created_at, referral_code').or(`email.ilike.%${q}%,name.ilike.%${q}%,referral_code.ilike.%${q}%`).limit(limit),
+      getSupabaseAdmin().from('transactions').select('id, user_id, type, amount, status, created_at, description').or(`description.ilike.%${q}%,tx_hash.ilike.%${q}%`).limit(limit),
+      getSupabaseAdmin().from('issues').select('id, user_id, subject, status, priority, created_at').or(`subject.ilike.%${q}%,description.ilike.%${q}%`).limit(limit),
     ]);
 
     return NextResponse.json({

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 import { verifyOtpSession, invalidateOtpSession, OTP_CONTEXTS } from '../../../../lib/server/otpStore';
 import { validateTransactionAmount, calculateFee, getClientIP, getUserAgent } from '../../../../lib/server/helpers';
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Withdrawal details do not match OTP request.', requiresNewOTP: true }, { status: 400 });
     }
 
-    const { data: wallet } = await supabaseAdmin.from('wallets').select('id, balance, staked_amount').eq('user_id', user!.id).single();
+    const { data: wallet } = await getSupabaseAdmin().from('wallets').select('id, balance, staked_amount').eq('user_id', user!.id).single();
     if (!wallet) return NextResponse.json({ success: false, message: 'Wallet not found' }, { status: 404 });
 
     const available = wallet.balance - wallet.staked_amount;
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     const feePercentage = parseFloat(process.env.TRANSACTION_FEE_PERCENTAGE || '0.5');
     const feeAmount = calculateFee(amount, feePercentage);
 
-    const { data: tx, error: txError } = await supabaseAdmin.from('transactions').insert({
+    const { data: tx, error: txError } = await getSupabaseAdmin().from('transactions').insert({
       user_id: user!.id,
       type: 'withdrawal',
       amount: withdrawAmount,
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
     }).select().single();
     if (txError) throw txError;
 
-    await supabaseAdmin.from('wallet_pending_transactions').insert({ wallet_id: wallet.id, transaction_id: tx.id }).catch(() => {});
+    await getSupabaseAdmin().from('wallet_pending_transactions').insert({ wallet_id: wallet.id, transaction_id: tx.id }).catch(() => {});
 
     return NextResponse.json({
       success: true,

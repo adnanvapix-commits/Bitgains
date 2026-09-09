@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 import { getCurrentStakingMonth, getMonthlyRate } from '../../../../lib/server/stakingRates';
 
@@ -9,9 +9,9 @@ export async function GET(req: NextRequest) {
 
   try {
     const [{ data: wallet }, { data: recentTxs }, { count: pendingCount }] = await Promise.all([
-      supabaseAdmin.from('wallets').select('*').eq('user_id', user!.id).single(),
-      supabaseAdmin.from('transactions').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }).limit(5),
-      supabaseAdmin.from('transactions').select('*', { count: 'exact', head: true }).eq('user_id', user!.id).eq('status', 'pending'),
+      getSupabaseAdmin().from('wallets').select('*').eq('user_id', user!.id).single(),
+      getSupabaseAdmin().from('transactions').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }).limit(5),
+      getSupabaseAdmin().from('transactions').select('*', { count: 'exact', head: true }).eq('user_id', user!.id).eq('status', 'pending'),
     ]);
 
     const currentMonth = wallet?.staking_start_date ? getCurrentStakingMonth(wallet.staking_start_date) : 1;

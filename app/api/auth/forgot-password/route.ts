@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { sendPasswordResetEmail } from '../../../../lib/server/emailService';
 
 export async function POST(req: NextRequest) {
@@ -14,10 +14,10 @@ export async function POST(req: NextRequest) {
     });
 
     // Fire background email
-    supabaseAdmin.from('profiles').select('id, name').eq('email', email.trim().toLowerCase()).single()
+    getSupabaseAdmin().from('profiles').select('id, name').eq('email', email.trim().toLowerCase()).single()
       .then(({ data: profile }) => {
         if (!profile) return;
-        return supabaseAdmin.auth.admin.generateLink({
+        return getSupabaseAdmin().auth.admin.generateLink({
           type: 'recovery',
           email: email.trim().toLowerCase(),
           options: { redirectTo: `${process.env.FRONTEND_URL || 'https://bitgains.co'}/reset-password` },

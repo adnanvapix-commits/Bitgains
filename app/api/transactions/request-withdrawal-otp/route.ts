@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 import { createOtpSession, OTP_CONTEXTS } from '../../../../lib/server/otpStore';
 import { sendWithdrawalOTPEmail } from '../../../../lib/server/emailService';
@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Amount and toAddress are required' }, { status: 400 });
     }
 
-    const { data: wallet } = await supabaseAdmin.from('wallets').select('balance, staked_amount').eq('user_id', user!.id).single();
+    const { data: wallet } = await getSupabaseAdmin().from('wallets').select('balance, staked_amount').eq('user_id', user!.id).single();
     if (!wallet) return NextResponse.json({ success: false, message: 'Wallet not found' }, { status: 404 });
 
     const available = wallet.balance - wallet.staked_amount;

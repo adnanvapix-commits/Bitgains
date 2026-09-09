@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 
 export async function POST(req: NextRequest) {
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     const minStake = packageType === '90-day' ? 500 : 100;
     if (stakeAmount < minStake) return NextResponse.json({ success: false, message: `Minimum stake for ${packageType} is ${minStake} USDT` }, { status: 400 });
 
-    const { data: wallet } = await supabaseAdmin.from('wallets').select('*').eq('user_id', user!.id).single();
+    const { data: wallet } = await getSupabaseAdmin().from('wallets').select('*').eq('user_id', user!.id).single();
     if (!wallet) return NextResponse.json({ success: false, message: 'Wallet not found' }, { status: 404 });
 
     const available = wallet.balance - wallet.staked_amount;
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     const stakeId = `STK-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const expectedRewards = Math.round(stakeAmount * 0.08 * (daysToAdd / 30) * 100000000) / 100000000;
 
-    const { data: stakeRecord, error: stakeErr } = await supabaseAdmin.from('stakes').insert({
+    const { data: stakeRecord, error: stakeErr } = await getSupabaseAdmin().from('stakes').insert({
       stake_id: stakeId,
       wallet_id: wallet.id,
       user_id: user!.id,
@@ -40,13 +40,13 @@ export async function POST(req: NextRequest) {
     }).select().single();
     if (stakeErr) throw stakeErr;
 
-    await supabaseAdmin.from('wallets').update({
+    await getSupabaseAdmin().from('wallets').update({
       staked_amount: wallet.staked_amount + stakeAmount,
       staking_start_date: wallet.staking_start_date || startDate.toISOString(),
       last_staking_update: startDate.toISOString(),
     }).eq('user_id', user!.id);
 
-    const { data: tx } = await supabaseAdmin.from('transactions').insert({
+    const { data: tx } = await getSupabaseAdmin().from('transactions').insert({
       user_id: user!.id, type: 'stake', amount: stakeAmount, currency: 'USDT', status: 'completed',
       description: `Staked ${stakeAmount} USDT (${packageType} package)`,
       completed_at: startDate.toISOString(),

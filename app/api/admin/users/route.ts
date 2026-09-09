@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser, requireAdmin } from '../../../../lib/api-auth';
 import { getPaginationData } from '../../../../lib/server/helpers';
 
@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   const to = from + limit - 1;
 
   try {
-    let q = supabaseAdmin.from('profiles').select('*', { count: 'exact' }).order('created_at', { ascending: false }).range(from, to);
+    let q = getSupabaseAdmin().from('profiles').select('*', { count: 'exact' }).order('created_at', { ascending: false }).range(from, to);
     if (status) q = q.eq('is_active', status === 'active');
     if (search) q = q.or(`email.ilike.%${search}%,name.ilike.%${search}%`);
 
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
 
     const userIds = (users || []).map((u: any) => u.id);
     const { data: wallets } = userIds.length
-      ? await supabaseAdmin.from('wallets').select('*, stakes(*)').in('user_id', userIds)
+      ? await getSupabaseAdmin().from('wallets').select('*, stakes(*)').in('user_id', userIds)
       : { data: [] };
 
     const walletMap = new Map((wallets || []).map((w: any) => [w.user_id, w]));

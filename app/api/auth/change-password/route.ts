@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '../../../../lib/supabase-server';
+import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 
 export async function PUT(req: NextRequest) {
@@ -14,7 +14,7 @@ export async function PUT(req: NextRequest) {
     if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(newPassword)) {
       return NextResponse.json({ success: false, message: 'Password must contain uppercase, lowercase and a number' }, { status: 400 });
     }
-    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(user!.id, { password: newPassword });
+    const { error: updateError } = await getSupabaseAdmin().auth.admin.updateUserById(user!.id, { password: newPassword });
     if (updateError) throw updateError;
     return NextResponse.json({ success: true, message: 'Password changed successfully' });
   } catch (err) {
