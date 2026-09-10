@@ -8,10 +8,21 @@ export async function GET(req: NextRequest) {
   if (error) return error;
 
   try {
-    const [{ data: wallet }, { data: recentTxs }, { count: pendingCount }] = await Promise.all([
-      getSupabaseAdmin().from('wallets').select('*').eq('user_id', user!.id).single(),
-      getSupabaseAdmin().from('transactions').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }).limit(5),
-      getSupabaseAdmin().from('transactions').select('*', { count: 'exact', head: true }).eq('user_id', user!.id).eq('status', 'pending'),
+    const supabase = getSupabaseAdmin();
+    let { data: wallet } = await supabase.from('wallets').select('*').eq('user_id', user!.id).single();
+
+    // Auto-create wallet if missing
+    if (!wallet) {
+      const { data: newWallet } = await supabase.from('wallets').insert({
+        user_id: user!.id, balance: 0, staked_amount: 0, total_earnings: 0,
+        total_deposited: 0, total_withdrawn: 0, apr: 12.5,
+      }).select('*').single();
+      wallet = newWallet;
+    }
+
+    const [{ data: recentTxs }, { count: pendingCount }] = await Promise.all([
+      supabase.from('transactions').select('*').eq('user_id', user!.id).order('created_at', { ascending: false }).limit(5),
+      supabase.from('transactions').select('*', { count: 'exact', head: true }).eq('user_id', user!.id).eq('status', 'pending'),
     ]);
 
     const currentMonth = wallet?.staking_start_date ? getCurrentStakingMonth(wallet.staking_start_date) : 1;

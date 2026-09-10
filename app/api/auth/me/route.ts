@@ -7,12 +7,24 @@ export async function GET(req: NextRequest) {
   if (error) return error;
 
   try {
-    const [{ data: profile }, { data: wallet }] = await Promise.all([
-      getSupabaseAdmin().from('profiles').select('*').eq('id', user!.id).single(),
-      getSupabaseAdmin().from('wallets').select('balance, staked_amount, total_earnings, total_deposited, total_withdrawn, apr').eq('user_id', user!.id).single(),
+    const supabase = getSupabaseAdmin();
+
+    const [{ data: profile }, walletResult] = await Promise.all([
+      supabase.from('profiles').select('*').eq('id', user!.id).single(),
+      supabase.from('wallets').select('balance, staked_amount, total_earnings, total_deposited, total_withdrawn, apr').eq('user_id', user!.id).single(),
     ]);
 
     if (!profile) return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
+
+    let wallet = walletResult.data;
+    // Auto-create wallet if missing (trigger may not have fired)
+    if (!wallet) {
+      const { data: newWallet } = await supabase.from('wallets').insert({
+        user_id: user!.id, balance: 0, staked_amount: 0, total_earnings: 0,
+        total_deposited: 0, total_withdrawn: 0, apr: 12.5,
+      }).select('balance, staked_amount, total_earnings, total_deposited, total_withdrawn, apr').single();
+      wallet = newWallet;
+    }
 
     return NextResponse.json({
       success: true,
