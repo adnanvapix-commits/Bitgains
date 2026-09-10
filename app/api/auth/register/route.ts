@@ -4,7 +4,9 @@ import { sendEmailVerificationEmail } from '../../../../lib/server/emailService'
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password, name, referralCode } = await req.json();
+    const body = await req.json();
+    const { email, password, referralCode } = body;
+    const name = body.name || body.fullName || '';
 
     // Basic validation
     if (!email || !password || !name) {
@@ -20,11 +22,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Name must be 2–50 characters' }, { status: 400 });
     }
 
+    const supabase = getSupabaseAdmin();
+
     // Resolve referral chain
     let referredBy = null, referredByLevel2 = null, referredByLevel3 = null, referralLevel = 0;
     if (referralCode?.trim()) {
       const code = referralCode.trim().toUpperCase();
-      const { data: referrer } = await supabaseAdmin
+      const { data: referrer } = await supabase
         .from('profiles')
         .select('id, referred_by, referred_by_level2')
         .eq('referral_code', code)
@@ -35,30 +39,32 @@ export async function POST(req: NextRequest) {
         if (referrer.referred_by) {
           referredByLevel2 = referrer.referred_by;
           referralLevel = 2;
-          const { data: l2 } = await getSupabaseAdmin().from('profiles').select('referred_by').eq('id', referrer.referred_by).single();
+          const { data: l2 } = await supabase.from('profiles').select('referred_by').eq('id', referrer.referred_by).single();
           if (l2?.referred_by) { referredByLevel3 = l2.referred_by; referralLevel = 3; }
         }
       }
     }
 
     // Create auth user
-    const { data: authData, error: signUpError } = await getSupabaseAdmin().auth.admin.createUser({
+    const { data: authData, error: signUpError } = await supabase.auth.admin.createUser({
       email,
       password,
-      email_confirm: false,
+      email_confirm: true,
       user_metadata: { name },
     });
+
     if (signUpError) {
-      if (signUpError.message?.includes('already registered')) {
+      if (signUpError.message?.toLowerCase().includes('already registered') || signUpError.message?.toLowerCase().includes('already been registered')) {
         return NextResponse.json({ success: false, message: 'User already exists with this email' }, { status: 400 });
       }
-      throw signUpError;
+      console.error('Supabase createUser error:', signUpError);
+      return NextResponse.json({ success: false, message: signUpError.message || 'Error creating account' }, { status: 400 });
     }
 
     const userId = authData.user.id;
 
-    // Update profile with referral data
-    await getSupabaseAdmin().from('profiles').update({
+    // Update profile with name + referral data (trigger creates the row)
+    await supabase.from('profiles').update({
       name: name.trim(),
       referred_by: referredBy,
       referred_by_level2: referredByLevel2,
@@ -68,47 +74,40 @@ export async function POST(req: NextRequest) {
 
     // Update referrer count
     if (referredBy) {
-      const { data: refProfile } = await getSupabaseAdmin().from('profiles').select('referral_count').eq('id', referredBy).single();
+      const { data: refProfile } = await supabase.from('profiles').select('referral_count').eq('id', referredBy).single();
       if (refProfile) {
-        await getSupabaseAdmin().from('profiles').update({ referral_count: (refProfile.referral_count || 0) + 1 }).eq('id', referredBy);
+        await supabase.from('profiles').update({ referral_count: (refProfile.referral_count || 0) + 1 }).eq('id', referredBy);
       }
     }
 
-    // Sign in to get session
-    const { data: sessionData, error: sessionError } = await getSupabaseAdmin().auth.signInWithPassword({ email, password });
-    if (sessionError) throw sessionError;
+    // Sign in to get session token
+    const { data: sessionData, error: sessionError } = await supabase.auth.signInWithPassword({ email, password });
+    if (sessionError) {
+      console.error('Session error after register:', sessionError);
+      return NextResponse.json({ success: false, message: 'Account created but login failed. Please login manually.' }, { status: 201 });
+    }
 
-    const { data: profile } = await getSupabaseAdmin().from('profiles').select('id, email, name, role, referral_code').eq('id', userId).single();
-
-    // Send verification email in background
-    getSupabaseAdmin().auth.admin.generateLink({
-      type: 'signup',
-      email,
-      options: { redirectTo: `${process.env.FRONTEND_URL || 'https://bitgains.co'}/verify-email` },
-    }).then(({ data: linkData }) => {
-      if (linkData?.properties?.hashed_token) {
-        sendEmailVerificationEmail(email, linkData.properties.hashed_token, name).catch(() => {});
-      }
-    }).catch(() => {});
+    const { data: profile } = await supabase.from('profiles').select('id, email, name, role, referral_code').eq('id', userId).single();
 
     return NextResponse.json({
       success: true,
-      message: 'User registered successfully. Please check your email to verify your account.',
+      message: 'Account created successfully!',
       data: {
         user: {
-          id: profile!.id,
-          email: profile!.email,
-          name: profile!.name,
-          role: profile!.role,
-          isEmailVerified: false,
-          referralCode: profile!.referral_code,
+          id: profile?.id || userId,
+          email: profile?.email || email,
+          name: profile?.name || name,
+          role: profile?.role || 'user',
+          isEmailVerified: true,
+          referralCode: profile?.referral_code || null,
         },
         token: sessionData.session!.access_token,
         refreshToken: sessionData.session!.refresh_token,
       },
     }, { status: 201 });
+
   } catch (err: any) {
     console.error('Register error:', err);
-    return NextResponse.json({ success: false, message: 'Error creating user account' }, { status: 500 });
+    return NextResponse.json({ success: false, message: err.message || 'Error creating user account' }, { status: 500 });
   }
 }
