@@ -6,90 +6,73 @@ import { calculateVariableReward, getCurrentStakingMonth, getMonthlyRate } from 
 export async function GET(req: NextRequest) {
   const { user, error } = await getAuthUser(req);
   if (error) return error;
-
   try {
-    const supabase = getSupabaseAdmin();
-    let { data: wallet } = await supabase.from('wallets').select('*, stakes(*)').eq('user_id', user!.id).single();
+    const sb = getSupabaseAdmin();
+    const uid = user!.id;
 
-    // Auto-create wallet if it doesn't exist (trigger may not have run)
+    // Get wallet - auto-create if missing
+    let { data: wallet } = await sb.from('wallets').select('*').eq('user_id', uid).single();
     if (!wallet) {
-      const { data: newWallet, error: createError } = await supabase
-        .from('wallets')
-        .insert({
-          user_id: user!.id,
-          balance: 0,
-          staked_amount: 0,
-          total_earnings: 0,
-          total_deposited: 0,
-          total_withdrawn: 0,
-          apr: 12.5,
-        })
-        .select('*, stakes(*)')
-        .single();
+      const { data: w } = await sb.from('wallets').insert({ user_id: uid, balance: 0, staked_amount: 0, total_earnings: 0, total_deposited: 0, total_withdrawn: 0, apr: 12.5 }).select('*').single();
+      wallet = w;
+    }
+    if (!wallet) return NextResponse.json({ success: false, message: 'Failed to initialize wallet' }, { status: 500 });
 
-      if (createError) {
-        console.error('Wallet create error:', createError);
-        return NextResponse.json({ success: false, message: 'Failed to initialize wallet' }, { status: 500 });
+    // Check matured stakes
+    const now = new Date().toISOString();
+    const { data: activeStakes } = await sb.from('stakes').select('*').eq('user_id', uid).eq('status', 'active');
+    let totalReward = 0;
+    const maturedStakes: any[] = [];
+
+    for (const stake of (activeStakes || [])) {
+      if (now >= stake.end_date) {
+        const { reward } = calculateVariableReward(stake.amount, stake.start_date, stake.start_date, stake.end_date);
+        totalReward += reward;
+        maturedStakes.push({ stakeId: stake.stake_id, amount: stake.amount, rewards: reward, packageType: stake.package_type });
+        await sb.from('stakes').update({ status: 'matured', actual_rewards: reward, matured_at: now }).eq('id', stake.id);
+        const { data: existingReward } = await sb.from('transactions').select('id').eq('user_id', uid).eq('type', 'reward').contains('metadata', { stakeId: stake.stake_id }).maybeSingle();
+        if (!existingReward) {
+          await sb.from('transactions').insert({ user_id: uid, type: 'reward', amount: reward, currency: 'USDT', status: 'completed', description: `Stake matured: ${stake.package_type} stake of ${stake.amount} USDT`, completed_at: now, metadata: { stakeId: stake.stake_id, stakedAmount: stake.amount, packageType: stake.package_type } });
+        }
       }
-      wallet = newWallet;
     }
 
-    const stakes = wallet.stakes || [];
-    const now = new Date();
-    let recentReward = 0;
-
-    // Check for matured stakes and credit rewards
-    const maturedStakes = stakes.filter((s: any) => s.status === 'active' && new Date(s.end_date) <= now);
-    for (const stake of maturedStakes) {
-      const { reward } = calculateVariableReward(stake.amount, stake.start_date, stake.start_date, now);
-      recentReward += reward;
-      if (reward > 0) {
-        await supabase.from('wallets').update({
-          balance: wallet.balance + reward,
-          total_earnings: wallet.total_earnings + reward,
-          last_staking_update: now.toISOString(),
-        }).eq('user_id', user!.id);
-        await supabase.from('transactions').insert({
-          user_id: user!.id, type: 'reward', amount: reward, currency: 'USDT', status: 'completed',
-          description: 'Staking rewards matured', completed_at: now.toISOString(),
-        });
-      }
-      await supabase.from('stakes').update({ status: 'matured', matured_at: now.toISOString() }).eq('stake_id', stake.stake_id);
+    if (totalReward > 0) {
+      await sb.from('wallets').update({ balance: wallet.balance + totalReward, staked_amount: Math.max(0, wallet.staked_amount - maturedStakes.reduce((s, m) => s + m.amount, 0)), total_earnings: wallet.total_earnings + totalReward, last_staking_update: now }).eq('user_id', uid);
     }
 
-    const currentMonth = wallet.staking_start_date ? getCurrentStakingMonth(wallet.staking_start_date) : 1;
+    // Fresh wallet
+    const { data: fresh } = await sb.from('wallets').select('*').eq('user_id', uid).single();
+    const { data: allStakes } = await sb.from('stakes').select('*').eq('user_id', uid).order('created_at', { ascending: false });
+    const w = fresh || wallet;
+    const currentMonth = w.staking_start_date ? getCurrentStakingMonth(w.staking_start_date) : 1;
     const currentRate = getMonthlyRate(currentMonth);
 
     return NextResponse.json({
       success: true,
       data: {
         wallet: {
-          balance: wallet.balance,
-          stakedAmount: wallet.staked_amount,
-          availableBalance: wallet.balance - wallet.staked_amount,
-          totalEarnings: wallet.total_earnings,
-          totalDeposited: wallet.total_deposited,
-          totalWithdrawn: wallet.total_withdrawn,
-          apr: wallet.apr,
-          stakingStartDate: wallet.staking_start_date,
-          lastStakingUpdate: wallet.last_staking_update,
-          recentReward,
+          balance: w.balance,
+          stakedAmount: w.staked_amount,
+          availableBalance: w.balance - w.staked_amount,
+          totalEarnings: w.total_earnings,
+          totalDeposited: w.total_deposited,
+          totalWithdrawn: w.total_withdrawn,
+          apr: w.apr,
+          stakingStartDate: w.staking_start_date,
+          lastStakingUpdate: w.last_staking_update,
+          recentReward: totalReward,
           currentStakingMonth: currentMonth,
           currentMonthlyRate: currentRate,
           currentMonthlyRatePercent: `${(currentRate * 100).toFixed(0)}%`,
-          stakes: stakes.map((s: any) => ({
-            stakeId: s.stake_id,
-            amount: s.amount,
-            packageType: s.package_type,
-            status: s.status,
-            startDate: s.start_date,
-            endDate: s.end_date,
-          })),
-          maturedStakes: maturedStakes.map((s: any) => s.stake_id),
+          stakes: (allStakes || []).map((s: any) => ({ stakeId: s.stake_id, amount: s.amount, startDate: s.start_date, endDate: s.end_date, packageType: s.package_type, status: s.status, expectedRewards: s.expected_rewards, actualRewards: s.actual_rewards, maturedAt: s.matured_at })),
+          maturedStakes,
+          createdAt: w.created_at,
+          updatedAt: w.updated_at,
         },
       },
     });
-  } catch (err) {
+  } catch (err: any) {
     console.error('Wallet error:', err);
     return NextResponse.json({ success: false, message: 'Failed to connect to wallet service' }, { status: 500 });
   }

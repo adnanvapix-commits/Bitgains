@@ -5,23 +5,20 @@ import { getAuthUser } from '../../../../lib/api-auth';
 export async function PUT(req: NextRequest) {
   const { user, error } = await getAuthUser(req);
   if (error) return error;
-
   try {
     const { name, email } = await req.json();
+    const sb = getSupabaseAdmin();
     const updates: any = {};
-    if (name !== undefined) updates.name = name.trim();
-
-    if (email !== undefined && email !== user!.email) {
-      const { data: existing } = await getSupabaseAdmin().from('profiles').select('id').eq('email', email).neq('id', user!.id).single();
-      if (existing) return NextResponse.json({ success: false, message: 'Email is already in use' }, { status: 400 });
+    if (name) updates.name = name.trim();
+    if (email && email !== user!.email) {
+      const { data: ex } = await sb.from('profiles').select('id').eq('email', email).neq('id', user!.id).single();
+      if (ex) return NextResponse.json({ success: false, message: 'Email already exists' }, { status: 400 });
       updates.email = email;
-      await getSupabaseAdmin().auth.admin.updateUserById(user!.id, { email });
+      await sb.auth.admin.updateUserById(user!.id, { email });
     }
-
-    const { data: updatedUser } = await getSupabaseAdmin().from('profiles').update(updates).eq('id', user!.id).select().single();
-    return NextResponse.json({ success: true, message: 'Profile updated successfully', data: { user: updatedUser } });
-  } catch (err) {
-    console.error('Update profile error:', err);
-    return NextResponse.json({ success: false, message: 'Error updating profile' }, { status: 500 });
+    const { data: updated } = await sb.from('profiles').update(updates).eq('id', user!.id).select().single();
+    return NextResponse.json({ success: true, message: 'Profile updated', data: { user: updated } });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, message: err.message }, { status: 500 });
   }
 }

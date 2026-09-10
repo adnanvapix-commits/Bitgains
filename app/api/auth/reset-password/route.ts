@@ -5,33 +5,14 @@ import { sendPasswordResetSuccessEmail } from '../../../../lib/server/emailServi
 export async function POST(req: NextRequest) {
   try {
     const { token, password } = await req.json();
-    if (!token || !password) {
-      return NextResponse.json({ success: false, message: 'Token and password are required' }, { status: 400 });
-    }
-    if (password.length < 6 || !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
-      return NextResponse.json({ success: false, message: 'Password must be 6+ chars with uppercase, lowercase and a number' }, { status: 400 });
-    }
-
-    // Verify the OTP/token
-    const { data: verifyData, error: verifyError } = await getSupabaseAdmin().auth.verifyOtp({
-      token_hash: token,
-      type: 'recovery',
-    });
-    if (verifyError || !verifyData.user) {
-      return NextResponse.json({ success: false, message: 'Invalid or expired reset token' }, { status: 400 });
-    }
-
-    // Update password
-    const { error: updateError } = await getSupabaseAdmin().auth.admin.updateUserById(verifyData.user.id, { password });
-    if (updateError) throw updateError;
-
-    // Send success email in background
-    const { data: profile } = await getSupabaseAdmin().from('profiles').select('email, name').eq('id', verifyData.user.id).single();
+    if (!token || !password || password.length < 6)
+      return NextResponse.json({ success: false, message: 'Token and valid password required' }, { status: 400 });
+    const sb = getSupabaseAdmin();
+    const { data: v, error } = await sb.auth.verifyOtp({ token_hash: token, type: 'recovery' });
+    if (error || !v.user) return NextResponse.json({ success: false, message: 'Invalid or expired token' }, { status: 400 });
+    await sb.auth.admin.updateUserById(v.user.id, { password });
+    const { data: profile } = await sb.from('profiles').select('email, name').eq('id', v.user.id).single();
     if (profile) sendPasswordResetSuccessEmail(profile.email, profile.name).catch(() => {});
-
-    return NextResponse.json({ success: true, message: 'Password has been reset successfully' });
-  } catch (err) {
-    console.error('Reset password error:', err);
-    return NextResponse.json({ success: false, message: 'Error resetting password' }, { status: 500 });
-  }
+    return NextResponse.json({ success: true, message: 'Password reset successfully' });
+  } catch (err: any) { return NextResponse.json({ success: false, message: err.message }, { status: 500 }); }
 }
