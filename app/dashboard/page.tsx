@@ -8434,10 +8434,10 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
                 { days: "180", label: "6 Months", rate: "15% APM" },
               ].map(opt => (
                 <button key={opt.days} onClick={() => setDuration(opt.days)}
-                  className={`p-3 rounded-xl border text-center transition-all ${
+                  className={`p-3 rounded-xl border-2 text-center transition-all duration-200 ${
                     duration === opt.days
-                      ? "border-warm-500 bg-warm-400/20 text-dark-900"
-                      : "border-warm-400/20 bg-cream-50 text-warm-700 hover:border-warm-400/40"
+                      ? "border-amber-600 bg-amber-600 text-white shadow-md shadow-amber-600/30 scale-[1.03]"
+                      : "border-warm-400/30 bg-white text-warm-700 hover:border-amber-500/60 hover:bg-amber-50"
                   }`}>
                   <div className="font-bold text-sm">{opt.label}</div>
                   <div className="text-xs text-warm-600">{opt.rate}</div>
@@ -8453,8 +8453,12 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
               <div className="text-xs text-warm-700 mt-0.5">Reinvest earnings for exponential growth</div>
             </div>
             <button onClick={() => setCompoundEnabled(!compoundEnabled)}
-              className={`relative w-12 h-6 rounded-full transition-all duration-300 ${compoundEnabled ? "bg-warm-500" : "bg-warm-400/30"}`}>
-              <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all duration-300 ${compoundEnabled ? "left-6" : "left-0.5"}`} />
+              className={`relative w-12 h-6 rounded-full transition-all duration-300 ring-2 ${
+                compoundEnabled
+                  ? "bg-amber-600 ring-amber-600"
+                  : "bg-stone-300 ring-stone-300"
+              }`}>
+              <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 ${compoundEnabled ? "left-6" : "left-0.5"}`} />
             </button>
           </div>
         </div>
@@ -8765,11 +8769,11 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
   const [reinvestPercent, setReinvestPercent] = useState(100);
 
   const projections = [
-    { months: 1, simple: 5.0, compound: 5.0 },
-    { months: 3, simple: 15.0, compound: 15.76 },
-    { months: 6, simple: 30.0, compound: 34.01 },
-    { months: 12, simple: 60.0, compound: 79.59 },
-    { months: 24, simple: 120.0, compound: 219.11 },
+    { months: 1, simple: +(num * rate).toFixed(2), compound: +(num * (Math.pow(1 + rate, 1) - 1)).toFixed(2) },
+    { months: 3, simple: +(num * rate * 3).toFixed(2), compound: +(num * (Math.pow(1 + rate, 3) - 1)).toFixed(2) },
+    { months: 6, simple: +(num * rate * 6).toFixed(2), compound: +(num * (Math.pow(1 + rate, 6) - 1)).toFixed(2) },
+    { months: 12, simple: +(num * rate * 12).toFixed(2), compound: +(num * (Math.pow(1 + rate, 12) - 1)).toFixed(2) },
+    { months: 24, simple: +(num * rate * 24).toFixed(2), compound: +(num * (Math.pow(1 + rate, 24) - 1)).toFixed(2) },
   ];
 
   return (
@@ -8795,7 +8799,11 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
                 </div>
               </div>
               <button onClick={() => setGlobalEnabled(!globalEnabled)}
-                className={`relative w-14 h-7 rounded-full transition-all duration-300 ${globalEnabled ? "bg-warm-500" : "bg-warm-400/30"}`}>
+                className={`relative w-14 h-7 rounded-full transition-all duration-300 ring-2 ${
+                  globalEnabled
+                    ? "bg-amber-600 ring-amber-600"
+                    : "bg-stone-300 ring-stone-300"
+                }`}>
                 <span className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow-md transition-all duration-300 ${globalEnabled ? "left-7" : "left-0.5"}`} />
               </button>
             </div>
@@ -8862,7 +8870,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
         {/* Compound vs Simple Projection */}
         <div className="glass-card p-6">
           <h3 className="font-semibold text-dark-900 mb-4">📈 Compound vs Simple</h3>
-          <p className="text-xs text-warm-700 mb-4">Based on $1,000 at 5%/month</p>
+          <p className="text-xs text-warm-700 mb-4">Based on $1,000 principal at 5%/month</p>
           <div className="space-y-3">
             {projections.map(p => (
               <div key={p.months} className="p-3 rounded-xl bg-warm-400/10">
@@ -9079,8 +9087,10 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
         <div className="flex gap-2">
           {["7d", "30d", "90d", "1y", "All"].map(p => (
             <button key={p} onClick={() => setPeriod(p)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                period === p ? "bg-warm-500 text-white" : "bg-warm-400/15 text-warm-700 hover:bg-warm-400/25"
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                period === p
+                  ? "bg-amber-600 text-white shadow-sm shadow-amber-600/30 scale-105"
+                  : "bg-white border border-warm-400/30 text-warm-700 hover:border-amber-500/50 hover:bg-amber-50"
               }`}>
               {p}
             </button>
@@ -9136,10 +9146,10 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
           <h3 className="font-semibold text-dark-900 mb-4">Performance Score</h3>
           <div className="space-y-4">
             {[
-              { label: "Portfolio Health", score: 85, color: "#C4966A" },
-              { label: "Staking Efficiency", score: 72, color: "#8B5E3C" },
-              { label: "Risk Score", score: 90, color: "#B8700A" },
-              { label: "Diversification", score: 45, color: "#7C5C3E" },
+              { label: "Portfolio Health", score: deposited > 0 ? Math.min(95, Math.round(70 + (earned / Math.max(deposited, 1)) * 100)) : 0, color: "#C4966A" },
+              { label: "Staking Efficiency", score: deposited > 0 ? Math.min(100, Math.round((staked / Math.max(bal, 1)) * 100)) : 0, color: "#8B5E3C" },
+              { label: "Risk Score", score: bal >= 0 ? 90 : 50, color: "#B8700A" },
+              { label: "Diversification", score: (walletData?.wallet?.stakes?.length ?? 0) > 1 ? 75 : 30, color: "#7C5C3E" },
             ].map(item => (
               <div key={item.label}>
                 <div className="flex justify-between text-sm mb-1.5">
@@ -9179,12 +9189,12 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
         <h3 className="font-semibold text-dark-900 mb-4">📊 Portfolio Insights</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
-            { icon: "🎯", title: "Optimization Tip", desc: "Stake at least $1,000 to unlock Silver tier and earn 8% instead of 5% monthly.", color: "bg-blue-50 border-blue-200" },
-            { icon: "🔄", title: "Compounding Boost", desc: "Enable auto-compound to increase your 12-month return from 60% to 79.6%.", color: "bg-green-50 border-green-200" },
-            { icon: "📅", title: "Next Payout", desc: "No active stakes. Deposit and stake to start earning monthly rewards.", color: "bg-amber-50 border-amber-200" },
-            { icon: "🏆", title: "Tier Progress", desc: `You need $${Math.max(100 - bal, 0).toFixed(0)} more to reach Bronze tier benefits.`, color: "bg-purple-50 border-purple-200" },
-            { icon: "📈", title: "ROI Potential", desc: "At your current balance, staking at 5% could earn you $0/month.", color: "bg-warm-50 border-warm-200" },
-            { icon: "🛡️", title: "Risk Assessment", desc: "Your portfolio risk is LOW. USDT staking provides stable, predictable returns.", color: "bg-emerald-50 border-emerald-200" },
+            { icon: "🎯", title: "Optimization Tip", desc: bal < 1000 ? `Add $${(1000 - bal).toFixed(2)} to reach Silver tier (8%/month).` : bal < 5000 ? `Add $${(5000 - bal).toFixed(2)} to reach Gold tier (12%/month).` : "You're at a great tier! Keep compounding.", color: "bg-blue-50 border-blue-200" },
+            { icon: "🔄", title: "Compounding Boost", desc: earned > 0 ? `You've earned $${earned.toFixed(2)} so far. Auto-compound could boost this by ~33% over 12 months.` : "Enable auto-compound after your first stake to maximize growth.", color: "bg-green-50 border-green-200" },
+            { icon: "📅", title: "Active Stakes", desc: (walletData?.wallet?.stakes?.filter((s: any) => s.status === "active")?.length ?? 0) > 0 ? `${walletData.wallet.stakes.filter((s: any) => s.status === "active").length} active stake(s) currently running.` : "No active stakes. Deposit and stake USDT to start earning.", color: "bg-amber-50 border-amber-200" },
+            { icon: "🏆", title: "Tier Status", desc: bal >= 25000 ? "Platinum tier — earning maximum 15%/month! 🎉" : bal >= 5000 ? `Gold tier. Add $${(25000 - bal).toFixed(2)} for Platinum.` : bal >= 1000 ? `Silver tier. Add $${(5000 - bal).toFixed(2)} for Gold.` : `Add $${(1000 - bal).toFixed(2)} for Silver tier.`, color: "bg-purple-50 border-purple-200" },
+            { icon: "📈", title: "Monthly Potential", desc: bal > 0 ? `Staking $${bal.toFixed(2)} could earn ~$${(bal * 0.05).toFixed(2)}–$${(bal * 0.15).toFixed(2)}/month.` : "Deposit USDT to see your earning potential.", color: "bg-warm-50 border-warm-200" },
+            { icon: "🛡️", title: "Risk Assessment", desc: "Your portfolio risk is LOW. USDT staking provides stable, predictable monthly returns with no market volatility.", color: "bg-emerald-50 border-emerald-200" },
           ].map(ins => (
             <div key={ins.title} className={`p-4 rounded-xl border ${ins.color}`}>
               <div className="text-xl mb-2">{ins.icon}</div>
