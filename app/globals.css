@@ -42,13 +42,14 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  --color-crypto-black:      #1c1917;
-  --color-crypto-charcoal:   #f9f8f6;
-  --color-crypto-emerald:    #059669;
-  --color-crypto-neon:       #10b981;
-  --color-crypto-cyan:       #0891b2;
-  --color-crypto-glow:       rgba(5,150,105,0.12);
-  --color-crypto-glow-strong:rgba(16,185,129,0.18);
+  /* ── Coinbase exact color tokens ── */
+  --color-crypto-black:       #0a0b0d;
+  --color-crypto-charcoal:    #eef0f3;
+  --color-crypto-emerald:     #0052ff;
+  --color-crypto-neon:        #0052ff;
+  --color-crypto-cyan:        #0052ff;
+  --color-crypto-glow:        rgba(0,82,255,0.12);
+  --color-crypto-glow-strong: rgba(0,82,255,0.20);
 
   --safe-area-inset-top:    env(safe-area-inset-top);
   --safe-area-inset-bottom: env(safe-area-inset-bottom);
@@ -57,311 +58,314 @@
 }
 
 /*
-  ╔══════════════════════════════════════════════════════╗
-  ║  BITGAINS — PREMIUM OFF-WHITE + CREAM THEME          ║
-  ║                                                      ║
-  ║  Page bg:    #F9F8F6  pure off-white (clean base)   ║
-  ║  Cards:      #FFFFFF  bright white (pop off bg)     ║
-  ║  Sidebar:    #F4EFE6  warm cream (distinct zone)    ║
-  ║  Dividers:   #EDE8DC  deeper cream (section sep.)  ║
-  ║  Text:       #1C1917  rich near-black               ║
-  ║  Subtext:    #57534E  warm stone gray               ║
-  ║  Brand:      #059669  emerald green                 ║
-  ╚══════════════════════════════════════════════════════╝
+  ╔══════════════════════════════════════════════════════════╗
+  ║  BITGAINS — COINBASE DESIGN SYSTEM COLORS (EXACT)        ║
+  ║                                                          ║
+  ║  Source: Coinbase Design System / cdp-react tokens       ║
+  ║                                                          ║
+  ║  bg.default      #FFFFFF   — main page/card background   ║
+  ║  bg.alternate    #EEF0F3   — section bg, sidebar, rows   ║
+  ║  fg.default      #0A0B0D   — primary text (near-black)   ║
+  ║  fg.muted        #5B616E   — secondary/muted text        ║
+  ║  fg.primary      #0052FF   — Coinbase Blue (brand)       ║
+  ║  fg.positive     #098551   — green/success               ║
+  ║  fg.negative     #CF202F   — red/error                   ║
+  ║  fg.warning      #ED702F   — orange/warning              ║
+  ║  line.default    #DCDFE4   — borders                     ║
+  ║  line.heavy      #9397A0   — stronger borders            ║
+  ╚══════════════════════════════════════════════════════════╝
 */
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.75rem;  /* Coinbase uses pill/rounded — slightly more than default */
 
-  /* ── Core ── */
-  --background:         #f9f8f6;   /* off-white page canvas */
-  --foreground:         #1c1917;   /* rich near-black */
+  /* ── Backgrounds ── */
+  --background:         #ffffff;    /* bg.default — pure white page */
+  --foreground:         #0a0b0d;    /* fg.default */
 
-  /* ── Cards — pure white so they pop off the off-white bg ── */
-  --card:               #ffffff;
-  --card-foreground:    #1c1917;
+  --card:               #ffffff;    /* white card */
+  --card-foreground:    #0a0b0d;
 
-  /* ── Popovers / menus ── */
   --popover:            #ffffff;
-  --popover-foreground: #1c1917;
+  --popover-foreground: #0a0b0d;
 
   /* ── Brand ── */
-  --primary:            #059669;
+  --primary:            #0052ff;    /* Coinbase Blue */
   --primary-foreground: #ffffff;
 
-  /* ── Secondary — cream tone for subtle areas ── */
-  --secondary:          #f4efe6;
-  --secondary-foreground: #1c1917;
+  /* ── Secondary — bg.alternate / bg.secondary ── */
+  --secondary:          #eef0f3;
+  --secondary-foreground: #0a0b0d;
 
-  /* ── Muted — slightly deeper cream for disabled/bg areas ── */
-  --muted:              #ede8dc;
-  --muted-foreground:   #57534e;   /* warm stone — readable */
+  /* ── Muted — alternate bg, muted text ── */
+  --muted:              #eef0f3;
+  --muted-foreground:   #5b616e;    /* fg.muted */
 
   /* ── Accent ── */
-  --accent:             #10b981;
-  --accent-foreground:  #ffffff;
+  --accent:             #eef0f3;
+  --accent-foreground:  #0a0b0d;
 
-  /* ── Destructive ── */
-  --destructive:        #dc2626;
+  /* ── Semantic states ── */
+  --destructive:        #cf202f;    /* fg.negative */
 
-  /* ── Borders — warm stone separator ── */
-  --border:             #e7e2d8;
-  --input:              #f9f8f6;
-  --ring:               #059669;
+  /* ── Lines / borders ── */
+  --border:             #dcdfe4;    /* line.default */
+  --input:              #ffffff;
+  --ring:               #0052ff;
 
   /* ── Charts ── */
-  --chart-1: #059669;
-  --chart-2: #10b981;
-  --chart-3: #0891b2;
-  --chart-4: #7c3aed;
-  --chart-5: #d97706;
+  --chart-1: #0052ff;   /* Coinbase Blue */
+  --chart-2: #098551;   /* positive green */
+  --chart-3: #ed702f;   /* warning amber */
+  --chart-4: #cf202f;   /* negative red */
+  --chart-5: #5b616e;   /* muted gray */
 
-  /* ── Sidebar — cream zone, distinct from page ── */
-  --sidebar:                    #f4efe6;
-  --sidebar-foreground:         #1c1917;
-  --sidebar-primary:            #059669;
+  /* ── Sidebar — bg.alternate tone ── */
+  --sidebar:                    #eef0f3;
+  --sidebar-foreground:         #0a0b0d;
+  --sidebar-primary:            #0052ff;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent:             #ede8dc;
-  --sidebar-accent-foreground:  #1c1917;
-  --sidebar-border:             #e0d9cc;
-  --sidebar-ring:               #059669;
+  --sidebar-accent:             #dcdfe4;
+  --sidebar-accent-foreground:  #0a0b0d;
+  --sidebar-border:             #dcdfe4;
+  --sidebar-ring:               #0052ff;
 }
 
-/* Mirror to .dark so no dark-mode flash ever happens */
+/* Mirror to .dark — prevents any dark-mode flash */
 .dark {
-  --background:         #f9f8f6;
-  --foreground:         #1c1917;
+  --background:         #ffffff;
+  --foreground:         #0a0b0d;
   --card:               #ffffff;
-  --card-foreground:    #1c1917;
+  --card-foreground:    #0a0b0d;
   --popover:            #ffffff;
-  --popover-foreground: #1c1917;
-  --primary:            #059669;
+  --popover-foreground: #0a0b0d;
+  --primary:            #0052ff;
   --primary-foreground: #ffffff;
-  --secondary:          #f4efe6;
-  --secondary-foreground: #1c1917;
-  --muted:              #ede8dc;
-  --muted-foreground:   #57534e;
-  --accent:             #10b981;
-  --accent-foreground:  #ffffff;
-  --destructive:        #dc2626;
-  --border:             #e7e2d8;
-  --input:              #f9f8f6;
-  --ring:               #059669;
-  --chart-1: #059669;
-  --chart-2: #10b981;
-  --chart-3: #0891b2;
-  --chart-4: #7c3aed;
-  --chart-5: #d97706;
-  --sidebar:                    #f4efe6;
-  --sidebar-foreground:         #1c1917;
-  --sidebar-primary:            #059669;
+  --secondary:          #eef0f3;
+  --secondary-foreground: #0a0b0d;
+  --muted:              #eef0f3;
+  --muted-foreground:   #5b616e;
+  --accent:             #eef0f3;
+  --accent-foreground:  #0a0b0d;
+  --destructive:        #cf202f;
+  --border:             #dcdfe4;
+  --input:              #ffffff;
+  --ring:               #0052ff;
+  --chart-1: #0052ff;
+  --chart-2: #098551;
+  --chart-3: #ed702f;
+  --chart-4: #cf202f;
+  --chart-5: #5b616e;
+  --sidebar:                    #eef0f3;
+  --sidebar-foreground:         #0a0b0d;
+  --sidebar-primary:            #0052ff;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent:             #ede8dc;
-  --sidebar-accent-foreground:  #1c1917;
-  --sidebar-border:             #e0d9cc;
-  --sidebar-ring:               #059669;
+  --sidebar-accent:             #dcdfe4;
+  --sidebar-accent-foreground:  #0a0b0d;
+  --sidebar-border:             #dcdfe4;
+  --sidebar-ring:               #0052ff;
 }
 
-/* ─── Base ───────────────────────────────────────────── */
+/* ─── Base reset ──────────────────────────────────────── */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
 
-  html {
-    background-color: #f9f8f6 !important;
-    color: #1c1917 !important;
-  }
-
-  body {
-    background-color: #f9f8f6 !important;
-    color: #1c1917 !important;
-    font-feature-settings: "kern" 1, "liga" 1;
+  html, body {
+    background-color: #ffffff !important;
+    color: #0a0b0d !important;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* ── Global text fix: white text → near-black on light surfaces ── */
+  /* ── The core fix: white text invisible on white bg → make it dark ── */
   .text-white {
-    color: #1c1917 !important;
+    color: #0a0b0d !important;
   }
 
-  /* ── Allow white text back on intentionally dark/colored elements ── */
-  .bg-emerald-500 .text-white,  .bg-emerald-600 .text-white,
-  .bg-emerald-700 .text-white,  .bg-green-500 .text-white,
-  .bg-green-600 .text-white,    .bg-teal-500 .text-white,
-  .bg-cyan-500 .text-white,     .bg-blue-500 .text-white,
-  .bg-blue-600 .text-white,     .bg-indigo-500 .text-white,
-  .bg-violet-500 .text-white,   .bg-purple-500 .text-white,
-  .bg-red-500 .text-white,      .bg-rose-500 .text-white,
-  .bg-orange-500 .text-white,   .bg-amber-500 .text-white,
-  .bg-yellow-500 .text-white,   .bg-pink-500 .text-white,
-  .bg-gray-700 .text-white,     .bg-gray-800 .text-white,
-  .bg-gray-900 .text-white,     .bg-slate-700 .text-white,
-  .bg-slate-800 .text-white,    .bg-slate-900 .text-white,
-  .bg-zinc-700 .text-white,     .bg-zinc-800 .text-white,
-  .bg-stone-700 .text-white,    .bg-stone-800 .text-white,
-  [class*="from-emerald"] .text-white,
+  /* ── Restore white text ONLY on colored / dark backgrounds ── */
+  .bg-blue-500 .text-white,      .bg-blue-600 .text-white,
+  .bg-indigo-500 .text-white,    .bg-indigo-600 .text-white,
+  .bg-green-500 .text-white,     .bg-green-600 .text-white,
+  .bg-emerald-500 .text-white,   .bg-emerald-600 .text-white,
+  .bg-red-500 .text-white,       .bg-red-600 .text-white,
+  .bg-orange-500 .text-white,    .bg-amber-500 .text-white,
+  .bg-gray-700 .text-white,      .bg-gray-800 .text-white,
+  .bg-gray-900 .text-white,      .bg-slate-700 .text-white,
+  .bg-slate-800 .text-white,     .bg-slate-900 .text-white,
+  .bg-zinc-800 .text-white,      .bg-zinc-900 .text-white,
+  [class*="from-blue"] .text-white,
+  [class*="from-indigo"] .text-white,
   [class*="from-green"] .text-white,
-  [class*="from-teal"] .text-white,
+  [class*="from-emerald"] .text-white,
   .btn-crypto, .btn-crypto *,
-  .gradient-green .text-white,
-  .gradient-green * {
+  .gradient-green, .gradient-green * {
     color: #ffffff !important;
   }
 
-  /* ── Hardcoded dark bg classes from old dark theme → off-white ── */
+  /* ── Old dark hardcoded bg classes → white ── */
   .bg-\[\#0b0f0e\], .bg-\[\#1a1f1d\], .bg-\[\#2a2f2d\],
   .bg-\[\#0B0F0E\], .bg-\[\#1A1F1D\], .bg-\[\#2A2F2D\] {
-    background-color: #f9f8f6 !important;
-    color: #1c1917 !important;
+    background-color: #ffffff !important;
+    color: #0a0b0d !important;
   }
 
-  /* ── Gray shades readable on cream background ── */
-  .text-gray-100, .text-gray-200, .text-gray-300 { color: #57534e !important; }
-  .text-gray-400 { color: #6b6660 !important; }
-  .text-gray-500 { color: #57534e !important; }
-  .text-gray-600 { color: #44403c !important; }
-  .text-slate-300, .text-slate-400 { color: #6b6660 !important; }
-  .text-slate-500 { color: #57534e !important; }
+  /* ── Gray text → warm Coinbase gray palette ── */
+  .text-gray-100, .text-gray-200 { color: #5b616e !important; }
+  .text-gray-300, .text-gray-400 { color: #5b616e !important; }
+  .text-gray-500                 { color: #5b616e !important; }
+  .text-gray-600                 { color: #3a3f4a !important; }
+  .text-slate-300, .text-slate-400 { color: #5b616e !important; }
+  .text-slate-500, .text-slate-600  { color: #3a3f4a !important; }
 
-  /* ── Headings always rich near-black ── */
+  /* ── Headings always near-black ── */
   h1, h2, h3, h4, h5, h6 {
-    color: #1c1917 !important;
-    font-weight: 700;
+    color: #0a0b0d !important;
+    font-weight: 600;
   }
 
-  /* ── Form elements ── */
+  /* ── Semantic text helpers ── */
+  .text-positive { color: #098551 !important; }
+  .text-negative { color: #cf202f !important; }
+  .text-warning  { color: #ed702f !important; }
+
+  /* ── Inputs ── */
   input, textarea, select {
     background-color: #ffffff !important;
-    color: #1c1917 !important;
-    border: 1.5px solid #e7e2d8 !important;
-    border-radius: 0.5rem;
+    color: #0a0b0d !important;
+    border: 1.5px solid #dcdfe4 !important;
+    border-radius: 0.75rem;
   }
   input::placeholder, textarea::placeholder {
-    color: #a8a29e !important;
+    color: #9397a0 !important;
   }
   input:focus, textarea:focus, select:focus {
-    border-color: #059669 !important;
-    box-shadow: 0 0 0 3px rgba(5,150,105,0.12) !important;
+    border-color: #0052ff !important;
+    box-shadow: 0 0 0 3px rgba(0,82,255,0.12) !important;
     outline: none !important;
-    background-color: #ffffff !important;
   }
 
   /* ── Tables ── */
-  table  { background-color: #ffffff; color: #1c1917; width: 100%; border-collapse: collapse; }
-  thead  { background-color: #f4efe6; }
-  th     { color: #1c1917 !important; font-weight: 600; padding: 12px 16px; text-align: left; }
-  td     { color: #1c1917 !important; padding: 12px 16px; border-bottom: 1px solid #e7e2d8; }
-  tr:hover td { background-color: #f9f8f6; }
+  table  { background-color: #ffffff; color: #0a0b0d; border-collapse: collapse; width: 100%; }
+  thead  { background-color: #eef0f3; }
+  th     { color: #0a0b0d !important; font-weight: 600; padding: 12px 16px; text-align: left; border-bottom: 1px solid #dcdfe4; }
+  td     { color: #0a0b0d !important; padding: 12px 16px; border-bottom: 1px solid #dcdfe4; }
+  tr:hover td { background-color: #f7f8fa; }
   tbody tr:last-child td { border-bottom: none; }
 }
 
 /* ─── Components ─────────────────────────────────────── */
 @layer components {
 
-  /* ── Cards ── */
-  /* White cards pop off the off-white background */
+  /* ── Cards — white surface with Coinbase-style border + subtle shadow ── */
   .glass-card {
     background-color: #ffffff;
-    border: 1px solid #e7e2d8;
+    border: 1px solid #dcdfe4;
     border-radius: 0.875rem;
-    box-shadow: 0 1px 4px rgba(28,25,23,0.06), 0 4px 16px rgba(28,25,23,0.04);
-    color: #1c1917;
+    box-shadow: 0 1px 3px rgba(10,11,13,0.06), 0 4px 12px rgba(10,11,13,0.04);
+    color: #0a0b0d;
   }
 
   .glass-card-strong {
     background-color: #ffffff;
-    border: 1px solid #ddd7cc;
+    border: 1px solid #dcdfe4;
     border-radius: 0.875rem;
-    box-shadow: 0 2px 8px rgba(28,25,23,0.08), 0 8px 24px rgba(28,25,23,0.06);
-    color: #1c1917;
+    box-shadow: 0 2px 8px rgba(10,11,13,0.08), 0 8px 24px rgba(10,11,13,0.06);
+    color: #0a0b0d;
   }
 
-  /* Cream-tinted section card — used for stats/summary areas */
-  .cream-card {
-    background-color: #f4efe6;
-    border: 1px solid #e0d9cc;
+  /* ── Alternate / section card — bg.alternate tone ── */
+  .alt-card {
+    background-color: #eef0f3;
+    border: 1px solid #dcdfe4;
     border-radius: 0.875rem;
-    box-shadow: 0 1px 3px rgba(28,25,23,0.05);
-    color: #1c1917;
+    color: #0a0b0d;
   }
 
-  /* ── Glow ── */
-  .glow-green        { box-shadow: 0 0 16px rgba(5,150,105,0.16); }
-  .glow-green-strong { box-shadow: 0 0 24px rgba(5,150,105,0.22); }
-  .glow-cyan         { box-shadow: 0 0 16px rgba(8,145,178,0.16); }
+  /* ── Glow — Coinbase Blue ── */
+  .glow-green        { box-shadow: 0 0 0 3px rgba(0,82,255,0.12); }
+  .glow-green-strong { box-shadow: 0 0 0 4px rgba(0,82,255,0.18); }
+  .glow-cyan         { box-shadow: 0 0 0 3px rgba(0,82,255,0.12); }
 
-  /* ── Page background gradient ── */
+  /* ── Gradients ── */
   .gradient-crypto {
-    background: linear-gradient(150deg, #f9f8f6 0%, #f4efe6 60%, #f9f8f6 100%);
+    background: linear-gradient(150deg, #ffffff 0%, #eef0f3 100%);
   }
-
-  /* ── Brand gradients ── */
   .gradient-green {
-    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    background: #0052ff;  /* solid Coinbase Blue — no gradient needed */
   }
   .gradient-green-soft {
-    background: linear-gradient(135deg, rgba(5,150,105,0.07) 0%, rgba(16,185,129,0.07) 100%);
+    background-color: rgba(0,82,255,0.06);
   }
 
-  /* ── Buttons ── */
+  /* ── Buttons — Coinbase Blue, pill shape ── */
   .btn-crypto {
-    @apply inline-flex items-center justify-center font-semibold px-5 py-2.5 text-sm rounded-xl;
-    @apply sm:px-6 sm:py-3 sm:text-base;
-    @apply transition-all duration-200 active:scale-95;
-    background: linear-gradient(135deg, #059669 0%, #0d9488 100%);
+    @apply inline-flex items-center justify-center font-semibold text-sm px-5 py-2.5;
+    @apply sm:text-base sm:px-6 sm:py-3;
+    @apply transition-all duration-150 active:scale-95;
+    background-color: #0052ff;
     color: #ffffff !important;
-    box-shadow: 0 4px 12px rgba(5,150,105,0.25), 0 1px 3px rgba(5,150,105,0.15);
+    border-radius: 100px;   /* Coinbase uses full pill */
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,82,255,0.24);
     letter-spacing: 0.01em;
+    font-weight: 600;
   }
   .btn-crypto:hover {
-    background: linear-gradient(135deg, #047857 0%, #059669 100%);
-    box-shadow: 0 6px 18px rgba(5,150,105,0.32), 0 2px 6px rgba(5,150,105,0.18);
+    background-color: #0040cc;
+    box-shadow: 0 4px 12px rgba(0,82,255,0.32);
     transform: translateY(-1px);
+  }
+  .btn-crypto:active {
+    background-color: #0040cc;
+    transform: scale(0.97);
   }
 
   .btn-crypto-outline {
-    @apply inline-flex items-center justify-center font-semibold px-5 py-2.5 text-sm rounded-xl;
-    @apply sm:px-6 sm:py-3 sm:text-base;
-    @apply transition-all duration-200 active:scale-95;
-    border: 1.5px solid #059669;
-    color: #059669 !important;
-    background: transparent;
+    @apply inline-flex items-center justify-center font-semibold text-sm px-5 py-2.5;
+    @apply sm:text-base sm:px-6 sm:py-3;
+    @apply transition-all duration-150 active:scale-95;
+    background-color: transparent;
+    color: #0052ff !important;
+    border: 1.5px solid #0052ff;
+    border-radius: 100px;
   }
   .btn-crypto-outline:hover {
-    background: #059669;
-    color: #ffffff !important;
-    box-shadow: 0 4px 12px rgba(5,150,105,0.22);
+    background-color: rgba(0,82,255,0.06);
   }
 
   /* ── Inputs ── */
   .input-crypto {
-    @apply rounded-xl px-4 py-3 text-sm sm:text-base transition-all duration-200;
+    @apply transition-all duration-150;
     background-color: #ffffff;
-    border: 1.5px solid #e7e2d8;
-    color: #1c1917;
-    box-shadow: inset 0 1px 3px rgba(28,25,23,0.04);
+    border: 1.5px solid #dcdfe4;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: #0a0b0d;
+    font-size: 0.9375rem;
+    box-shadow: inset 0 1px 2px rgba(10,11,13,0.04);
   }
-  .input-crypto::placeholder { color: #a8a29e; }
+  .input-crypto::placeholder { color: #9397a0; }
   .input-crypto:focus {
-    border-color: #059669;
-    box-shadow: 0 0 0 3px rgba(5,150,105,0.12), inset 0 1px 3px rgba(28,25,23,0.02);
+    border-color: #0052ff;
+    box-shadow: 0 0 0 3px rgba(0,82,255,0.12);
     outline: none;
   }
 
   /* ── Card hover ── */
   .card-hover {
-    @apply transition-all duration-200 cursor-pointer;
+    @apply transition-all duration-150 cursor-pointer;
   }
   .card-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(28,25,23,0.10), 0 2px 8px rgba(28,25,23,0.06);
-    border-color: #d4cdc2;
+    border-color: #9397a0;
+    box-shadow: 0 4px 16px rgba(10,11,13,0.08);
+    transform: translateY(-1px);
   }
 
-  /* ── Animated background ── */
+  /* ── Animated bg ── */
   .animated-bg {
-    background: linear-gradient(-45deg, #f9f8f6, #f4efe6, #fbfaf8, #ede8dc);
+    background: linear-gradient(-45deg, #ffffff, #eef0f3, #f7f8fa, #eef0f3);
     background-size: 400% 400%;
     animation: gradientShift 18s ease infinite;
   }
@@ -371,47 +375,45 @@
     100% { background-position: 0% 50%; }
   }
 
-  /* ── Neon text → premium emerald ── */
+  /* ── "Neon" → just Coinbase Blue ── */
   .neon-text {
-    color: #059669 !important;
+    color: #0052ff !important;
     font-weight: 700;
     text-shadow: none;
   }
 
-  /* ── Pulse ── */
+  /* ── Pulse — blue ring ── */
   .pulse-glow {
     animation: pulseGlow 2.5s ease-in-out infinite alternate;
   }
   @keyframes pulseGlow {
-    from { box-shadow: 0 0 6px rgba(5,150,105,0.10); }
-    to   { box-shadow: 0 0 18px rgba(5,150,105,0.24); }
+    from { box-shadow: 0 0 0 2px rgba(0,82,255,0.08); }
+    to   { box-shadow: 0 0 0 4px rgba(0,82,255,0.20); }
   }
 
-  /* ── Navigation ── */
+  /* ── Nav overlay ── */
   .mobile-nav-overlay {
-    @apply fixed inset-0 bg-black/15 backdrop-blur-sm z-40 lg:hidden;
+    @apply fixed inset-0 bg-black/12 backdrop-blur-sm z-40 lg:hidden;
   }
 
-  /* Sidebar — cream tone, clearly separate from off-white page */
+  /* ── Sidebar — bg.alternate ── */
   .mobile-nav-sidebar,
   .mobile-sidebar,
   .desktop-sidebar {
     @apply fixed left-0 top-0 h-full w-80 z-50;
     @apply transform transition-all duration-300 ease-in-out overflow-hidden;
-    background: linear-gradient(180deg, #f4efe6 0%, #ede8dc 100%);
-    border-right: 1px solid #e0d9cc;
-    color: #1c1917;
-    box-shadow: 2px 0 12px rgba(28,25,23,0.06);
+    background-color: #eef0f3;
+    border-right: 1px solid #dcdfe4;
+    color: #0a0b0d;
+    box-shadow: 2px 0 16px rgba(10,11,13,0.06);
   }
-
   .mobile-nav-sidebar.closed,
   .mobile-sidebar.closed   { transform: translateX(-100%); }
-  .mobile-sidebar.open,
-  .mobile-nav-sidebar      { transform: translateX(0); }
+  .mobile-sidebar.open     { transform: translateX(0); }
   .desktop-sidebar.expanded  { transform: translateX(0); }
   .desktop-sidebar.collapsed { transform: translateX(-20rem); }
 
-  /* ── Main content ── */
+  /* ── Layout ── */
   .main-content { @apply flex-1 min-h-screen transition-all duration-300; }
   .main-content.sidebar-open  { @apply lg:ml-80; }
   .main-content.sidebar-closed{ @apply ml-0; }
@@ -425,7 +427,7 @@
   /* ── Touch ── */
   .touch-target { @apply min-h-[44px] min-w-[44px] flex items-center justify-center; }
 
-  /* ── Type scale ── */
+  /* ── Type ── */
   .text-responsive-xs   { @apply text-xs sm:text-sm; }
   .text-responsive-sm   { @apply text-sm sm:text-base; }
   .text-responsive-base { @apply text-base sm:text-lg; }
@@ -445,13 +447,10 @@
   /* ── Scrollbar ── */
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: #d4cdc2 transparent;
+    scrollbar-color: #dcdfe4 transparent;
   }
   .scrollbar-thin::-webkit-scrollbar { width: 5px; }
   .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: #d4cdc2;
-    border-radius: 20px;
-  }
-  .scrollbar-thin::-webkit-scrollbar-thumb:hover { background-color: #b8b0a6; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background-color: #dcdfe4; border-radius: 20px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover { background-color: #9397a0; }
 }
