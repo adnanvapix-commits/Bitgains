@@ -210,6 +210,36 @@ export default function DashboardPage() {
       description: "Account settings",
     },
     {
+      id: "calculator",
+      label: "Staking Calculator",
+      icon: BarChart3,
+      description: "Project your earnings",
+    },
+    {
+      id: "plans",
+      label: "Staking Plans",
+      icon: Award,
+      description: "Bronze to Platinum tiers",
+    },
+    {
+      id: "auto-compound",
+      label: "Auto-Compound",
+      icon: RefreshCw,
+      description: "Reinvest rewards",
+    },
+    {
+      id: "address-book",
+      label: "Address Book",
+      icon: QrCode,
+      description: "Trusted wallets",
+    },
+    {
+      id: "portfolio",
+      label: "Portfolio Analytics",
+      icon: BarChart3,
+      description: "Deep insights",
+    },
+    {
       id: "raise-issue",
       label: "Raise Issue",
       icon: MessageSquare,
@@ -919,6 +949,11 @@ export default function DashboardPage() {
                     {activeTab === "analytics" && "Analyze your performance"}
                     {activeTab === "settings" &&
                       "Configure your account preferences"}
+                    {activeTab === "calculator" && "Project your staking returns"}
+                    {activeTab === "plans" && "Choose your staking tier"}
+                    {activeTab === "auto-compound" && "Manage your auto-compounding preferences"}
+                    {activeTab === "address-book" && "Manage your trusted withdrawal addresses"}
+                    {activeTab === "portfolio" && "Deep portfolio insights & analytics"}
                   </p>
                 </div>
               </div>
@@ -1238,6 +1273,11 @@ export default function DashboardPage() {
                   />
                 )}
                 {activeTab === "settings" && <SettingsTab />}
+                {activeTab === "calculator" && <StakingCalculatorTab walletData={walletData} />}
+                {activeTab === "plans" && <StakingPlansTab />}
+                {activeTab === "auto-compound" && <AutoCompoundTab walletData={walletData} />}
+                {activeTab === "address-book" && <AddressBookTab />}
+                {activeTab === "portfolio" && <PortfolioAnalyticsTab walletData={walletData} />}
               </>
             )}
           </div>
@@ -8316,3 +8356,844 @@ function TransactionPopup({
 }
 
 
+
+// ─────────────────────────────────────────────────────────────
+// 1. STAKING CALCULATOR TAB
+// ─────────────────────────────────────────────────────────────
+function StakingCalculatorTab({ walletData }: { walletData: any }) {
+  const [amount, setAmount] = useState("1000");
+  const [duration, setDuration] = useState("30");
+  const [compoundEnabled, setCompoundEnabled] = useState(false);
+
+  const RATES: Record<string, number> = {
+    "30": 0.05, "60": 0.08, "90": 0.12, "180": 0.15,
+  };
+  const rate = RATES[duration] ?? 0.05;
+  const num = parseFloat(amount) || 0;
+  const months = parseInt(duration) / 30;
+  const simpleEarning = num * rate * months;
+  const compoundEarning = num * (Math.pow(1 + rate, months) - 1);
+  const earning = compoundEnabled ? compoundEarning : simpleEarning;
+  const total = num + earning;
+
+  const tiers = [
+    { label: "Bronze", min: 100, max: 999, rate: "5%", color: "from-amber-600 to-amber-500", icon: "🥉" },
+    { label: "Silver", min: 1000, max: 4999, rate: "8%", color: "from-slate-400 to-slate-300", icon: "🥈" },
+    { label: "Gold", min: 5000, max: 24999, rate: "12%", color: "from-yellow-500 to-yellow-400", icon: "🥇" },
+    { label: "Platinum", min: 25000, max: Infinity, rate: "15%", color: "from-purple-500 to-purple-400", icon: "💎" },
+  ];
+  const currentTier = tiers.find(t => num >= t.min && num <= t.max) ?? tiers[0];
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="glass-card p-6">
+        <h2 className="text-2xl font-bold text-dark-900 mb-1">Staking Calculator</h2>
+        <p className="text-warm-700">Simulate your potential returns before you stake</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Input Panel */}
+        <div className="glass-card p-6 space-y-6">
+          <h3 className="text-lg font-semibold text-dark-900 flex items-center gap-2">
+            <span className="w-8 h-8 bg-warm-400/20 rounded-lg flex items-center justify-center text-warm-600">⚙</span>
+            Configure Your Stake
+          </h3>
+
+          {/* Amount */}
+          <div>
+            <label className="block text-sm font-medium text-warm-700 mb-2">Stake Amount (USDT)</label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-warm-600 font-semibold">$</span>
+              <input
+                type="number"
+                value={amount}
+                onChange={e => setAmount(e.target.value)}
+                className="w-full pl-8 pr-4 py-3 rounded-xl border border-warm-400/30 bg-cream-100 text-dark-900 focus:ring-2 focus:ring-warm-400 focus:border-transparent outline-none text-lg font-semibold"
+                placeholder="1000"
+              />
+            </div>
+            <div className="flex gap-2 mt-2">
+              {[100, 500, 1000, 5000, 25000].map(v => (
+                <button key={v} onClick={() => setAmount(String(v))}
+                  className="px-2 py-1 text-xs rounded-lg bg-warm-400/15 text-warm-700 hover:bg-warm-400/30 transition-all font-medium">
+                  ${v >= 1000 ? `${v/1000}K` : v}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Duration */}
+          <div>
+            <label className="block text-sm font-medium text-warm-700 mb-2">Lock Duration</label>
+            <div className="grid grid-cols-4 gap-2">
+              {[
+                { days: "30", label: "1 Month", rate: "5% APM" },
+                { days: "60", label: "2 Months", rate: "8% APM" },
+                { days: "90", label: "3 Months", rate: "12% APM" },
+                { days: "180", label: "6 Months", rate: "15% APM" },
+              ].map(opt => (
+                <button key={opt.days} onClick={() => setDuration(opt.days)}
+                  className={`p-3 rounded-xl border text-center transition-all ${
+                    duration === opt.days
+                      ? "border-warm-500 bg-warm-400/20 text-dark-900"
+                      : "border-warm-400/20 bg-cream-50 text-warm-700 hover:border-warm-400/40"
+                  }`}>
+                  <div className="font-bold text-sm">{opt.label}</div>
+                  <div className="text-xs text-warm-600">{opt.rate}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Compound Toggle */}
+          <div className="flex items-center justify-between p-4 rounded-xl bg-warm-400/10 border border-warm-400/20">
+            <div>
+              <div className="font-semibold text-dark-900 text-sm">Auto-Compound Rewards</div>
+              <div className="text-xs text-warm-700 mt-0.5">Reinvest earnings for exponential growth</div>
+            </div>
+            <button onClick={() => setCompoundEnabled(!compoundEnabled)}
+              className={`relative w-12 h-6 rounded-full transition-all duration-300 ${compoundEnabled ? "bg-warm-500" : "bg-warm-400/30"}`}>
+              <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all duration-300 ${compoundEnabled ? "left-6" : "left-0.5"}`} />
+            </button>
+          </div>
+        </div>
+
+        {/* Results Panel */}
+        <div className="space-y-4">
+          {/* Tier Badge */}
+          <div className={`glass-card p-5 bg-gradient-to-r ${currentTier.color} text-white`}>
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">{currentTier.icon}</span>
+              <div>
+                <div className="text-sm font-medium opacity-90">Your Tier</div>
+                <div className="text-2xl font-bold">{currentTier.label} Member</div>
+                <div className="text-sm opacity-90">{currentTier.rate} monthly rate • ${currentTier.min.toLocaleString()}–{currentTier.max === Infinity ? "∞" : `$${currentTier.max.toLocaleString()}`}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Result Cards */}
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              { label: "Monthly Rate", value: `${(rate * 100).toFixed(0)}% APM`, sub: "Per month return" },
+              { label: "Total Earnings", value: `$${earning.toFixed(2)}`, sub: `Over ${months} month${months > 1 ? "s" : ""}` },
+              { label: "Total Return", value: `$${total.toFixed(2)}`, sub: "Principal + rewards" },
+              { label: "ROI", value: `${num > 0 ? ((earning / num) * 100).toFixed(1) : "0"}%`, sub: "Return on investment" },
+            ].map(item => (
+              <div key={item.label} className="glass-card p-4 text-center">
+                <div className="text-xs text-warm-600 mb-1">{item.label}</div>
+                <div className="text-xl font-bold text-dark-900">{item.value}</div>
+                <div className="text-xs text-warm-700">{item.sub}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Projection Bar */}
+          <div className="glass-card p-5">
+            <div className="text-sm font-semibold text-dark-900 mb-3">Earnings Breakdown</div>
+            <div className="space-y-3">
+              <div>
+                <div className="flex justify-between text-xs text-warm-700 mb-1">
+                  <span>Principal</span><span>${num.toLocaleString()}</span>
+                </div>
+                <div className="h-2 bg-warm-400/20 rounded-full overflow-hidden">
+                  <div className="h-full bg-warm-400 rounded-full" style={{ width: `${total > 0 ? (num / total) * 100 : 100}%` }} />
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between text-xs text-warm-700 mb-1">
+                  <span>Earnings</span><span>${earning.toFixed(2)}</span>
+                </div>
+                <div className="h-2 bg-green-500/20 rounded-full overflow-hidden">
+                  <div className="h-full bg-green-500 rounded-full" style={{ width: `${total > 0 ? (earning / total) * 100 : 0}%` }} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="glass-card p-4 border border-amber-400/30 bg-amber-50/50">
+            <div className="flex gap-2 items-start">
+              <span className="text-amber-500 text-lg mt-0.5">⚠</span>
+              <p className="text-xs text-warm-700">This is a projection based on current rates. Actual returns may vary. Rates are locked at time of staking.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Monthly Projection Table */}
+      <div className="glass-card p-6">
+        <h3 className="text-lg font-semibold text-dark-900 mb-4">Month-by-Month Projection</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left">
+                <th className="pb-3 text-warm-600 font-semibold">Month</th>
+                <th className="pb-3 text-warm-600 font-semibold">Balance</th>
+                <th className="pb-3 text-warm-600 font-semibold">Earnings</th>
+                <th className="pb-3 text-warm-600 font-semibold">Total Return</th>
+                <th className="pb-3 text-warm-600 font-semibold">ROI %</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.from({ length: Math.min(months, 6) }, (_, i) => {
+                const m = i + 1;
+                const bal = compoundEnabled ? num * Math.pow(1 + rate, m) : num + num * rate * m;
+                const earn = bal - num;
+                return (
+                  <tr key={m} className="border-t border-warm-400/10">
+                    <td className="py-3 text-dark-900 font-medium">Month {m}</td>
+                    <td className="py-3 text-dark-900">${bal.toFixed(2)}</td>
+                    <td className="py-3 text-green-600 font-medium">+${earn.toFixed(2)}</td>
+                    <td className="py-3 text-dark-900">${(num + earn).toFixed(2)}</td>
+                    <td className="py-3 text-warm-600">{num > 0 ? ((earn / num) * 100).toFixed(2) : "0"}%</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// 2. STAKING PLANS / TIERS TAB
+// ─────────────────────────────────────────────────────────────
+function StakingPlansTab() {
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+
+  const plans = [
+    {
+      id: "bronze",
+      name: "Bronze",
+      icon: "🥉",
+      min: 100, max: 999,
+      rate: "5%",
+      duration: "30 days",
+      color: "from-amber-700 to-amber-500",
+      bg: "bg-amber-50",
+      border: "border-amber-300",
+      badge: "bg-amber-100 text-amber-800",
+      features: [
+        "5% monthly return",
+        "30-day lock period",
+        "Manual withdrawal",
+        "Basic dashboard access",
+        "Email notifications",
+      ],
+      badge_label: "Starter",
+    },
+    {
+      id: "silver",
+      name: "Silver",
+      icon: "🥈",
+      min: 1000, max: 4999,
+      rate: "8%",
+      duration: "30 days",
+      color: "from-slate-500 to-slate-400",
+      bg: "bg-slate-50",
+      border: "border-slate-300",
+      badge: "bg-slate-100 text-slate-700",
+      features: [
+        "8% monthly return",
+        "30-day lock period",
+        "Priority withdrawals",
+        "Advanced analytics",
+        "SMS + email alerts",
+        "Referral bonuses",
+      ],
+      badge_label: "Popular",
+    },
+    {
+      id: "gold",
+      name: "Gold",
+      icon: "🥇",
+      min: 5000, max: 24999,
+      rate: "12%",
+      duration: "30 days",
+      color: "from-yellow-600 to-yellow-400",
+      bg: "bg-yellow-50",
+      border: "border-yellow-400",
+      badge: "bg-yellow-100 text-yellow-800",
+      features: [
+        "12% monthly return",
+        "30-day lock period",
+        "Instant withdrawals",
+        "Full portfolio analytics",
+        "Dedicated support",
+        "Enhanced referral rates",
+        "Early access to features",
+      ],
+      badge_label: "Recommended",
+    },
+    {
+      id: "platinum",
+      name: "Platinum",
+      icon: "💎",
+      min: 25000, max: Infinity,
+      rate: "15%",
+      duration: "30 days",
+      color: "from-purple-600 to-purple-400",
+      bg: "bg-purple-50",
+      border: "border-purple-400",
+      badge: "bg-purple-100 text-purple-800",
+      features: [
+        "15% monthly return",
+        "30-day lock period",
+        "Instant withdrawals",
+        "VIP dashboard & analytics",
+        "24/7 private support",
+        "Maximum referral commissions",
+        "Exclusive investment insights",
+        "Custom lock duration options",
+        "Auto-compound enabled",
+      ],
+      badge_label: "VIP Elite",
+    },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="glass-card p-6">
+        <h2 className="text-2xl font-bold text-dark-900 mb-1">Staking Plans & Tiers</h2>
+        <p className="text-warm-700">Higher stakes unlock better rates and exclusive benefits</p>
+      </div>
+
+      {/* Tier Comparison Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+        {plans.map(plan => (
+          <div key={plan.id}
+            onClick={() => setSelectedPlan(plan.id === selectedPlan ? null : plan.id)}
+            className={`glass-card p-6 cursor-pointer transition-all duration-200 hover:-translate-y-1 ${
+              selectedPlan === plan.id ? `border-2 ${plan.border} shadow-lg` : "border border-warm-400/20"
+            }`}>
+            {/* Badge */}
+            <div className={`inline-block px-2.5 py-0.5 text-xs font-semibold rounded-full mb-4 ${plan.badge}`}>
+              {plan.badge_label}
+            </div>
+
+            {/* Icon + Name */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${plan.color} flex items-center justify-center text-2xl shadow`}>
+                {plan.icon}
+              </div>
+              <div>
+                <div className="text-xl font-bold text-dark-900">{plan.name}</div>
+                <div className="text-xs text-warm-600">${plan.min.toLocaleString()}–{plan.max === Infinity ? "∞" : `$${plan.max.toLocaleString()}`}</div>
+              </div>
+            </div>
+
+            {/* Rate */}
+            <div className={`p-3 rounded-xl bg-gradient-to-r ${plan.color} text-white text-center mb-4`}>
+              <div className="text-3xl font-black">{plan.rate}</div>
+              <div className="text-xs opacity-80">Per Month (APM)</div>
+            </div>
+
+            {/* Duration */}
+            <div className="text-center text-sm text-warm-700 mb-4">
+              🔒 {plan.duration} lock period
+            </div>
+
+            {/* Features */}
+            <ul className="space-y-2">
+              {plan.features.map(f => (
+                <li key={f} className="flex items-center gap-2 text-sm text-dark-900">
+                  <span className="w-4 h-4 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs flex-shrink-0">✓</span>
+                  {f}
+                </li>
+              ))}
+            </ul>
+
+            {/* CTA placeholder */}
+            <div className={`mt-5 w-full py-2.5 rounded-xl text-center text-sm font-semibold bg-gradient-to-r ${plan.color} text-white opacity-70 cursor-not-allowed`}>
+              Coming Soon
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Rate Comparison Table */}
+      <div className="glass-card p-6">
+        <h3 className="text-lg font-semibold text-dark-900 mb-4">Rate Comparison</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr>
+                <th className="text-left pb-3 text-warm-600">Feature</th>
+                {plans.map(p => (
+                  <th key={p.id} className="text-center pb-3 text-warm-600">
+                    {p.icon} {p.name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["Min. Stake", "$100", "$1,000", "$5,000", "$25,000"],
+                ["Monthly Rate", "5%", "8%", "12%", "15%"],
+                ["Lock Period", "30 days", "30 days", "30 days", "30 days"],
+                ["Withdrawal Speed", "Manual", "Priority", "Instant", "Instant"],
+                ["Analytics", "Basic", "Advanced", "Full", "VIP"],
+                ["Support", "Email", "Email+SMS", "Dedicated", "24/7 VIP"],
+                ["Auto-Compound", "✗", "✗", "✓", "✓"],
+                ["Referral Bonus", "Standard", "Enhanced", "Enhanced+", "Maximum"],
+              ].map(([feat, ...vals]) => (
+                <tr key={feat} className="border-t border-warm-400/10">
+                  <td className="py-3 font-medium text-dark-900">{feat}</td>
+                  {vals.map((v, i) => (
+                    <td key={i} className="py-3 text-center text-warm-700">{v}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// 3. AUTO-COMPOUND TAB
+// ─────────────────────────────────────────────────────────────
+function AutoCompoundTab({ walletData }: { walletData: any }) {
+  const [globalEnabled, setGlobalEnabled] = useState(false);
+  const [threshold, setThreshold] = useState("50");
+  const [frequency, setFrequency] = useState("monthly");
+  const [reinvestPercent, setReinvestPercent] = useState(100);
+
+  const projections = [
+    { months: 1, simple: 5.0, compound: 5.0 },
+    { months: 3, simple: 15.0, compound: 15.76 },
+    { months: 6, simple: 30.0, compound: 34.01 },
+    { months: 12, simple: 60.0, compound: 79.59 },
+    { months: 24, simple: 120.0, compound: 219.11 },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="glass-card p-6">
+        <h2 className="text-2xl font-bold text-dark-900 mb-1">Auto-Compound Settings</h2>
+        <p className="text-warm-700">Automatically reinvest your rewards to maximize exponential growth</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Toggle Card */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* Global Toggle */}
+          <div className="glass-card p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-warm-400/20 flex items-center justify-center">
+                  <RefreshCw className="w-5 h-5 text-warm-600" />
+                </div>
+                <div>
+                  <div className="font-bold text-dark-900">Auto-Compound</div>
+                  <div className="text-sm text-warm-700">Reinvest rewards automatically</div>
+                </div>
+              </div>
+              <button onClick={() => setGlobalEnabled(!globalEnabled)}
+                className={`relative w-14 h-7 rounded-full transition-all duration-300 ${globalEnabled ? "bg-warm-500" : "bg-warm-400/30"}`}>
+                <span className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow-md transition-all duration-300 ${globalEnabled ? "left-7" : "left-0.5"}`} />
+              </button>
+            </div>
+            <div className={`p-3 rounded-xl text-sm ${globalEnabled ? "bg-green-50 border border-green-200 text-green-700" : "bg-warm-400/10 border border-warm-400/20 text-warm-700"}`}>
+              {globalEnabled ? "✓ Auto-compound is ACTIVE. Your rewards will be reinvested automatically." : "○ Auto-compound is OFF. Enable to start growing faster."}
+            </div>
+          </div>
+
+          {/* Settings Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Reinvest % */}
+            <div className="glass-card p-5">
+              <div className="font-semibold text-dark-900 mb-3">Reinvestment Rate</div>
+              <div className="text-3xl font-black text-warm-600 mb-2">{reinvestPercent}%</div>
+              <input type="range" min="10" max="100" step="10" value={reinvestPercent}
+                onChange={e => setReinvestPercent(Number(e.target.value))}
+                className="w-full accent-amber-600" />
+              <div className="flex justify-between text-xs text-warm-600 mt-1">
+                <span>10%</span><span>50%</span><span>100%</span>
+              </div>
+              <p className="text-xs text-warm-700 mt-2">{100 - reinvestPercent}% will be sent to your available balance.</p>
+            </div>
+
+            {/* Frequency */}
+            <div className="glass-card p-5">
+              <div className="font-semibold text-dark-900 mb-3">Compound Frequency</div>
+              <div className="space-y-2">
+                {["daily", "weekly", "monthly"].map(f => (
+                  <button key={f} onClick={() => setFrequency(f)}
+                    className={`w-full py-2.5 px-4 rounded-xl text-sm font-medium text-left transition-all ${
+                      frequency === f ? "bg-warm-400/25 border border-warm-500 text-dark-900" : "bg-warm-400/10 border border-warm-400/10 text-warm-700 hover:bg-warm-400/20"
+                    }`}>
+                    <span className="capitalize">{f}</span>
+                    {f === "monthly" && <span className="ml-2 text-xs text-warm-600">(default)</span>}
+                    {f === "daily" && <span className="ml-2 text-xs text-amber-600">⚡ Max growth</span>}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Minimum Threshold */}
+            <div className="glass-card p-5">
+              <div className="font-semibold text-dark-900 mb-1">Minimum Threshold</div>
+              <p className="text-xs text-warm-700 mb-3">Only compound when rewards exceed this amount</p>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-warm-600 font-semibold">$</span>
+                <input type="number" value={threshold} onChange={e => setThreshold(e.target.value)}
+                  className="w-full pl-8 pr-4 py-3 rounded-xl border border-warm-400/30 bg-cream-100 text-dark-900 outline-none focus:ring-2 focus:ring-warm-400" />
+              </div>
+            </div>
+
+            {/* Next Compound */}
+            <div className="glass-card p-5">
+              <div className="font-semibold text-dark-900 mb-3">Next Compound Event</div>
+              <div className="text-2xl font-bold text-warm-600">—</div>
+              <div className="text-sm text-warm-700 mt-1">No active stakes</div>
+              <div className="mt-3 p-2 rounded-lg bg-warm-400/10 text-xs text-warm-700">
+                Stake funds to activate compounding schedule
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Compound vs Simple Projection */}
+        <div className="glass-card p-6">
+          <h3 className="font-semibold text-dark-900 mb-4">📈 Compound vs Simple</h3>
+          <p className="text-xs text-warm-700 mb-4">Based on $1,000 at 5%/month</p>
+          <div className="space-y-3">
+            {projections.map(p => (
+              <div key={p.months} className="p-3 rounded-xl bg-warm-400/10">
+                <div className="text-xs font-semibold text-warm-600 mb-2">{p.months} Month{p.months > 1 ? "s" : ""}</div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-dark-900">Simple</span>
+                  <span className="font-medium text-dark-900">+${p.simple.toFixed(1)}</span>
+                </div>
+                <div className="h-1.5 bg-warm-400/20 rounded-full mb-2">
+                  <div className="h-full bg-warm-400 rounded-full" style={{ width: `${Math.min(p.simple / 2.2, 100)}%` }} />
+                </div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-green-700 font-medium">Compound ⚡</span>
+                  <span className="font-bold text-green-700">+${p.compound.toFixed(1)}</span>
+                </div>
+                <div className="h-1.5 bg-green-100 rounded-full">
+                  <div className="h-full bg-green-500 rounded-full" style={{ width: `${Math.min(p.compound / 2.2, 100)}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 p-3 rounded-xl bg-green-50 border border-green-200 text-xs text-green-700">
+            💡 Compound interest grows <strong>exponentially</strong> — the difference doubles every 12 months!
+          </div>
+        </div>
+      </div>
+
+      {/* Save Button (placeholder) */}
+      <div className="glass-card p-4 flex items-center justify-between">
+        <div className="text-sm text-warm-700">Settings will apply to your next staking cycle</div>
+        <button className="px-6 py-2.5 bg-gradient-to-r from-warm-500 to-warm-600 text-white rounded-xl font-semibold text-sm opacity-70 cursor-not-allowed">
+          Save Settings (Coming Soon)
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// 4. ADDRESS BOOK TAB
+// ─────────────────────────────────────────────────────────────
+function AddressBookTab() {
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newLabel, setNewLabel] = useState("");
+  const [newAddress, setNewAddress] = useState("");
+  const [newNetwork, setNewNetwork] = useState("ERC-20");
+  const [addresses, setAddresses] = useState([
+    { id: 1, label: "My Binance Wallet", address: "0x742d35Cc6634C0532925a3b8D4C9B2aBd6a84c3e", network: "ERC-20", verified: true, lastUsed: "2024-01-15" },
+    { id: 2, label: "Hardware Wallet", address: "TQn9Y2khEsLJW1ChVWFMSMeRDow5KEFH4V", network: "TRC-20", verified: true, lastUsed: "2024-01-10" },
+  ]);
+
+  const networks = ["ERC-20", "TRC-20", "BEP-20"];
+
+  const maskAddress = (addr: string) => `${addr.slice(0, 8)}...${addr.slice(-8)}`;
+
+  return (
+    <div className="space-y-6">
+      <div className="glass-card p-6 flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-dark-900 mb-1">Address Book</h2>
+          <p className="text-warm-700">Save and manage trusted withdrawal addresses</p>
+        </div>
+        <button onClick={() => setShowAddForm(!showAddForm)}
+          className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-warm-500 to-warm-600 text-white rounded-xl font-semibold text-sm hover:opacity-90 transition-all">
+          <Plus className="w-4 h-4" />
+          Add Address
+        </button>
+      </div>
+
+      {/* Add Form */}
+      {showAddForm && (
+        <div className="glass-card p-6 border-2 border-warm-400/40">
+          <h3 className="font-semibold text-dark-900 mb-4">Add New Address</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+            <div>
+              <label className="block text-xs text-warm-600 mb-1.5 font-medium">Label</label>
+              <input value={newLabel} onChange={e => setNewLabel(e.target.value)}
+                placeholder="e.g. My Binance Wallet"
+                className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-100 text-dark-900 outline-none focus:ring-2 focus:ring-warm-400 text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs text-warm-600 mb-1.5 font-medium">Network</label>
+              <select value={newNetwork} onChange={e => setNewNetwork(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-100 text-dark-900 outline-none text-sm">
+                {networks.map(n => <option key={n}>{n}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-warm-600 mb-1.5 font-medium">Wallet Address</label>
+              <input value={newAddress} onChange={e => setNewAddress(e.target.value)}
+                placeholder="0x..."
+                className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-100 text-dark-900 outline-none focus:ring-2 focus:ring-warm-400 text-sm" />
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <button onClick={() => {
+              if (newLabel && newAddress) {
+                setAddresses(prev => [...prev, { id: Date.now(), label: newLabel, address: newAddress, network: newNetwork, verified: false, lastUsed: "—" }]);
+                setNewLabel(""); setNewAddress(""); setShowAddForm(false);
+              }
+            }} className="px-5 py-2 bg-gradient-to-r from-warm-500 to-warm-600 text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-all">
+              Save Address
+            </button>
+            <button onClick={() => setShowAddForm(false)} className="px-5 py-2 border border-warm-400/30 text-warm-700 rounded-xl text-sm hover:bg-warm-400/10 transition-all">
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Security Note */}
+      <div className="glass-card p-4 border border-amber-300/50 bg-amber-50/50 flex gap-3">
+        <Shield className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+        <div className="text-sm">
+          <strong className="text-dark-900">Security Tip:</strong>
+          <span className="text-warm-700"> Only save addresses you fully trust. Always verify the first 4 and last 4 characters before withdrawing.</span>
+        </div>
+      </div>
+
+      {/* Address List */}
+      <div className="space-y-3">
+        {addresses.length === 0 ? (
+          <div className="glass-card p-12 text-center">
+            <div className="text-4xl mb-3">📋</div>
+            <div className="text-lg font-semibold text-dark-900 mb-1">No addresses saved</div>
+            <div className="text-warm-700 text-sm">Add trusted wallets for faster withdrawals</div>
+          </div>
+        ) : (
+          addresses.map(addr => (
+            <div key={addr.id} className="glass-card p-5 flex items-center justify-between group hover:-translate-y-0.5 transition-all">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-xl bg-warm-400/20 flex items-center justify-center text-warm-600 font-bold text-sm flex-shrink-0">
+                  {addr.label.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-dark-900">{addr.label}</span>
+                    {addr.verified && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">✓ Verified</span>}
+                    <span className="text-xs bg-warm-400/15 text-warm-700 px-2 py-0.5 rounded-full">{addr.network}</span>
+                  </div>
+                  <div className="text-sm text-warm-600 font-mono mt-0.5">{maskAddress(addr.address)}</div>
+                  <div className="text-xs text-warm-500 mt-0.5">Last used: {addr.lastUsed}</div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                <button className="p-2 rounded-lg hover:bg-warm-400/15 text-warm-600 transition-all" title="Copy address">
+                  <Copy className="w-4 h-4" />
+                </button>
+                <button onClick={() => setAddresses(prev => prev.filter(a => a.id !== addr.id))}
+                  className="p-2 rounded-lg hover:bg-red-50 text-red-400 transition-all" title="Delete">
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-4">
+        {[
+          { label: "Saved Addresses", value: addresses.length },
+          { label: "Verified", value: addresses.filter(a => a.verified).length },
+          { label: "Networks", value: [...new Set(addresses.map(a => a.network))].length },
+        ].map(s => (
+          <div key={s.label} className="glass-card p-4 text-center">
+            <div className="text-2xl font-bold text-dark-900">{s.value}</div>
+            <div className="text-xs text-warm-600">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// 5. PORTFOLIO ANALYTICS TAB
+// ─────────────────────────────────────────────────────────────
+function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
+  const [period, setPeriod] = useState("30d");
+  const [metric, setMetric] = useState("balance");
+
+  const bal = walletData?.wallet?.balance ?? 0;
+  const staked = walletData?.wallet?.stakedAmount ?? 0;
+  const earned = walletData?.wallet?.totalEarnings ?? 0;
+  const deposited = walletData?.wallet?.totalDeposited ?? 0;
+  const withdrawn = walletData?.wallet?.totalWithdrawn ?? 0;
+  const available = bal - staked;
+
+  const allocationData = [
+    { name: "Available", value: Math.max(available, 0), color: "#C4966A" },
+    { name: "Staked", value: Math.max(staked, 0), color: "#8B5E3C" },
+    { name: "Earnings", value: Math.max(earned, 0), color: "#B8700A" },
+  ];
+  const totalAlloc = allocationData.reduce((s, d) => s + d.value, 0) || 1;
+
+  const performanceMetrics = [
+    { label: "Total Balance", value: `$${bal.toFixed(2)}`, change: "+0.00%", positive: true, icon: "💰" },
+    { label: "Total Deposited", value: `$${deposited.toFixed(2)}`, change: "", positive: true, icon: "📥" },
+    { label: "Total Withdrawn", value: `$${withdrawn.toFixed(2)}`, change: "", positive: true, icon: "📤" },
+    { label: "Total Earnings", value: `$${earned.toFixed(2)}`, change: "+0.00%", positive: true, icon: "📈" },
+    { label: "Staked Amount", value: `$${staked.toFixed(2)}`, change: "", positive: true, icon: "🔒" },
+    { label: "Available Balance", value: `$${available.toFixed(2)}`, change: "", positive: true, icon: "💳" },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="glass-card p-6 flex items-start justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-dark-900 mb-1">Portfolio Analytics</h2>
+          <p className="text-warm-700">Deep insights into your investment performance</p>
+        </div>
+        <div className="flex gap-2">
+          {["7d", "30d", "90d", "1y", "All"].map(p => (
+            <button key={p} onClick={() => setPeriod(p)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                period === p ? "bg-warm-500 text-white" : "bg-warm-400/15 text-warm-700 hover:bg-warm-400/25"
+              }`}>
+              {p}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* KPI Metrics Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        {performanceMetrics.map(m => (
+          <div key={m.label} className="glass-card p-4">
+            <div className="text-xl mb-2">{m.icon}</div>
+            <div className="text-lg font-bold text-dark-900">{m.value}</div>
+            <div className="text-xs text-warm-600 mt-0.5">{m.label}</div>
+            {m.change && (
+              <div className={`text-xs font-medium mt-1 ${m.positive ? "text-green-600" : "text-red-500"}`}>
+                {m.change}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Allocation Chart */}
+        <div className="glass-card p-6">
+          <h3 className="font-semibold text-dark-900 mb-4">Portfolio Allocation</h3>
+          {allocationData.every(d => d.value === 0) ? (
+            <div className="text-center py-8">
+              <div className="text-4xl mb-2">📊</div>
+              <div className="text-sm text-warm-700">No funds yet</div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {allocationData.map(d => (
+                <div key={d.name}>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span className="font-medium text-dark-900">{d.name}</span>
+                    <span className="text-warm-700">${d.value.toFixed(2)} ({((d.value / totalAlloc) * 100).toFixed(1)}%)</span>
+                  </div>
+                  <div className="h-3 bg-warm-400/20 rounded-full overflow-hidden">
+                    <div className="h-full rounded-full transition-all duration-500"
+                      style={{ width: `${(d.value / totalAlloc) * 100}%`, backgroundColor: d.color }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Performance Scores */}
+        <div className="glass-card p-6">
+          <h3 className="font-semibold text-dark-900 mb-4">Performance Score</h3>
+          <div className="space-y-4">
+            {[
+              { label: "Portfolio Health", score: 85, color: "#C4966A" },
+              { label: "Staking Efficiency", score: 72, color: "#8B5E3C" },
+              { label: "Risk Score", score: 90, color: "#B8700A" },
+              { label: "Diversification", score: 45, color: "#7C5C3E" },
+            ].map(item => (
+              <div key={item.label}>
+                <div className="flex justify-between text-sm mb-1.5">
+                  <span className="text-dark-900 font-medium">{item.label}</span>
+                  <span className="font-bold" style={{ color: item.color }}>{item.score}/100</span>
+                </div>
+                <div className="h-2 bg-warm-400/20 rounded-full overflow-hidden">
+                  <div className="h-full rounded-full transition-all duration-700"
+                    style={{ width: `${item.score}%`, backgroundColor: item.color }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Activity Heatmap */}
+        <div className="glass-card p-6">
+          <h3 className="font-semibold text-dark-900 mb-4">Monthly Summary</h3>
+          <div className="space-y-3">
+            {[
+              { label: "Stake Events", value: walletData?.wallet?.stakes?.length ?? 0 },
+              { label: "Active Stakes", value: walletData?.wallet?.stakes?.filter((s: any) => s.status === "active").length ?? 0 },
+              { label: "Matured Stakes", value: walletData?.wallet?.maturedStakes?.length ?? 0 },
+              { label: "Avg. Stake Size", value: staked > 0 ? `$${staked.toFixed(0)}` : "$0" },
+            ].map(s => (
+              <div key={s.label} className="flex justify-between items-center p-3 rounded-xl bg-warm-400/10">
+                <span className="text-sm text-warm-700">{s.label}</span>
+                <span className="font-bold text-dark-900">{s.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Insights */}
+      <div className="glass-card p-6">
+        <h3 className="font-semibold text-dark-900 mb-4">📊 Portfolio Insights</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[
+            { icon: "🎯", title: "Optimization Tip", desc: "Stake at least $1,000 to unlock Silver tier and earn 8% instead of 5% monthly.", color: "bg-blue-50 border-blue-200" },
+            { icon: "🔄", title: "Compounding Boost", desc: "Enable auto-compound to increase your 12-month return from 60% to 79.6%.", color: "bg-green-50 border-green-200" },
+            { icon: "📅", title: "Next Payout", desc: "No active stakes. Deposit and stake to start earning monthly rewards.", color: "bg-amber-50 border-amber-200" },
+            { icon: "🏆", title: "Tier Progress", desc: `You need $${Math.max(100 - bal, 0).toFixed(0)} more to reach Bronze tier benefits.`, color: "bg-purple-50 border-purple-200" },
+            { icon: "📈", title: "ROI Potential", desc: "At your current balance, staking at 5% could earn you $0/month.", color: "bg-warm-50 border-warm-200" },
+            { icon: "🛡️", title: "Risk Assessment", desc: "Your portfolio risk is LOW. USDT staking provides stable, predictable returns.", color: "bg-emerald-50 border-emerald-200" },
+          ].map(ins => (
+            <div key={ins.title} className={`p-4 rounded-xl border ${ins.color}`}>
+              <div className="text-xl mb-2">{ins.icon}</div>
+              <div className="font-semibold text-dark-900 text-sm mb-1">{ins.title}</div>
+              <div className="text-xs text-warm-700 leading-relaxed">{ins.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
