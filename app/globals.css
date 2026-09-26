@@ -227,15 +227,17 @@
     border: 1px solid #E2D9CE;
     border-radius: 0.875rem;
     box-shadow: 0 2px 8px rgba(61,43,31,0.06), 0 1px 3px rgba(61,43,31,0.04);
-    color: #3D2B1F;
+    color: #3D2B1F !important;
   }
+  .glass-card * { color: #3D2B1F; }
   .glass-card-strong {
     background-color: #F8F5F0;
     border: 1px solid #D4C4B0;
     border-radius: 0.875rem;
     box-shadow: 0 4px 16px rgba(61,43,31,0.10), 0 2px 6px rgba(61,43,31,0.06);
-    color: #3D2B1F;
+    color: #3D2B1F !important;
   }
+  .glass-card-strong * { color: #3D2B1F; }
 
   /* Glows */
   .glow-green        { box-shadow: 0 0 16px rgba(196,150,106,0.25); }
@@ -406,3 +408,46 @@
   /* Text selection — WebYatra exact */
   ::selection { background: rgba(196,150,106,0.25); }
 }
+
+
+/* ─── Dashboard & all page text overrides ───────────────────────────────── */
+
+/* Any element with text-white inside the dashboard/cream bg → dark */
+.text-white\/70, .text-white\/80, .text-white\/90,
+[class*="text-white/"] { color: #7C5C3E !important; }
+
+/* Hard text-white on light surface → near-black */
+p.text-white, h1.text-white, h2.text-white, h3.text-white,
+h4.text-white, h5.text-white, h6.text-white,
+span.text-white, div.text-white, li.text-white { color: #3D2B1F !important; }
+
+/* Dashboard sidebar nav items */
+nav .text-white, aside .text-white { color: #3D2B1F !important; }
+
+/* Frosted glass / backdrop cards — always white bg, dark text */
+[class*="backdrop-blur"] {
+  background-color: rgba(248,245,240,0.95) !important;
+  color: #3D2B1F !important;
+}
+
+/* Remove any remaining dark backgrounds */
+[class*="bg-crypto-black"], [class*="bg-crypto-charcoal"],
+[class*="bg-dark-"] {
+  background-color: #F8F5F0 !important;
+  color: #3D2B1F !important;
+}
+
+/* Emerald text colors → warm brown brand */
+.text-emerald-400 { color: #C4966A !important; }
+.text-emerald-500 { color: #B8845A !important; }
+.text-emerald-300 { color: #D4A882 !important; }
+.text-green-400   { color: #C4966A !important; }
+.text-cyan-400    { color: #8B5E3C !important; }
+
+/* Keep emerald on icon backgrounds (those use bg-gradient, not text) */
+.text-black { color: #3D2B1F !important; }
+
+/* Footer links */
+footer a, footer p, footer h3, footer li { color: #7C5C3E !important; }
+footer a:hover { color: #3D2B1F !important; }
+footer .border-warm-600\/20 { border-color: rgba(196,150,106,0.2) !important; }

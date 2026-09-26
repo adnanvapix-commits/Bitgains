@@ -17,7 +17,7 @@ import LaunchPopup from "@/components/LaunchPopup";
 
 export default function Home() {
   return (
-    <div className="min-h-screen gradient-crypto animated-bg">
+    <div className="min-h-screen" style={{ background: 'linear-gradient(150deg, #FDFAF6 0%, #F0EBE3 60%, #FDFAF6 100%)' }}>
       {/* Launch Celebration Popup */}
       <LaunchPopup />
       {/* Navigation */}
@@ -69,7 +69,7 @@ export default function Home() {
             </Link>
             <Link
               href="/login"
-              className="text-white/80 hover:text-white transition-colors text-sm sm:text-base px-2 py-1 rounded-lg hover:bg-white/10"
+              className="text-warm-700 hover:text-warm-900 transition-colors text-sm sm:text-base px-2 py-1 rounded-lg hover:bg-warm-400/10"
             >
               Login
             </Link>
@@ -100,7 +100,7 @@ export default function Home() {
               </span>
             </h1>
 
-            <p className="text-lg sm:text-xl md:text-2xl text-white/80 max-w-4xl mx-auto leading-relaxed px-4 sm:px-0">
+            <p className="text-lg sm:text-xl md:text-2xl text-warm-700 max-w-4xl mx-auto leading-relaxed px-4 sm:px-0">
               Lock your USDT for one month and earn{" "}
               <span className="font-bold text-emerald-400">5% – 15% APM</span>.
               <br className="hidden sm:block" />
@@ -193,7 +193,7 @@ export default function Home() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6">
               Why Stake with Us?
             </h2>
-            <p className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto px-4 sm:px-0">
+            <p className="text-lg sm:text-xl text-warm-700 max-w-2xl mx-auto px-4 sm:px-0">
               We keep it straightforward and profitable for your USDT staking
               journey.
             </p>
@@ -243,10 +243,10 @@ export default function Home() {
                 >
                   <feature.icon className="w-8 h-8 text-black" />
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-4">
+                <h3 className="text-xl font-semibold text-dark-900 mb-4">
                   {feature.title}
                 </h3>
-                <p className="text-white/70 leading-relaxed">
+                <p className="text-warm-700 leading-relaxed">
                   {feature.description}
                 </p>
               </motion.div>
@@ -268,7 +268,7 @@ export default function Home() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6">
               How It Works
             </h2>
-            <p className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto px-4 sm:px-0">
+            <p className="text-lg sm:text-xl text-warm-700 max-w-2xl mx-auto px-4 sm:px-0">
               Four simple steps to start earning with your USDT
             </p>
           </motion.div>
@@ -319,10 +319,10 @@ export default function Home() {
                     {step.step}
                   </span>
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-4">
+                <h3 className="text-xl font-semibold text-dark-900 mb-4">
                   {step.title}
                 </h3>
-                <p className="text-white/70 leading-relaxed">
+                <p className="text-warm-700 leading-relaxed">
                   {step.description}
                 </p>
               </motion.div>
@@ -344,7 +344,7 @@ export default function Home() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6">
               Dashboard Features
             </h2>
-            <p className="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto px-4 sm:px-0">
+            <p className="text-lg sm:text-xl text-warm-700 max-w-2xl mx-auto px-4 sm:px-0">
               Everything you need to manage your USDT staking journey
             </p>
           </motion.div>
@@ -365,7 +365,7 @@ export default function Home() {
                 className="glass-card p-6 card-hover flex items-center"
               >
                 <div className="w-3 h-3 bg-emerald-400 rounded-full mr-4 flex-shrink-0"></div>
-                <p className="text-white text-lg">{feature}</p>
+                <p className="text-dark-900 text-lg">{feature}</p>
               </motion.div>
             ))}
           </div>
@@ -385,7 +385,7 @@ export default function Home() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6">
               Frequently Asked Questions
             </h2>
-            <p className="text-lg sm:text-xl text-white/80 px-4 sm:px-0">
+            <p className="text-lg sm:text-xl text-warm-700 px-4 sm:px-0">
               Everything you need to know about USDT staking
             </p>
           </motion.div>
@@ -421,10 +421,10 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="glass-card p-6 sm:p-8"
               >
-                <h3 className="text-lg sm:text-xl font-semibold text-white mb-3">
+                <h3 className="text-lg sm:text-xl font-semibold text-dark-900 mb-3">
                   {faq.question}
                 </h3>
-                <p className="text-white/80 leading-relaxed text-sm sm:text-base">
+                <p className="text-warm-700 leading-relaxed text-sm sm:text-base">
                   {faq.answer}
                 </p>
               </motion.div>
@@ -458,10 +458,10 @@ export default function Home() {
                 className="glass-card-strong p-8 text-center card-hover"
               >
                 <stat.icon className="w-12 h-12 text-emerald-400 mx-auto mb-4" />
-                <div className="text-3xl md:text-4xl font-bold text-white mb-2 neon-text">
+                <div className="text-3xl md:text-4xl font-bold neon-text mb-2">
                   {stat.value}
                 </div>
-                <div className="text-white/70 text-lg">{stat.label}</div>
+                <div className="text-warm-700 text-lg">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -481,7 +481,7 @@ export default function Home() {
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 sm:mb-6">
               Ready to grow your USDT?
             </h2>
-            <p className="text-lg sm:text-xl text-white/80 mb-6 sm:mb-8 max-w-2xl mx-auto px-4 sm:px-0">
+            <p className="text-lg sm:text-xl text-warm-700 mb-6 sm:mb-8 max-w-2xl mx-auto px-4 sm:px-0">
               Lock it for one month, earn appreciation, and repeat whenever you
               want. Start your monthly earning journey today.
             </p>
@@ -499,7 +499,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="px-4 sm:px-6 py-8 sm:py-12 border-t border-white/10">
+      <footer className="px-4 sm:px-6 py-8 sm:py-12 border-t border-warm-600/20">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             <div className="sm:col-span-2 md:col-span-1">
@@ -525,20 +525,20 @@ export default function Home() {
                   </div>
                 </span>
               </div>
-              <p className="text-white/70 text-sm sm:text-base">
+              <p className="text-warm-700 text-sm sm:text-base">
                 The most secure and profitable way to stake your USDT.
               </p>
             </div>
 
             <div>
-              <h3 className="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">
+              <h3 className="text-dark-900 font-semibold mb-3 sm:mb-4 text-sm sm:text-base">
                 Platform
               </h3>
-              <ul className="space-y-2 text-white/70 text-sm sm:text-base">
+              <ul className="space-y-2 text-warm-700 text-sm sm:text-base">
                 <li>
                   <Link
                     href="/login"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-warm-900 transition-colors"
                   >
                     Login
                   </Link>
@@ -546,7 +546,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/signup"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-warm-900 transition-colors"
                   >
                     Sign Up
                   </Link>
@@ -554,7 +554,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/dashboard"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-warm-900 transition-colors"
                   >
                     Dashboard
                   </Link>
@@ -563,14 +563,14 @@ export default function Home() {
             </div>
 
             <div>
-              <h3 className="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">
+              <h3 className="text-dark-900 font-semibold mb-3 sm:mb-4 text-sm sm:text-base">
                 Support
               </h3>
-              <ul className="space-y-2 text-white/70 text-sm sm:text-base">
+              <ul className="space-y-2 text-warm-700 text-sm sm:text-base">
                 <li>
                   <Link
                     href="/support"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-warm-900 transition-colors"
                   >
                     Help & Support
                   </Link>
@@ -578,7 +578,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="/support"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-warm-900 transition-colors"
                   >
                     Contact Us
                   </Link>
@@ -586,7 +586,7 @@ export default function Home() {
                 <li>
                   <Link
                     href="#features"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-warm-900 transition-colors"
                   >
                     Documentation
                   </Link>
@@ -595,22 +595,22 @@ export default function Home() {
             </div>
 
             <div>
-              <h3 className="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">
+              <h3 className="text-dark-900 font-semibold mb-3 sm:mb-4 text-sm sm:text-base">
                 Legal
               </h3>
-              <ul className="space-y-2 text-white/70 text-sm sm:text-base">
+              <ul className="space-y-2 text-warm-700 text-sm sm:text-base">
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-warm-900 transition-colors">
                     Terms of Service
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-warm-900 transition-colors">
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="#" className="hover:text-warm-900 transition-colors">
                     Security
                   </Link>
                 </li>
@@ -618,7 +618,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="border-t border-white/10 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-white/70 text-sm sm:text-base">
+          <div className="border-t border-warm-600/20 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-warm-700 text-sm sm:text-base">
             <p>&copy; 2024 USDT Staking Platform. All rights reserved.</p>
           </div>
         </div>
@@ -626,3 +626,5 @@ export default function Home() {
     </div>
   );
 }
+
+
