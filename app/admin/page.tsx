@@ -874,7 +874,7 @@ export default function AdminPage() {
 
   if (!isAuthenticated || !user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-crypto-black via-crypto-charcoal to-crypto-black flex items-center justify-center">
+      <div className="min-h-screen bg-cream-50 flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
       </div>
     );
@@ -882,10 +882,10 @@ export default function AdminPage() {
 
   if (user.role !== "admin") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-crypto-black via-crypto-charcoal to-crypto-black flex items-center justify-center">
+      <div className="min-h-screen bg-cream-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-white mb-4">Access Denied</h1>
-          <p className="text-white/60">
+          <h1 className="text-2xl font-bold text-stone-900 mb-4">Access Denied</h1>
+          <p className="text-stone-900/60">
             You need admin privileges to access this page.
           </p>
         </div>
@@ -894,30 +894,30 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-crypto-black via-crypto-charcoal to-crypto-black">
+    <div className="min-h-screen bg-cream-50">
       <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Header */}
         <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:items-center justify-between mb-6 sm:mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-stone-900 mb-2">
               Admin Panel
             </h1>
-            <p className="text-white/60 text-sm sm:text-base">
+            <p className="text-stone-900/60 text-sm sm:text-base">
               Manage pending transactions and user staking
             </p>
           </div>
 
           <div className="flex items-center space-x-3 sm:space-x-4">
             {/* Admin Profile */}
-            <div className="flex items-center space-x-3 px-3 sm:px-4 py-2 bg-white/5 rounded-xl border border-white/10">
+            <div className="flex items-center space-x-3 px-3 sm:px-4 py-2 bg-cream-100/80 rounded-xl border border-stone-300/40">
               <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-400 rounded-full flex items-center justify-center">
-                <User className="w-4 h-4 text-white" />
+                <User className="w-4 h-4 text-stone-900" />
               </div>
               <div className="hidden sm:block">
-                <p className="text-white font-medium text-sm">
+                <p className="text-stone-900 font-medium text-sm">
                   {user?.name || "Admin"}
                 </p>
-                <p className="text-white/60 text-xs">Administrator</p>
+                <p className="text-stone-900/60 text-xs">Administrator</p>
               </div>
             </div>
 
@@ -948,7 +948,7 @@ export default function AdminPage() {
         {/* Global Search Bar */}
         <div className="relative mb-6">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/60" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-900/60" />
             <input
               type="text"
               value={searchQuery}
@@ -957,7 +957,7 @@ export default function AdminPage() {
                 searchQuery.length >= 2 && setShowSearchResults(true)
               }
               placeholder="Search users, emails, transactions, wallet addresses..."
-              className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50"
+              className="w-full pl-12 pr-4 py-3 bg-cream-100/80 border border-stone-300/50 rounded-xl text-stone-900 placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50"
             />
             {isSearching && (
               <Loader2 className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-emerald-400 animate-spin" />
@@ -966,24 +966,24 @@ export default function AdminPage() {
 
           {/* Search Results Dropdown */}
           {showSearchResults && searchResults && (
-            <div className="absolute z-50 w-full mt-2 bg-crypto-charcoal border border-white/20 rounded-xl shadow-2xl max-h-[32rem] overflow-y-auto">
+            <div className="absolute z-50 w-full mt-2 bg-cream-100 border border-stone-300/50 rounded-xl shadow-2xl max-h-[32rem] overflow-y-auto">
               {searchResults.counts && (
-                <div className="grid grid-cols-3 gap-2 p-3 border-b border-white/10 text-center">
-                  <div className="bg-white/5 rounded-lg p-2">
-                    <p className="text-xs text-white/60">Users</p>
-                    <p className="text-white font-semibold text-lg">
+                <div className="grid grid-cols-3 gap-2 p-3 border-b border-stone-300/40 text-center">
+                  <div className="bg-cream-100/80 rounded-lg p-2">
+                    <p className="text-xs text-stone-900/60">Users</p>
+                    <p className="text-stone-900 font-semibold text-lg">
                       {searchResults.counts.users}
                     </p>
                   </div>
-                  <div className="bg-white/5 rounded-lg p-2">
-                    <p className="text-xs text-white/60">Transactions</p>
-                    <p className="text-white font-semibold text-lg">
+                  <div className="bg-cream-100/80 rounded-lg p-2">
+                    <p className="text-xs text-stone-900/60">Transactions</p>
+                    <p className="text-stone-900 font-semibold text-lg">
                       {searchResults.counts.transactions}
                     </p>
                   </div>
-                  <div className="bg-white/5 rounded-lg p-2">
-                    <p className="text-xs text-white/60">Issues</p>
-                    <p className="text-white font-semibold text-lg">
+                  <div className="bg-cream-100/80 rounded-lg p-2">
+                    <p className="text-xs text-stone-900/60">Issues</p>
+                    <p className="text-stone-900 font-semibold text-lg">
                       {searchResults.counts.issues}
                     </p>
                   </div>
@@ -992,22 +992,22 @@ export default function AdminPage() {
 
               {/* Users Results */}
               {userMatches.length > 0 && (
-                <div className="p-3 border-b border-white/10">
-                  <h4 className="text-xs font-semibold text-white/60 mb-3 flex items-center gap-2">
+                <div className="p-3 border-b border-stone-300/40">
+                  <h4 className="text-xs font-semibold text-stone-900/60 mb-3 flex items-center gap-2">
                     <User className="w-3 h-3" />
                     Users ({userMatches.length})
                   </h4>
                   {userMatches.map((match) => (
                     <div
                       key={match._id}
-                      className="p-3 mb-2 last:mb-0 bg-white/5 rounded-lg"
+                      className="p-3 mb-2 last:mb-0 bg-cream-100/80 rounded-lg"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <p className="text-white font-medium text-sm">
+                          <p className="text-stone-900 font-medium text-sm">
                             {match.name}
                           </p>
-                          <p className="text-white/60 text-xs">{match.email}</p>
+                          <p className="text-stone-900/60 text-xs">{match.email}</p>
                         </div>
                         <span
                           className={`text-[10px] px-2 py-0.5 rounded ${
@@ -1037,15 +1037,15 @@ export default function AdminPage() {
                         )}
                       </div>
                       {match.recentTransactions?.length > 0 && (
-                        <div className="mt-3 border-t border-white/10 pt-2">
-                          <p className="text-white/60 text-[10px] uppercase mb-1">
+                        <div className="mt-3 border-t border-stone-300/40 pt-2">
+                          <p className="text-stone-900/60 text-[10px] uppercase mb-1">
                             Recent Activity
                           </p>
                           <div className="space-y-1">
                             {match.recentTransactions.map((tx) => (
                               <div
                                 key={tx._id}
-                                className="flex items-center justify-between text-[11px] text-white/70"
+                                className="flex items-center justify-between text-[11px] text-stone-900/70"
                               >
                                 <div className="flex items-center gap-2">
                                   <ArrowUpRight className="w-3 h-3" />
@@ -1074,29 +1074,29 @@ export default function AdminPage() {
 
               {/* Transactions Results */}
               {transactionMatches.length > 0 && (
-                <div className="p-3 border-b border-white/10">
-                  <h4 className="text-xs font-semibold text-white/60 mb-3 flex items-center gap-2">
+                <div className="p-3 border-b border-stone-300/40">
+                  <h4 className="text-xs font-semibold text-stone-900/60 mb-3 flex items-center gap-2">
                     <ArrowUpRight className="w-3 h-3" />
                     Transactions ({transactionMatches.length})
                   </h4>
                   {transactionMatches.map((tx) => (
                     <div
                       key={tx._id}
-                      className="p-3 mb-2 last:mb-0 bg-white/5 rounded-lg"
+                      className="p-3 mb-2 last:mb-0 bg-cream-100/80 rounded-lg"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <p className="text-white font-medium text-sm">
+                          <p className="text-stone-900 font-medium text-sm">
                             {tx.userId?.name ||
                               tx.userId?.email ||
                               "Unknown User"}
                           </p>
-                          <p className="text-white/60 text-xs">
+                          <p className="text-stone-900/60 text-xs">
                             {tx.userId?.email || "No email on record"}
                           </p>
                         </div>
                         <div className="text-right">
-                          <p className="text-white font-semibold text-sm">
+                          <p className="text-stone-900 font-semibold text-sm">
                             ${formatCurrency(tx.amount)}
                           </p>
                           <span
@@ -1108,7 +1108,7 @@ export default function AdminPage() {
                           </span>
                         </div>
                       </div>
-                      <div className="flex flex-wrap items-center gap-2 text-[11px] text-white/60 mt-2">
+                      <div className="flex flex-wrap items-center gap-2 text-[11px] text-stone-900/60 mt-2">
                         <span className="uppercase">{tx.type}</span>
                         {tx.network && <span>Network: {tx.network}</span>}
                         {tx.txHash && (
@@ -1118,7 +1118,7 @@ export default function AdminPage() {
                         )}
                       </div>
                       {tx.description && (
-                        <p className="text-white/60 text-xs mt-2 line-clamp-2">
+                        <p className="text-stone-900/60 text-xs mt-2 line-clamp-2">
                           {tx.description}
                         </p>
                       )}
@@ -1129,22 +1129,22 @@ export default function AdminPage() {
 
               {/* Issues Results */}
               {issueMatches.length > 0 && (
-                <div className="p-3 border-b border-white/10">
-                  <h4 className="text-xs font-semibold text-white/60 mb-3 flex items-center gap-2">
+                <div className="p-3 border-b border-stone-300/40">
+                  <h4 className="text-xs font-semibold text-stone-900/60 mb-3 flex items-center gap-2">
                     <MessageSquare className="w-3 h-3" />
                     Support Issues ({issueMatches.length})
                   </h4>
                   {issueMatches.map((issue) => (
                     <div
                       key={issue._id}
-                      className="p-3 mb-2 last:mb-0 bg-white/5 rounded-lg"
+                      className="p-3 mb-2 last:mb-0 bg-cream-100/80 rounded-lg"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <p className="text-white font-medium text-sm">
+                          <p className="text-stone-900 font-medium text-sm">
                             {issue.subject}
                           </p>
-                          <p className="text-white/60 text-xs">
+                          <p className="text-stone-900/60 text-xs">
                             {issue.userId?.email || "Unknown user"}
                           </p>
                         </div>
@@ -1166,7 +1166,7 @@ export default function AdminPage() {
                         </div>
                       </div>
                       {issue.description && (
-                        <p className="text-white/60 text-xs mt-2 line-clamp-2">
+                        <p className="text-stone-900/60 text-xs mt-2 line-clamp-2">
                           {issue.description}
                         </p>
                       )}
@@ -1180,22 +1180,22 @@ export default function AdminPage() {
                 transactionMatches.length === 0 &&
                 issueMatches.length === 0 && (
                   <div className="p-4 text-center">
-                    <Search className="w-8 h-8 text-white/20 mx-auto mb-2" />
-                    <p className="text-white/60 text-sm">
+                    <Search className="w-8 h-8 text-stone-900/20 mx-auto mb-2" />
+                    <p className="text-stone-900/60 text-sm">
                       No results found for "{searchQuery}"
                     </p>
                   </div>
                 )}
 
               {/* Close Button */}
-              <div className="p-2 border-t border-white/10">
+              <div className="p-2 border-t border-stone-300/40">
                 <button
                   onClick={() => {
                     setShowSearchResults(false);
                     setSearchQuery("");
                     setSearchResults(null);
                   }}
-                  className="w-full py-2 text-white/60 hover:text-white text-sm transition-colors"
+                  className="w-full py-2 text-stone-900/60 hover:text-stone-900 text-sm transition-colors"
                 >
                   Close Search
                 </button>
@@ -1205,20 +1205,20 @@ export default function AdminPage() {
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex space-x-1 mb-6 sm:mb-8 bg-white/5 rounded-xl p-1 overflow-x-auto">
+        <div className="flex space-x-1 mb-6 sm:mb-8 bg-cream-100/80 rounded-xl p-1 overflow-x-auto">
           <button
             onClick={() => setActiveTab("transactions")}
             className={`flex-shrink-0 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
               activeTab === "transactions"
                 ? "bg-emerald-500 text-black shadow-lg"
-                : "text-white/70 hover:text-white hover:bg-white/10"
+                : "text-stone-900/70 hover:text-stone-900 hover:bg-cream-200/60"
             }`}
           >
             <div className="flex items-center justify-center space-x-2">
               <Clock className="w-4 h-4" />
               <span>Pending</span>
               {pendingTransactions.length > 0 && (
-                <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                <span className="bg-red-500 text-stone-900 text-xs px-2 py-1 rounded-full">
                   {pendingTransactions.length}
                 </span>
               )}
@@ -1230,14 +1230,14 @@ export default function AdminPage() {
             className={`flex-shrink-0 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
               activeTab === "staking-activity"
                 ? "bg-emerald-500 text-black shadow-lg"
-                : "text-white/70 hover:text-white hover:bg-white/10"
+                : "text-stone-900/70 hover:text-stone-900 hover:bg-cream-200/60"
             }`}
           >
             <div className="flex items-center justify-center space-x-2">
               <TrendingUp className="w-4 h-4" />
               <span>Staking Activity</span>
               {stakingTransactions.length > 0 && (
-                <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+                <span className="bg-blue-500 text-stone-900 text-xs px-2 py-1 rounded-full">
                   {stakingTransactions.length}
                 </span>
               )}
@@ -1249,14 +1249,14 @@ export default function AdminPage() {
             className={`flex-shrink-0 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
               activeTab === "staking"
                 ? "bg-emerald-500 text-black shadow-lg"
-                : "text-white/70 hover:text-white hover:bg-white/10"
+                : "text-stone-900/70 hover:text-stone-900 hover:bg-cream-200/60"
             }`}
           >
             <div className="flex items-center justify-center space-x-2">
               <Users className="w-4 h-4" />
               <span>User Staking</span>
               {users.length > 0 && (
-                <span className="bg-purple-500 text-white text-xs px-2 py-1 rounded-full">
+                <span className="bg-purple-500 text-stone-900 text-xs px-2 py-1 rounded-full">
                   {users.length}
                 </span>
               )}
@@ -1268,7 +1268,7 @@ export default function AdminPage() {
             className={`flex-shrink-0 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
               activeTab === "issues"
                 ? "bg-emerald-500 text-black shadow-lg"
-                : "text-white/70 hover:text-white hover:bg-white/10"
+                : "text-stone-900/70 hover:text-stone-900 hover:bg-cream-200/60"
             }`}
           >
             <div className="flex items-center justify-center space-x-2">
@@ -1282,7 +1282,7 @@ export default function AdminPage() {
             className={`flex-shrink-0 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
               activeTab === "balance-manager"
                 ? "bg-emerald-500 text-black shadow-lg"
-                : "text-white/70 hover:text-white hover:bg-white/10"
+                : "text-stone-900/70 hover:text-stone-900 hover:bg-cream-200/60"
             }`}
           >
             <div className="flex items-center justify-center space-x-2">
@@ -1296,7 +1296,7 @@ export default function AdminPage() {
             className={`flex-shrink-0 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
               activeTab === "deleted-transactions"
                 ? "bg-emerald-500 text-black shadow-lg"
-                : "text-white/70 hover:text-white hover:bg-white/10"
+                : "text-stone-900/70 hover:text-stone-900 hover:bg-cream-200/60"
             }`}
           >
             <div className="flex items-center justify-center space-x-2">
@@ -1310,7 +1310,7 @@ export default function AdminPage() {
             className={`flex-shrink-0 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
               activeTab === "audit-logs"
                 ? "bg-emerald-500 text-black shadow-lg"
-                : "text-white/70 hover:text-white hover:bg-white/10"
+                : "text-stone-900/70 hover:text-stone-900 hover:bg-cream-200/60"
             }`}
           >
             <div className="flex items-center justify-center space-x-2">
@@ -1324,7 +1324,7 @@ export default function AdminPage() {
             className={`flex-shrink-0 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
               activeTab === "referral-hierarchy"
                 ? "bg-emerald-500 text-black shadow-lg"
-                : "text-white/70 hover:text-white hover:bg-white/10"
+                : "text-stone-900/70 hover:text-stone-900 hover:bg-cream-200/60"
             }`}
           >
             <div className="flex items-center justify-center space-x-2">
@@ -1338,7 +1338,7 @@ export default function AdminPage() {
             className={`flex-shrink-0 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
               activeTab === "notifications"
                 ? "bg-emerald-500 text-black shadow-lg"
-                : "text-white/70 hover:text-white hover:bg-white/10"
+                : "text-stone-900/70 hover:text-stone-900 hover:bg-cream-200/60"
             }`}
           >
             <div className="flex items-center justify-center space-x-2">
@@ -1354,14 +1354,14 @@ export default function AdminPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-gradient-to-r from-emerald-500/20 to-green-400/20 backdrop-blur-xl border border-emerald-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6"
+              className="bg-gradient-to-r from-emerald-500/20 to-green-400/20  border border-emerald-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6"
             >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-emerald-400 text-xs sm:text-sm font-medium">
                     Pending Deposits
                   </p>
-                  <p className="text-lg sm:text-2xl font-bold text-white">
+                  <p className="text-lg sm:text-2xl font-bold text-stone-900">
                     {stats.transactions?.pendingDeposits || 0}
                   </p>
                 </div>
@@ -1373,14 +1373,14 @@ export default function AdminPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-gradient-to-r from-red-500/20 to-orange-400/20 backdrop-blur-xl border border-red-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6"
+              className="bg-gradient-to-r from-red-500/20 to-orange-400/20  border border-red-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6"
             >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-red-400 text-xs sm:text-sm font-medium">
                     Pending Withdrawals
                   </p>
-                  <p className="text-lg sm:text-2xl font-bold text-white">
+                  <p className="text-lg sm:text-2xl font-bold text-stone-900">
                     {stats.transactions?.pendingWithdrawals || 0}
                   </p>
                 </div>
@@ -1392,14 +1392,14 @@ export default function AdminPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-gradient-to-r from-blue-500/20 to-cyan-400/20 backdrop-blur-xl border border-blue-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6"
+              className="bg-gradient-to-r from-blue-500/20 to-cyan-400/20  border border-blue-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6"
             >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-blue-400 text-xs sm:text-sm font-medium">
                     Total Users
                   </p>
-                  <p className="text-lg sm:text-2xl font-bold text-white">
+                  <p className="text-lg sm:text-2xl font-bold text-stone-900">
                     {stats.users?.total || 0}
                   </p>
                 </div>
@@ -1411,14 +1411,14 @@ export default function AdminPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="bg-gradient-to-r from-purple-500/20 to-pink-400/20 backdrop-blur-xl border border-purple-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6"
+              className="bg-gradient-to-r from-purple-500/20 to-pink-400/20  border border-purple-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6"
             >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-purple-400 text-xs sm:text-sm font-medium">
                     Total Staked
                   </p>
-                  <p className="text-lg sm:text-2xl font-bold text-white">
+                  <p className="text-lg sm:text-2xl font-bold text-stone-900">
                     ${(stats.wallets?.totalStaked || 0).toLocaleString()}
                   </p>
                   <p className="text-purple-300 text-xs">
@@ -1433,14 +1433,14 @@ export default function AdminPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="bg-gradient-to-r from-yellow-500/20 to-orange-400/20 backdrop-blur-xl border border-yellow-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6"
+              className="bg-gradient-to-r from-yellow-500/20 to-orange-400/20  border border-yellow-500/30 rounded-xl sm:rounded-2xl p-4 sm:p-6"
             >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-yellow-400 text-xs sm:text-sm font-medium">
                     Total Balance
                   </p>
-                  <p className="text-lg sm:text-2xl font-bold text-white">
+                  <p className="text-lg sm:text-2xl font-bold text-stone-900">
                     ${(stats.wallets?.totalBalance || 0).toLocaleString()}
                   </p>
                   <p className="text-yellow-300 text-xs">Platform liquidity</p>
@@ -1468,8 +1468,8 @@ export default function AdminPage() {
             {/* Filters */}
             <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:space-x-4 mb-6">
               <div className="flex items-center space-x-2">
-                <Filter className="w-4 h-4 text-white/60" />
-                <span className="text-white/60 text-sm">Filter:</span>
+                <Filter className="w-4 h-4 text-stone-900/60" />
+                <span className="text-stone-900/60 text-sm">Filter:</span>
               </div>
 
               <div className="flex flex-wrap gap-2">
@@ -1480,7 +1480,7 @@ export default function AdminPage() {
                     className={`px-3 sm:px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
                       filter === filterOption
                         ? "bg-emerald-500 text-black"
-                        : "bg-white/10 text-white/70 hover:bg-white/20"
+                        : "bg-cream-200/60 text-stone-900/70 hover:bg-cream-300/60"
                     }`}
                   >
                     {filterOption.charAt(0).toUpperCase() +
@@ -1494,10 +1494,10 @@ export default function AdminPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-xl sm:rounded-2xl overflow-hidden"
+              className="bg-cream-100/80  border border-stone-300/50 rounded-xl sm:rounded-2xl overflow-hidden"
             >
-              <div className="p-4 sm:p-6 border-b border-white/10">
-                <h2 className="text-lg sm:text-xl font-bold text-white">
+              <div className="p-4 sm:p-6 border-b border-stone-300/40">
+                <h2 className="text-lg sm:text-xl font-bold text-stone-900">
                   Pending Transactions
                 </h2>
               </div>
@@ -1505,41 +1505,41 @@ export default function AdminPage() {
               {isLoading ? (
                 <div className="p-8 sm:p-12 text-center">
                   <Loader2 className="w-8 h-8 text-emerald-400 animate-spin mx-auto mb-4" />
-                  <p className="text-white/60 text-sm sm:text-base">
+                  <p className="text-stone-900/60 text-sm sm:text-base">
                     Loading transactions...
                   </p>
                 </div>
               ) : pendingTransactions.length === 0 ? (
                 <div className="p-8 sm:p-12 text-center">
-                  <Clock className="w-10 h-10 sm:w-12 sm:h-12 text-white/40 mx-auto mb-4" />
-                  <p className="text-white/60 text-sm sm:text-base">
+                  <Clock className="w-10 h-10 sm:w-12 sm:h-12 text-stone-900/40 mx-auto mb-4" />
+                  <p className="text-stone-900/60 text-sm sm:text-base">
                     No pending transactions found
                   </p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[900px]">
-                    <thead className="bg-white/5">
+                    <thead className="bg-cream-100/80">
                       <tr>
-                        <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                        <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                           User
                         </th>
-                        <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                        <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                           Type
                         </th>
-                        <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                        <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                           Amount
                         </th>
-                        <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                        <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                           Address
                         </th>
-                        <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                        <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                           Date
                         </th>
-                        <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                        <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                           Status
                         </th>
-                        <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                        <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                           Actions
                         </th>
                       </tr>
@@ -1551,14 +1551,14 @@ export default function AdminPage() {
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.05 }}
-                          className="border-b border-white/10 hover:bg-white/5 transition-colors"
+                          className="border-b border-stone-300/40 hover:bg-cream-100/80 transition-colors"
                         >
                           <td className="p-3 sm:p-4">
                             <div>
-                              <p className="text-white font-medium text-sm sm:text-base">
+                              <p className="text-stone-900 font-medium text-sm sm:text-base">
                                 {tx.userId?.name}
                               </p>
-                              <p className="text-white/60 text-xs sm:text-sm">
+                              <p className="text-stone-900/60 text-xs sm:text-sm">
                                 {tx.userId?.email}
                               </p>
                             </div>
@@ -1583,11 +1583,11 @@ export default function AdminPage() {
                           </td>
                           <td className="p-3 sm:p-4">
                             <div>
-                              <p className="text-white font-bold text-sm sm:text-base">
+                              <p className="text-stone-900 font-bold text-sm sm:text-base">
                                 {tx.amount.toLocaleString()} {tx.currency}
                               </p>
                               {tx.fee?.amount && tx.fee.amount > 0 && (
-                                <p className="text-white/60 text-xs">
+                                <p className="text-stone-900/60 text-xs">
                                   Fee: {tx.fee.amount} {tx.currency}
                                 </p>
                               )}
@@ -1597,10 +1597,10 @@ export default function AdminPage() {
                             <div>
                               {tx.type === "withdrawal" && tx.toAddress ? (
                                 <div className="space-y-1">
-                                  <p className="text-white/60 text-xs">
+                                  <p className="text-stone-900/60 text-xs">
                                     Withdrawal Address:
                                   </p>
-                                  <p className="text-white text-xs font-mono break-all">
+                                  <p className="text-stone-900 text-xs font-mono break-all">
                                     {tx.toAddress}
                                   </p>
                                   {tx.network && (
@@ -1613,10 +1613,10 @@ export default function AdminPage() {
                                 <div className="space-y-2">
                                   {tx.fromAddress && (
                                     <div className="space-y-1">
-                                      <p className="text-white/60 text-xs">
+                                      <p className="text-stone-900/60 text-xs">
                                         From Address:
                                       </p>
-                                      <p className="text-white text-xs font-mono break-all">
+                                      <p className="text-stone-900 text-xs font-mono break-all">
                                         {tx.fromAddress}
                                       </p>
                                     </div>
@@ -1627,7 +1627,7 @@ export default function AdminPage() {
                                     </p>
                                   )}
                                   {tx.userTransactionId && (
-                                    <div className="space-y-1 mt-2 pt-2 border-t border-white/10">
+                                    <div className="space-y-1 mt-2 pt-2 border-t border-stone-300/40">
                                       <p className="text-emerald-400 text-xs font-semibold">
                                         User Transaction ID:
                                       </p>
@@ -1638,18 +1638,18 @@ export default function AdminPage() {
                                   )}
                                 </div>
                               ) : (
-                                <span className="text-white/40 text-xs">
+                                <span className="text-stone-900/40 text-xs">
                                   N/A
                                 </span>
                               )}
                             </div>
                           </td>
                           <td className="p-3 sm:p-4">
-                            <div className="text-white/80">
+                            <div className="text-stone-900/80">
                               <p className="text-sm">
                                 {new Date(tx.submittedAt).toLocaleDateString()}
                               </p>
-                              <p className="text-xs text-white/60">
+                              <p className="text-xs text-stone-900/60">
                                 {new Date(tx.submittedAt).toLocaleTimeString()}
                               </p>
                             </div>
@@ -1713,13 +1713,13 @@ export default function AdminPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-xl sm:rounded-2xl overflow-hidden"
+            className="bg-cream-100/80  border border-stone-300/50 rounded-xl sm:rounded-2xl overflow-hidden"
           >
-            <div className="p-4 sm:p-6 border-b border-white/10">
-              <h2 className="text-lg sm:text-xl font-bold text-white">
+            <div className="p-4 sm:p-6 border-b border-stone-300/40">
+              <h2 className="text-lg sm:text-xl font-bold text-stone-900">
                 Staking Activity
               </h2>
-              <p className="text-white/60 text-sm mt-1">
+              <p className="text-stone-900/60 text-sm mt-1">
                 All stake and unstake transactions
               </p>
             </div>
@@ -1727,38 +1727,38 @@ export default function AdminPage() {
             {isLoadingStaking ? (
               <div className="p-8 sm:p-12 text-center">
                 <Loader2 className="w-8 h-8 text-blue-400 animate-spin mx-auto mb-4" />
-                <p className="text-white/60 text-sm sm:text-base">
+                <p className="text-stone-900/60 text-sm sm:text-base">
                   Loading staking activity...
                 </p>
               </div>
             ) : stakingTransactions.length === 0 ? (
               <div className="p-8 sm:p-12 text-center">
-                <TrendingUp className="w-10 h-10 sm:w-12 sm:h-12 text-white/40 mx-auto mb-4" />
-                <p className="text-white/60 text-sm sm:text-base">
+                <TrendingUp className="w-10 h-10 sm:w-12 sm:h-12 text-stone-900/40 mx-auto mb-4" />
+                <p className="text-stone-900/60 text-sm sm:text-base">
                   No staking activity found
                 </p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[900px]">
-                  <thead className="bg-white/5">
+                  <thead className="bg-cream-100/80">
                     <tr>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         User
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Type
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Amount
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Date & Time
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Status
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Description
                       </th>
                     </tr>
@@ -1770,14 +1770,14 @@ export default function AdminPage() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className="border-b border-white/10 hover:bg-white/5 transition-colors"
+                        className="border-b border-stone-300/40 hover:bg-cream-100/80 transition-colors"
                       >
                         <td className="p-3 sm:p-4">
                           <div>
-                            <p className="text-white font-medium text-sm sm:text-base">
+                            <p className="text-stone-900 font-medium text-sm sm:text-base">
                               {tx.userId?.name}
                             </p>
-                            <p className="text-white/60 text-xs sm:text-sm">
+                            <p className="text-stone-900/60 text-xs sm:text-sm">
                               {tx.userId?.email}
                             </p>
                           </div>
@@ -1823,10 +1823,10 @@ export default function AdminPage() {
                         </td>
                         <td className="p-3 sm:p-4">
                           <div>
-                            <p className="text-white text-sm">
+                            <p className="text-stone-900 text-sm">
                               {new Date(tx.createdAt).toLocaleDateString()}
                             </p>
-                            <p className="text-white/60 text-xs">
+                            <p className="text-stone-900/60 text-xs">
                               {new Date(tx.createdAt).toLocaleTimeString()}
                             </p>
                           </div>
@@ -1840,7 +1840,7 @@ export default function AdminPage() {
                           </div>
                         </td>
                         <td className="p-3 sm:p-4">
-                          <p className="text-white/80 text-sm">
+                          <p className="text-stone-900/80 text-sm">
                             {tx.description}
                           </p>
                         </td>
@@ -1858,15 +1858,15 @@ export default function AdminPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-xl sm:rounded-2xl overflow-hidden"
+            className="bg-cream-100/80  border border-stone-300/50 rounded-xl sm:rounded-2xl overflow-hidden"
           >
-            <div className="p-4 sm:p-6 border-b border-white/10">
+            <div className="p-4 sm:p-6 border-b border-stone-300/40">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg sm:text-xl font-bold text-white">
+                <h2 className="text-lg sm:text-xl font-bold text-stone-900">
                   User Staking Overview
                 </h2>
                 <div className="flex items-center space-x-3">
-                  <span className="text-white/60 text-sm">
+                  <span className="text-stone-900/60 text-sm">
                     Total Staked:{" "}
                     <span className="text-emerald-400 font-bold">
                       ${(stats?.wallets?.totalStaked || 0).toLocaleString()}
@@ -1879,47 +1879,47 @@ export default function AdminPage() {
             {isLoadingUsers ? (
               <div className="p-8 sm:p-12 text-center">
                 <Loader2 className="w-8 h-8 text-blue-400 animate-spin mx-auto mb-4" />
-                <p className="text-white/60 text-sm sm:text-base">
+                <p className="text-stone-900/60 text-sm sm:text-base">
                   Loading user staking data...
                 </p>
               </div>
             ) : users.length === 0 ? (
               <div className="p-8 sm:p-12 text-center">
-                <TrendingUp className="w-10 h-10 sm:w-12 sm:h-12 text-white/40 mx-auto mb-4" />
-                <p className="text-white/60 text-sm sm:text-base">
+                <TrendingUp className="w-10 h-10 sm:w-12 sm:h-12 text-stone-900/40 mx-auto mb-4" />
+                <p className="text-stone-900/60 text-sm sm:text-base">
                   No users are currently staking
                 </p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[1000px]">
-                  <thead className="bg-white/5">
+                  <thead className="bg-cream-100/80">
                     <tr>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         User
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Staked Amount
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Staking Date
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Last Update
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Total Balance
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Available
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Total Earnings
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Staking %
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Actions
                       </th>
                     </tr>
@@ -1931,14 +1931,14 @@ export default function AdminPage() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className="border-b border-white/10 hover:bg-white/5 transition-colors"
+                        className="border-b border-stone-300/40 hover:bg-cream-100/80 transition-colors"
                       >
                         <td className="p-3 sm:p-4">
                           <div>
-                            <p className="text-white font-medium text-sm sm:text-base">
+                            <p className="text-stone-900 font-medium text-sm sm:text-base">
                               {user.name}
                             </p>
-                            <p className="text-white/60 text-xs sm:text-sm">
+                            <p className="text-stone-900/60 text-xs sm:text-sm">
                               {user.email}
                             </p>
                           </div>
@@ -1959,12 +1959,12 @@ export default function AdminPage() {
                               <div className="flex items-start space-x-2">
                                 <Calendar className="w-4 h-4 text-blue-400 mt-0.5" />
                                 <div>
-                                  <p className="text-white text-sm">
+                                  <p className="text-stone-900 text-sm">
                                     {new Date(
                                       user.wallet.stakingStartDate
                                     ).toLocaleDateString()}
                                   </p>
-                                  <p className="text-white/60 text-xs">
+                                  <p className="text-stone-900/60 text-xs">
                                     {new Date(
                                       user.wallet.stakingStartDate
                                     ).toLocaleTimeString()}
@@ -1972,7 +1972,7 @@ export default function AdminPage() {
                                 </div>
                               </div>
                             ) : (
-                              <span className="text-white/40 text-sm">
+                              <span className="text-stone-900/40 text-sm">
                                 Not staked
                               </span>
                             )}
@@ -1984,12 +1984,12 @@ export default function AdminPage() {
                               <div className="flex items-start space-x-2">
                                 <Clock className="w-4 h-4 text-orange-400 mt-0.5" />
                                 <div>
-                                  <p className="text-white/80 text-sm">
+                                  <p className="text-stone-900/80 text-sm">
                                     {new Date(
                                       user.wallet.lastStakingUpdate
                                     ).toLocaleDateString()}
                                   </p>
-                                  <p className="text-white/60 text-xs">
+                                  <p className="text-stone-900/60 text-xs">
                                     {new Date(
                                       user.wallet.lastStakingUpdate
                                     ).toLocaleTimeString()}
@@ -1997,7 +1997,7 @@ export default function AdminPage() {
                                 </div>
                               </div>
                             ) : (
-                              <span className="text-white/40 text-sm">
+                              <span className="text-stone-900/40 text-sm">
                                 No updates
                               </span>
                             )}
@@ -2006,13 +2006,13 @@ export default function AdminPage() {
                         <td className="p-3 sm:p-4">
                           <div className="flex items-center space-x-2">
                             <Wallet className="w-4 h-4 text-emerald-400" />
-                            <span className="text-white font-bold">
+                            <span className="text-stone-900 font-bold">
                               ${user.wallet?.balance?.toLocaleString() || "0"}
                             </span>
                           </div>
                         </td>
                         <td className="p-3 sm:p-4">
-                          <span className="text-white">
+                          <span className="text-stone-900">
                             $
                             {user.wallet?.availableBalance?.toLocaleString() ||
                               "0"}
@@ -2027,7 +2027,7 @@ export default function AdminPage() {
                         </td>
                         <td className="p-3 sm:p-4">
                           <div className="flex items-center space-x-2">
-                            <div className="w-16 bg-white/20 rounded-full h-2">
+                            <div className="w-16 bg-cream-300/60 rounded-full h-2">
                               <div
                                 className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full"
                                 style={{
@@ -2040,7 +2040,7 @@ export default function AdminPage() {
                                 }}
                               />
                             </div>
-                            <span className="text-white/70 text-sm">
+                            <span className="text-stone-900/70 text-sm">
                               {Math.round(
                                 (user.wallet?.stakedAmount /
                                   user.wallet?.balance) *
@@ -2093,17 +2093,17 @@ export default function AdminPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-xl sm:rounded-2xl overflow-hidden"
+            className="bg-cream-100/80  border border-stone-300/50 rounded-xl sm:rounded-2xl overflow-hidden"
           >
-            <div className="p-4 sm:p-6 border-b border-white/10">
+            <div className="p-4 sm:p-6 border-b border-stone-300/40">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-                <h2 className="text-lg sm:text-xl font-bold text-white">
+                <h2 className="text-lg sm:text-xl font-bold text-stone-900">
                   User Issues
                 </h2>
 
                 {/* Issue Filters */}
                 <div className="flex items-center space-x-2">
-                  <span className="text-white/60 text-sm">Filter:</span>
+                  <span className="text-stone-900/60 text-sm">Filter:</span>
                   {["all", "open", "in-progress", "resolved"].map(
                     (filterOption) => (
                       <button
@@ -2112,7 +2112,7 @@ export default function AdminPage() {
                         className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                           issueFilter === filterOption
                             ? "bg-emerald-500 text-black"
-                            : "bg-white/10 text-white/70 hover:bg-white/20"
+                            : "bg-cream-200/60 text-stone-900/70 hover:bg-cream-300/60"
                         }`}
                       >
                         {filterOption.replace("-", " ").toUpperCase()}
@@ -2127,13 +2127,13 @@ export default function AdminPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-4">
                   <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
                     <p className="text-blue-400 text-xs font-medium">Total</p>
-                    <p className="text-white text-xl font-bold">
+                    <p className="text-stone-900 text-xl font-bold">
                       {issueStats.total || 0}
                     </p>
                   </div>
                   <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
                     <p className="text-yellow-400 text-xs font-medium">Open</p>
-                    <p className="text-white text-xl font-bold">
+                    <p className="text-stone-900 text-xl font-bold">
                       {issueStats.open || 0}
                     </p>
                   </div>
@@ -2141,7 +2141,7 @@ export default function AdminPage() {
                     <p className="text-cyan-400 text-xs font-medium">
                       In Progress
                     </p>
-                    <p className="text-white text-xl font-bold">
+                    <p className="text-stone-900 text-xl font-bold">
                       {issueStats.inProgress || 0}
                     </p>
                   </div>
@@ -2149,13 +2149,13 @@ export default function AdminPage() {
                     <p className="text-emerald-400 text-xs font-medium">
                       Resolved
                     </p>
-                    <p className="text-white text-xl font-bold">
+                    <p className="text-stone-900 text-xl font-bold">
                       {issueStats.resolved || 0}
                     </p>
                   </div>
                   <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
                     <p className="text-red-400 text-xs font-medium">Urgent</p>
-                    <p className="text-white text-xl font-bold">
+                    <p className="text-stone-900 text-xl font-bold">
                       {issueStats.urgent || 0}
                     </p>
                   </div>
@@ -2166,38 +2166,38 @@ export default function AdminPage() {
             {isLoadingIssues ? (
               <div className="p-8 sm:p-12 text-center">
                 <Loader2 className="w-8 h-8 text-emerald-400 animate-spin mx-auto mb-4" />
-                <p className="text-white/60 text-sm sm:text-base">
+                <p className="text-stone-900/60 text-sm sm:text-base">
                   Loading issues...
                 </p>
               </div>
             ) : issues.length === 0 ? (
               <div className="p-8 sm:p-12 text-center">
-                <MessageSquare className="w-10 h-10 sm:w-12 sm:h-12 text-white/40 mx-auto mb-4" />
-                <p className="text-white/60 text-sm sm:text-base">
+                <MessageSquare className="w-10 h-10 sm:w-12 sm:h-12 text-stone-900/40 mx-auto mb-4" />
+                <p className="text-stone-900/60 text-sm sm:text-base">
                   No issues found
                 </p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[900px]">
-                  <thead className="bg-white/5">
+                  <thead className="bg-cream-100/80">
                     <tr>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         User
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Subject
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Priority
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Status
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Date
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-medium text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-medium text-sm">
                         Actions
                       </th>
                     </tr>
@@ -2208,24 +2208,24 @@ export default function AdminPage() {
                         key={issue._id}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="border-b border-white/10 hover:bg-white/5 transition-colors"
+                        className="border-b border-stone-300/40 hover:bg-cream-100/80 transition-colors"
                       >
                         <td className="p-3 sm:p-4">
                           <div>
-                            <p className="text-white font-medium text-sm">
+                            <p className="text-stone-900 font-medium text-sm">
                               {issue.userId?.name || "Unknown"}
                             </p>
-                            <p className="text-white/60 text-xs">
+                            <p className="text-stone-900/60 text-xs">
                               {issue.userId?.email || "N/A"}
                             </p>
                           </div>
                         </td>
                         <td className="p-3 sm:p-4">
                           <div className="max-w-xs">
-                            <p className="text-white font-medium text-sm truncate">
+                            <p className="text-stone-900 font-medium text-sm truncate">
                               {issue.subject}
                             </p>
-                            <p className="text-white/60 text-xs line-clamp-2">
+                            <p className="text-stone-900/60 text-xs line-clamp-2">
                               {issue.description}
                             </p>
                           </div>
@@ -2251,7 +2251,7 @@ export default function AdminPage() {
                             onChange={(e) =>
                               handleUpdateIssueStatus(issue._id, e.target.value)
                             }
-                            className="px-2 py-1 bg-white/10 border border-white/20 rounded-lg text-white text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                            className="px-2 py-1 bg-cream-200/60 border border-stone-300/50 rounded-lg text-stone-900 text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                           >
                             <option value="open" className="bg-gray-900">
                               Open
@@ -2268,11 +2268,11 @@ export default function AdminPage() {
                           </select>
                         </td>
                         <td className="p-3 sm:p-4">
-                          <div className="text-white/80">
+                          <div className="text-stone-900/80">
                             <p className="text-sm">
                               {new Date(issue.createdAt).toLocaleDateString()}
                             </p>
-                            <p className="text-xs text-white/60">
+                            <p className="text-xs text-stone-900/60">
                               {new Date(issue.createdAt).toLocaleTimeString()}
                             </p>
                           </div>
@@ -2315,10 +2315,10 @@ export default function AdminPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-4 sm:p-6"
+            className="bg-cream-100/80  border border-stone-300/50 rounded-2xl p-4 sm:p-6"
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center space-x-3">
+              <h2 className="text-xl sm:text-2xl font-bold text-stone-900 flex items-center space-x-3">
                 <Wallet className="w-6 h-6 text-emerald-400" />
                 <span>Manual Balance Adjustment</span>
               </h2>
@@ -2326,28 +2326,28 @@ export default function AdminPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Form Section */}
-              <div className="bg-white/5 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">
+              <div className="bg-cream-100/80 rounded-xl p-6">
+                <h3 className="text-lg font-semibold text-stone-900 mb-4">
                   Adjust User Balance
                 </h3>
 
                 <div className="space-y-4">
                   {/* User Selection */}
                   <div>
-                    <label className="block text-white/80 text-sm mb-2">
+                    <label className="block text-stone-900/80 text-sm mb-2">
                       Select User
                     </label>
                     <select
                       value={selectedUser}
                       onChange={(e) => setSelectedUser(e.target.value)}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                      className="w-full px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                     >
                       <option value="">-- Select a user --</option>
                       {allUsers.map((user: any) => (
                         <option
                           key={user._id}
                           value={user._id}
-                          className="bg-crypto-charcoal"
+                          className="bg-cream-100"
                         >
                           {user.email} ({user.name}) - Balance: $
                           {user.wallet?.balance || 0}
@@ -2358,7 +2358,7 @@ export default function AdminPage() {
 
                   {/* Action Type */}
                   <div>
-                    <label className="block text-white/80 text-sm mb-2">
+                    <label className="block text-stone-900/80 text-sm mb-2">
                       Action Type
                     </label>
                     <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-3 sm:space-y-0">
@@ -2367,7 +2367,7 @@ export default function AdminPage() {
                         className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
                           balanceAction === "add"
                             ? "bg-emerald-500 text-black"
-                            : "bg-white/10 text-white hover:bg-white/20"
+                            : "bg-cream-200/60 text-stone-900 hover:bg-cream-300/60"
                         }`}
                       >
                         ➕ Add Balance
@@ -2376,8 +2376,8 @@ export default function AdminPage() {
                         onClick={() => setBalanceAction("deduct")}
                         className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
                           balanceAction === "deduct"
-                            ? "bg-red-500 text-white"
-                            : "bg-white/10 text-white hover:bg-white/20"
+                            ? "bg-red-500 text-stone-900"
+                            : "bg-cream-200/60 text-stone-900 hover:bg-cream-300/60"
                         }`}
                       >
                         ➖ Deduct Balance
@@ -2386,8 +2386,8 @@ export default function AdminPage() {
                         onClick={() => setBalanceAction("bonus")}
                         className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all ${
                           balanceAction === "bonus"
-                            ? "bg-purple-500 text-white"
-                            : "bg-white/10 text-white hover:bg-white/20"
+                            ? "bg-purple-500 text-stone-900"
+                            : "bg-cream-200/60 text-stone-900 hover:bg-cream-300/60"
                         }`}
                       >
                         🎁 Add Bonus
@@ -2397,7 +2397,7 @@ export default function AdminPage() {
 
                   {/* Amount */}
                   <div>
-                    <label className="block text-white/80 text-sm mb-2">
+                    <label className="block text-stone-900/80 text-sm mb-2">
                       Amount (USDT)
                     </label>
                     <input
@@ -2406,24 +2406,24 @@ export default function AdminPage() {
                       min="0"
                       value={balanceAmount}
                       onChange={(e) => setBalanceAmount(e.target.value)}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                      className="w-full px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                       placeholder="Enter amount..."
                     />
                   </div>
 
                   {/* Reason */}
                   <div>
-                    <label className="block text-white/80 text-sm mb-2">
+                    <label className="block text-stone-900/80 text-sm mb-2">
                       Reason (Required)
                     </label>
                     <textarea
                       value={balanceReason}
                       onChange={(e) => setBalanceReason(e.target.value)}
-                      className="w-full h-24 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                      className="w-full h-24 px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                       placeholder="Provide a detailed reason for this adjustment..."
                       maxLength={500}
                     />
-                    <p className="text-white/40 text-xs mt-1">
+                    <p className="text-stone-900/40 text-xs mt-1">
                       {balanceReason.length}/500
                     </p>
                   </div>
@@ -2441,8 +2441,8 @@ export default function AdminPage() {
                       balanceAction === "add"
                         ? "bg-emerald-500 text-black hover:bg-emerald-600"
                         : balanceAction === "bonus"
-                        ? "bg-purple-500 text-white hover:bg-purple-600"
-                        : "bg-red-500 text-white hover:bg-red-600"
+                        ? "bg-purple-500 text-stone-900 hover:bg-purple-600"
+                        : "bg-red-500 text-stone-900 hover:bg-red-600"
                     } disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
                     {isProcessingBalance ? (
@@ -2472,7 +2472,7 @@ export default function AdminPage() {
                     <AlertTriangle className="w-5 h-5" />
                     <span>Important Information</span>
                   </h4>
-                  <ul className="text-white/70 text-sm space-y-2">
+                  <ul className="text-stone-900/70 text-sm space-y-2">
                     <li>
                       • Use this feature to manually adjust user balances when
                       deposits are rejected by mistake
@@ -2487,7 +2487,7 @@ export default function AdminPage() {
                   <h4 className="text-yellow-400 font-semibold mb-2">
                     ⚠️ Use Cases
                   </h4>
-                  <ul className="text-white/70 text-sm space-y-2">
+                  <ul className="text-stone-900/70 text-sm space-y-2">
                     <li>
                       <strong>Add Balance:</strong> When a deposit was rejected
                       but funds were received
@@ -2517,7 +2517,7 @@ export default function AdminPage() {
                           (u: any) => u._id === selectedUser
                         );
                         return (
-                          <div className="text-white/80 text-sm space-y-1">
+                          <div className="text-stone-900/80 text-sm space-y-1">
                             <p>
                               <strong>Name:</strong> {user.name}
                             </p>
@@ -2551,16 +2551,16 @@ export default function AdminPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-4 sm:p-6"
+            className="bg-cream-100/80  border border-stone-300/50 rounded-2xl p-4 sm:p-6"
           >
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center space-x-3">
+              <h2 className="text-xl sm:text-2xl font-bold text-stone-900 flex items-center space-x-3">
                 <RefreshCw className="w-6 h-6 text-yellow-400" />
                 <span>Deleted / Rejected Transactions</span>
               </h2>
               <button
                 onClick={fetchDeletedTransactions}
-                className="p-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors"
+                className="p-2 bg-cream-200/60 text-stone-900 rounded-lg hover:bg-cream-300/60 transition-colors"
                 title="Refresh"
               >
                 <RefreshCw className="w-5 h-5" />
@@ -2573,33 +2573,33 @@ export default function AdminPage() {
               </div>
             ) : deletedTransactions.length === 0 ? (
               <div className="text-center py-12">
-                <XCircle className="w-12 h-12 text-white/30 mx-auto mb-4" />
-                <p className="text-white/60">No deleted transactions found</p>
+                <XCircle className="w-12 h-12 text-stone-900/30 mx-auto mb-4" />
+                <p className="text-stone-900/60">No deleted transactions found</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-white/10">
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-semibold text-xs sm:text-sm">
+                    <tr className="border-b border-stone-300/40">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-semibold text-xs sm:text-sm">
                         User
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-semibold text-xs sm:text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-semibold text-xs sm:text-sm">
                         Type
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-semibold text-xs sm:text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-semibold text-xs sm:text-sm">
                         Amount
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-semibold text-xs sm:text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-semibold text-xs sm:text-sm">
                         Status
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-semibold text-xs sm:text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-semibold text-xs sm:text-sm">
                         Deleted At
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-semibold text-xs sm:text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-semibold text-xs sm:text-sm">
                         Deleted By
                       </th>
-                      <th className="text-left p-3 sm:p-4 text-white/80 font-semibold text-xs sm:text-sm">
+                      <th className="text-left p-3 sm:p-4 text-stone-900/80 font-semibold text-xs sm:text-sm">
                         Actions
                       </th>
                     </tr>
@@ -2610,14 +2610,14 @@ export default function AdminPage() {
                         key={tx._id}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="border-b border-white/5 hover:bg-white/5"
+                        className="border-b border-white/5 hover:bg-cream-100/80"
                       >
                         <td className="p-3 sm:p-4">
                           <div>
-                            <p className="text-white text-sm">
+                            <p className="text-stone-900 text-sm">
                               {tx.userId?.name || "N/A"}
                             </p>
-                            <p className="text-white/60 text-xs">
+                            <p className="text-stone-900/60 text-xs">
                               {tx.userId?.email}
                             </p>
                           </div>
@@ -2634,27 +2634,27 @@ export default function AdminPage() {
                           </span>
                         </td>
                         <td className="p-3 sm:p-4">
-                          <p className="text-white font-semibold">
+                          <p className="text-stone-900 font-semibold">
                             ${tx.amount} USDT
                           </p>
                         </td>
                         <td className="p-3 sm:p-4">
-                          <span className="px-2 py-1 rounded-full text-xs bg-gray-500/20 text-gray-400">
+                          <span className="px-2 py-1 rounded-full text-xs bg-gray-500/20 text-stone-600">
                             {tx.status}
                           </span>
                         </td>
                         <td className="p-3 sm:p-4">
-                          <div className="text-white/80">
+                          <div className="text-stone-900/80">
                             <p className="text-sm">
                               {new Date(tx.deletedAt).toLocaleDateString()}
                             </p>
-                            <p className="text-xs text-white/60">
+                            <p className="text-xs text-stone-900/60">
                               {new Date(tx.deletedAt).toLocaleTimeString()}
                             </p>
                           </div>
                         </td>
                         <td className="p-3 sm:p-4">
-                          <p className="text-white/70 text-sm">
+                          <p className="text-stone-900/70 text-sm">
                             {tx.deletedBy?.email || "System"}
                           </p>
                         </td>
@@ -2690,7 +2690,7 @@ export default function AdminPage() {
                   <p className="text-emerald-400 text-xs font-medium mb-1">
                     Manual Additions
                   </p>
-                  <p className="text-2xl font-bold text-white">
+                  <p className="text-2xl font-bold text-stone-900">
                     {auditLogStats.manualAdditions?.count || 0}
                   </p>
                   <p className="text-emerald-400 text-sm">
@@ -2703,7 +2703,7 @@ export default function AdminPage() {
                   <p className="text-red-400 text-xs font-medium mb-1">
                     Manual Deductions
                   </p>
-                  <p className="text-2xl font-bold text-white">
+                  <p className="text-2xl font-bold text-stone-900">
                     {auditLogStats.manualDeductions?.count || 0}
                   </p>
                   <p className="text-red-400 text-sm">
@@ -2716,7 +2716,7 @@ export default function AdminPage() {
                   <p className="text-yellow-400 text-xs font-medium mb-1">
                     Revived Txns
                   </p>
-                  <p className="text-2xl font-bold text-white">
+                  <p className="text-2xl font-bold text-stone-900">
                     {auditLogStats.revivedTransactions?.count || 0}
                   </p>
                 </div>
@@ -2724,7 +2724,7 @@ export default function AdminPage() {
                   <p className="text-purple-400 text-xs font-medium mb-1">
                     Deleted Txns
                   </p>
-                  <p className="text-2xl font-bold text-white">
+                  <p className="text-2xl font-bold text-stone-900">
                     {auditLogStats.deletedTransactions?.count || 0}
                   </p>
                 </div>
@@ -2732,15 +2732,15 @@ export default function AdminPage() {
             )}
 
             {/* Audit Logs Table */}
-            <div className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-4 sm:p-6">
+            <div className="bg-cream-100/80  border border-stone-300/50 rounded-2xl p-4 sm:p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center space-x-3">
+                <h2 className="text-xl sm:text-2xl font-bold text-stone-900 flex items-center space-x-3">
                   <Calendar className="w-6 h-6 text-cyan-400" />
                   <span>Admin Activity Audit Log</span>
                 </h2>
                 <button
                   onClick={fetchAuditLogs}
-                  className="p-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors"
+                  className="p-2 bg-cream-200/60 text-stone-900 rounded-lg hover:bg-cream-300/60 transition-colors"
                   title="Refresh"
                 >
                   <RefreshCw className="w-5 h-5" />
@@ -2753,30 +2753,30 @@ export default function AdminPage() {
                 </div>
               ) : auditLogs.length === 0 ? (
                 <div className="text-center py-12">
-                  <Calendar className="w-12 h-12 text-white/30 mx-auto mb-4" />
-                  <p className="text-white/60">No audit logs found</p>
+                  <Calendar className="w-12 h-12 text-stone-900/30 mx-auto mb-4" />
+                  <p className="text-stone-900/60">No audit logs found</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-white/10">
-                        <th className="text-left p-3 text-white/80 font-semibold text-xs">
+                      <tr className="border-b border-stone-300/40">
+                        <th className="text-left p-3 text-stone-900/80 font-semibold text-xs">
                           Admin
                         </th>
-                        <th className="text-left p-3 text-white/80 font-semibold text-xs">
+                        <th className="text-left p-3 text-stone-900/80 font-semibold text-xs">
                           Action
                         </th>
-                        <th className="text-left p-3 text-white/80 font-semibold text-xs">
+                        <th className="text-left p-3 text-stone-900/80 font-semibold text-xs">
                           Target User
                         </th>
-                        <th className="text-left p-3 text-white/80 font-semibold text-xs">
+                        <th className="text-left p-3 text-stone-900/80 font-semibold text-xs">
                           Amount
                         </th>
-                        <th className="text-left p-3 text-white/80 font-semibold text-xs">
+                        <th className="text-left p-3 text-stone-900/80 font-semibold text-xs">
                           Reason
                         </th>
-                        <th className="text-left p-3 text-white/80 font-semibold text-xs">
+                        <th className="text-left p-3 text-stone-900/80 font-semibold text-xs">
                           Date & Time
                         </th>
                       </tr>
@@ -2787,10 +2787,10 @@ export default function AdminPage() {
                           key={log._id}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          className="border-b border-white/5 hover:bg-white/5"
+                          className="border-b border-white/5 hover:bg-cream-100/80"
                         >
                           <td className="p-3">
-                            <p className="text-white text-sm">
+                            <p className="text-stone-900 text-sm">
                               {log.adminEmail}
                             </p>
                           </td>
@@ -2810,29 +2810,29 @@ export default function AdminPage() {
                             </span>
                           </td>
                           <td className="p-3">
-                            <p className="text-white/80 text-sm">
+                            <p className="text-stone-900/80 text-sm">
                               {log.targetUserEmail}
                             </p>
                           </td>
                           <td className="p-3">
-                            <p className="text-white font-semibold text-sm">
+                            <p className="text-stone-900 font-semibold text-sm">
                               {log.amount > 0 ? `$${log.amount}` : "-"}
                             </p>
                           </td>
                           <td className="p-3">
                             <p
-                              className="text-white/70 text-xs max-w-xs truncate"
+                              className="text-stone-900/70 text-xs max-w-xs truncate"
                               title={log.reason}
                             >
                               {log.reason}
                             </p>
                           </td>
                           <td className="p-3">
-                            <div className="text-white/80 text-xs">
+                            <div className="text-stone-900/80 text-xs">
                               <p>
                                 {new Date(log.createdAt).toLocaleDateString()}
                               </p>
-                              <p className="text-white/60">
+                              <p className="text-stone-900/60">
                                 {new Date(log.createdAt).toLocaleTimeString()}
                               </p>
                             </div>
@@ -2855,9 +2855,9 @@ export default function AdminPage() {
             className="space-y-6"
           >
             {/* User Selection */}
-            <div className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-4 sm:p-6">
+            <div className="bg-cream-100/80  border border-stone-300/50 rounded-2xl p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center space-x-3">
+                <h2 className="text-xl sm:text-2xl font-bold text-stone-900 flex items-center space-x-3">
                   <Network className="w-6 h-6 text-purple-400" />
                   <span>Referral Hierarchy Tree</span>
                 </h2>
@@ -2865,7 +2865,7 @@ export default function AdminPage() {
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <div className="lg:col-span-1">
-                  <label className="block text-white/80 text-sm mb-2">
+                  <label className="block text-stone-900/80 text-sm mb-2">
                     Select User to View Hierarchy
                   </label>
                   <select
@@ -2878,14 +2878,14 @@ export default function AdminPage() {
                         setReferralHierarchy(null);
                       }
                     }}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                    className="w-full px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                   >
                     <option value="">-- Select a user --</option>
                     {allUsers.map((user: any) => (
                       <option
                         key={user._id}
                         value={user._id}
-                        className="bg-crypto-charcoal"
+                        className="bg-cream-100"
                       >
                         {user.name} ({user.email})
                       </option>
@@ -2902,18 +2902,18 @@ export default function AdminPage() {
                   <div className="grid grid-cols-3 gap-4 mt-3">
                     <div className="text-center p-3 bg-purple-500/20 rounded-lg">
                       <p className="text-2xl font-bold text-purple-400">8%</p>
-                      <p className="text-white/70 text-xs">Level 1 (Direct)</p>
+                      <p className="text-stone-900/70 text-xs">Level 1 (Direct)</p>
                     </div>
                     <div className="text-center p-3 bg-blue-500/20 rounded-lg">
                       <p className="text-2xl font-bold text-blue-400">4%</p>
-                      <p className="text-white/70 text-xs">Level 2</p>
+                      <p className="text-stone-900/70 text-xs">Level 2</p>
                     </div>
                     <div className="text-center p-3 bg-cyan-500/20 rounded-lg">
                       <p className="text-2xl font-bold text-cyan-400">2%</p>
-                      <p className="text-white/70 text-xs">Level 3</p>
+                      <p className="text-stone-900/70 text-xs">Level 3</p>
                     </div>
                   </div>
-                  <p className="text-white/60 text-xs mt-3">
+                  <p className="text-stone-900/60 text-xs mt-3">
                     + 1% bonus on referred user&apos;s first deposit
                   </p>
                 </div>
@@ -2926,14 +2926,14 @@ export default function AdminPage() {
                 <Loader2 className="w-8 h-8 text-purple-400 animate-spin" />
               </div>
             ) : referralHierarchy ? (
-              <div className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-4 sm:p-6">
+              <div className="bg-cream-100/80  border border-stone-300/50 rounded-2xl p-4 sm:p-6">
                 {/* User Stats Summary */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                   <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4">
                     <p className="text-emerald-400 text-xs font-medium">
                       Total Referrals
                     </p>
-                    <p className="text-2xl font-bold text-white">
+                    <p className="text-2xl font-bold text-stone-900">
                       {referralHierarchy.downline?.total || 0}
                     </p>
                   </div>
@@ -2941,7 +2941,7 @@ export default function AdminPage() {
                     <p className="text-purple-400 text-xs font-medium">
                       Level 1 Referrals
                     </p>
-                    <p className="text-2xl font-bold text-white">
+                    <p className="text-2xl font-bold text-stone-900">
                       {referralHierarchy.downline?.level1?.count || 0}
                     </p>
                   </div>
@@ -2949,7 +2949,7 @@ export default function AdminPage() {
                     <p className="text-blue-400 text-xs font-medium">
                       Level 2 Referrals
                     </p>
-                    <p className="text-2xl font-bold text-white">
+                    <p className="text-2xl font-bold text-stone-900">
                       {referralHierarchy.downline?.level2?.count || 0}
                     </p>
                   </div>
@@ -2957,7 +2957,7 @@ export default function AdminPage() {
                     <p className="text-cyan-400 text-xs font-medium">
                       Level 3 Referrals
                     </p>
-                    <p className="text-2xl font-bold text-white">
+                    <p className="text-2xl font-bold text-stone-900">
                       {referralHierarchy.downline?.level3?.count || 0}
                     </p>
                   </div>
@@ -2969,7 +2969,7 @@ export default function AdminPage() {
                     <p className="text-yellow-400 text-xs font-medium">
                       Total Earnings
                     </p>
-                    <p className="text-xl font-bold text-white">
+                    <p className="text-xl font-bold text-stone-900">
                       ${(referralHierarchy.earnings?.total || 0).toFixed(2)}
                     </p>
                   </div>
@@ -2977,7 +2977,7 @@ export default function AdminPage() {
                     <p className="text-purple-400 text-xs font-medium">
                       Level 1 (8%)
                     </p>
-                    <p className="text-xl font-bold text-white">
+                    <p className="text-xl font-bold text-stone-900">
                       ${(referralHierarchy.earnings?.level1 || 0).toFixed(2)}
                     </p>
                   </div>
@@ -2985,7 +2985,7 @@ export default function AdminPage() {
                     <p className="text-blue-400 text-xs font-medium">
                       Level 2 (4%)
                     </p>
-                    <p className="text-xl font-bold text-white">
+                    <p className="text-xl font-bold text-stone-900">
                       ${(referralHierarchy.earnings?.level2 || 0).toFixed(2)}
                     </p>
                   </div>
@@ -2993,7 +2993,7 @@ export default function AdminPage() {
                     <p className="text-cyan-400 text-xs font-medium">
                       Level 3 (2%)
                     </p>
-                    <p className="text-xl font-bold text-white">
+                    <p className="text-xl font-bold text-stone-900">
                       ${(referralHierarchy.earnings?.level3 || 0).toFixed(2)}
                     </p>
                   </div>
@@ -3001,7 +3001,7 @@ export default function AdminPage() {
                     <p className="text-emerald-400 text-xs font-medium">
                       First Deposit Bonus
                     </p>
-                    <p className="text-xl font-bold text-white">
+                    <p className="text-xl font-bold text-stone-900">
                       $
                       {(
                         referralHierarchy.earnings?.firstDepositBonus || 0
@@ -3011,7 +3011,7 @@ export default function AdminPage() {
                 </div>
 
                 {/* Hierarchy Tree */}
-                <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                <h3 className="text-lg font-bold text-stone-900 mb-4 flex items-center gap-2">
                   <Network className="w-5 h-5 text-purple-400" />
                   Referral Tree (Downline)
                 </h3>
@@ -3031,15 +3031,15 @@ export default function AdminPage() {
                           >
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">
+                                <span className="text-stone-900 font-bold text-sm">
                                   L1
                                 </span>
                               </div>
                               <div>
-                                <p className="text-white font-medium">
+                                <p className="text-stone-900 font-medium">
                                   {level1User.name}
                                 </p>
-                                <p className="text-white/60 text-xs">
+                                <p className="text-stone-900/60 text-xs">
                                   {level1User.email}
                                 </p>
                               </div>
@@ -3054,9 +3054,9 @@ export default function AdminPage() {
                                   level1User._id?.toString()
                               ).length > 0 &&
                                 (expandedNodes.has(level1User._id) ? (
-                                  <ChevronDown className="w-5 h-5 text-white/60" />
+                                  <ChevronDown className="w-5 h-5 text-stone-900/60" />
                                 ) : (
-                                  <ChevronRight className="w-5 h-5 text-white/60" />
+                                  <ChevronRight className="w-5 h-5 text-stone-900/60" />
                                 ))}
                             </div>
                           </div>
@@ -3083,15 +3083,15 @@ export default function AdminPage() {
                                     >
                                       <div className="flex items-center gap-2">
                                         <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                                          <span className="text-white font-bold text-xs">
+                                          <span className="text-stone-900 font-bold text-xs">
                                             L2
                                           </span>
                                         </div>
                                         <div>
-                                          <p className="text-white font-medium text-sm">
+                                          <p className="text-stone-900 font-medium text-sm">
                                             {level2User.name}
                                           </p>
-                                          <p className="text-white/60 text-xs">
+                                          <p className="text-stone-900/60 text-xs">
                                             {level2User.email}
                                           </p>
                                         </div>
@@ -3106,9 +3106,9 @@ export default function AdminPage() {
                                             level2User._id?.toString()
                                         ).length > 0 &&
                                           (expandedNodes.has(level2User._id) ? (
-                                            <ChevronDown className="w-4 h-4 text-white/60" />
+                                            <ChevronDown className="w-4 h-4 text-stone-900/60" />
                                           ) : (
-                                            <ChevronRight className="w-4 h-4 text-white/60" />
+                                            <ChevronRight className="w-4 h-4 text-stone-900/60" />
                                           ))}
                                       </div>
                                     </div>
@@ -3129,15 +3129,15 @@ export default function AdminPage() {
                                             >
                                               <div className="flex items-center gap-2">
                                                 <div className="w-5 h-5 bg-cyan-500 rounded-full flex items-center justify-center">
-                                                  <span className="text-white font-bold text-[10px]">
+                                                  <span className="text-stone-900 font-bold text-[10px]">
                                                     L3
                                                   </span>
                                                 </div>
                                                 <div>
-                                                  <p className="text-white font-medium text-xs">
+                                                  <p className="text-stone-900 font-medium text-xs">
                                                     {level3User.name}
                                                   </p>
-                                                  <p className="text-white/60 text-[10px]">
+                                                  <p className="text-stone-900/60 text-[10px]">
                                                     {level3User.email}
                                                   </p>
                                                 </div>
@@ -3159,20 +3159,20 @@ export default function AdminPage() {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <Network className="w-12 h-12 text-white/20 mx-auto mb-3" />
-                    <p className="text-white/60">
+                    <Network className="w-12 h-12 text-stone-900/20 mx-auto mb-3" />
+                    <p className="text-stone-900/60">
                       No referrals found for this user
                     </p>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-8 text-center">
-                <Network className="w-16 h-16 text-white/20 mx-auto mb-4" />
-                <p className="text-white/60 text-lg">
+              <div className="bg-cream-100/80  border border-stone-300/50 rounded-2xl p-8 text-center">
+                <Network className="w-16 h-16 text-stone-900/20 mx-auto mb-4" />
+                <p className="text-stone-900/60 text-lg">
                   Select a user to view their referral hierarchy
                 </p>
-                <p className="text-white/40 text-sm mt-2">
+                <p className="text-stone-900/40 text-sm mt-2">
                   The tree will show up to 3 levels of referrals with commission
                   rates
                 </p>
@@ -3190,8 +3190,8 @@ export default function AdminPage() {
             className="space-y-6"
           >
             {/* Send Notification Form */}
-            <div className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6">
-              <h3 className="text-xl font-bold text-white mb-6 flex items-center">
+            <div className="bg-cream-100/80  border border-stone-300/50 rounded-2xl p-6">
+              <h3 className="text-xl font-bold text-stone-900 mb-6 flex items-center">
                 <MessageSquare className="w-6 h-6 mr-3 text-emerald-400" />
                 Send Push Notification
               </h3>
@@ -3200,13 +3200,13 @@ export default function AdminPage() {
                 <div className="space-y-4">
                   {/* User Selection */}
                   <div>
-                    <label className="block text-white/80 text-sm mb-2">
+                    <label className="block text-stone-900/80 text-sm mb-2">
                       Send To
                     </label>
                     <select
                       value={notificationUserId}
                       onChange={(e) => setNotificationUserId(e.target.value)}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                      className="w-full px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                     >
                       <option value="all" className="bg-gray-800">
                         All Users (Broadcast)
@@ -3225,7 +3225,7 @@ export default function AdminPage() {
 
                   {/* Notification Type */}
                   <div>
-                    <label className="block text-white/80 text-sm mb-2">
+                    <label className="block text-stone-900/80 text-sm mb-2">
                       Notification Type
                     </label>
                     <select
@@ -3233,7 +3233,7 @@ export default function AdminPage() {
                       onChange={(e) =>
                         setNotificationType(e.target.value as any)
                       }
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                      className="w-full px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                     >
                       <option value="announcement" className="bg-gray-800">
                         📢 Announcement
@@ -3255,7 +3255,7 @@ export default function AdminPage() {
 
                   {/* Title */}
                   <div>
-                    <label className="block text-white/80 text-sm mb-2">
+                    <label className="block text-stone-900/80 text-sm mb-2">
                       Title
                     </label>
                     <input
@@ -3264,9 +3264,9 @@ export default function AdminPage() {
                       onChange={(e) => setNotificationTitle(e.target.value)}
                       placeholder="Enter notification title..."
                       maxLength={200}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                      className="w-full px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                     />
-                    <p className="text-white/40 text-xs mt-1">
+                    <p className="text-stone-900/40 text-xs mt-1">
                       {notificationTitle.length}/200
                     </p>
                   </div>
@@ -3275,7 +3275,7 @@ export default function AdminPage() {
                 <div className="space-y-4">
                   {/* Message */}
                   <div>
-                    <label className="block text-white/80 text-sm mb-2">
+                    <label className="block text-stone-900/80 text-sm mb-2">
                       Message
                     </label>
                     <textarea
@@ -3284,9 +3284,9 @@ export default function AdminPage() {
                       placeholder="Enter notification message..."
                       maxLength={2000}
                       rows={6}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                      className="w-full px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                     />
-                    <p className="text-white/40 text-xs mt-1">
+                    <p className="text-stone-900/40 text-xs mt-1">
                       {notificationMessage.length}/2000
                     </p>
                   </div>
@@ -3299,7 +3299,7 @@ export default function AdminPage() {
                       !notificationTitle.trim() ||
                       !notificationMessage.trim()
                     }
-                    className="w-full py-4 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 transition-all duration-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                    className="w-full py-4 bg-emerald-500 text-stone-900 rounded-xl hover:bg-emerald-600 transition-all duration-300 font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                   >
                     {isSendingNotification ? (
                       <>
@@ -3318,16 +3318,16 @@ export default function AdminPage() {
             </div>
 
             {/* Sent Notifications History */}
-            <div className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl p-6">
+            <div className="bg-cream-100/80  border border-stone-300/50 rounded-2xl p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-white flex items-center">
+                <h3 className="text-xl font-bold text-stone-900 flex items-center">
                   <Clock className="w-6 h-6 mr-3 text-blue-400" />
                   Sent Notifications History
                 </h3>
                 <button
                   onClick={fetchSentNotifications}
                   disabled={isLoadingNotifications}
-                  className="px-4 py-2 bg-white/10 rounded-xl text-white hover:bg-white/20 transition-all duration-300 flex items-center"
+                  className="px-4 py-2 bg-cream-200/60 rounded-xl text-stone-900 hover:bg-cream-300/60 transition-all duration-300 flex items-center"
                 >
                   <RefreshCw
                     className={`w-4 h-4 mr-2 ${
@@ -3344,15 +3344,15 @@ export default function AdminPage() {
                 </div>
               ) : sentNotifications.length === 0 ? (
                 <div className="text-center py-12">
-                  <MessageSquare className="w-16 h-16 text-white/20 mx-auto mb-4" />
-                  <p className="text-white/60">No notifications sent yet</p>
+                  <MessageSquare className="w-16 h-16 text-stone-900/20 mx-auto mb-4" />
+                  <p className="text-stone-900/60">No notifications sent yet</p>
                 </div>
               ) : (
                 <div className="space-y-4 max-h-96 overflow-y-auto">
                   {sentNotifications.map((notif: any) => (
                     <div
                       key={notif._id}
-                      className="bg-white/5 rounded-xl p-4 border border-white/10 hover:border-white/20 transition-all duration-300"
+                      className="bg-cream-100/80 rounded-xl p-4 border border-stone-300/40 hover:border-stone-300/50 transition-all duration-300"
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
@@ -3382,13 +3382,13 @@ export default function AdminPage() {
                               {notif.isBroadcast ? "Broadcast" : "Individual"}
                             </span>
                           </div>
-                          <h4 className="text-white font-semibold">
+                          <h4 className="text-stone-900 font-semibold">
                             {notif.title}
                           </h4>
-                          <p className="text-white/60 text-sm mt-1 line-clamp-2">
+                          <p className="text-stone-900/60 text-sm mt-1 line-clamp-2">
                             {notif.message}
                           </p>
-                          <div className="flex items-center gap-4 mt-3 text-white/40 text-xs">
+                          <div className="flex items-center gap-4 mt-3 text-stone-900/40 text-xs">
                             <span>
                               Sent by: {notif.sentBy?.name || "Admin"}
                             </span>
@@ -3419,30 +3419,30 @@ export default function AdminPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-stone-900/40  z-50 flex items-center justify-center p-4"
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-crypto-charcoal border border-white/20 rounded-2xl p-6 max-w-md w-full"
+              className="bg-cream-100 border border-stone-300/50 rounded-2xl p-6 max-w-md w-full"
             >
-              <h3 className="text-xl font-bold text-white mb-4">
+              <h3 className="text-xl font-bold text-stone-900 mb-4">
                 Respond to Issue
               </h3>
 
               <div className="mb-4">
-                <label className="block text-white/80 text-sm mb-2">
+                <label className="block text-stone-900/80 text-sm mb-2">
                   Your Response
                 </label>
                 <textarea
                   value={adminResponse}
                   onChange={(e) => setAdminResponse(e.target.value)}
-                  className="w-full h-32 px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+                  className="w-full h-32 px-4 py-2 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
                   placeholder="Type your response to the user..."
                   maxLength={2000}
                 />
-                <p className="text-white/40 text-xs mt-1">
+                <p className="text-stone-900/40 text-xs mt-1">
                   {adminResponse.length}/2000
                 </p>
               </div>
@@ -3458,7 +3458,7 @@ export default function AdminPage() {
                     }
                   }}
                   disabled={!adminResponse.trim()}
-                  className="flex-1 py-3 px-4 bg-cyan-500 text-white rounded-xl hover:bg-cyan-600 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3 px-4 bg-cyan-500 text-stone-900 rounded-xl hover:bg-cyan-600 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Send Response
                 </button>
@@ -3468,7 +3468,7 @@ export default function AdminPage() {
                     setResponseModal({ open: false, issueId: null });
                     setAdminResponse("");
                   }}
-                  className="flex-1 py-3 px-4 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-colors"
+                  className="flex-1 py-3 px-4 bg-cream-200/60 text-stone-900 rounded-xl hover:bg-cream-300/60 transition-colors"
                 >
                   Cancel
                 </button>
@@ -3485,22 +3485,22 @@ export default function AdminPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-stone-900/40  z-50 flex items-center justify-center p-4"
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-crypto-charcoal border border-white/20 rounded-2xl p-6 max-w-md w-full"
+              className="bg-cream-100 border border-stone-300/50 rounded-2xl p-6 max-w-md w-full"
             >
-              <h3 className="text-xl font-bold text-white mb-4">
+              <h3 className="text-xl font-bold text-stone-900 mb-4">
                 {commentModal.action === "approve"
                   ? "Approve Transaction"
                   : "Reject Transaction"}
               </h3>
 
               <div className="mb-4">
-                <label className="block text-white/80 text-sm mb-2">
+                <label className="block text-stone-900/80 text-sm mb-2">
                   {commentModal.action === "reject"
                     ? "Rejection Reason (Required)"
                     : "Comment (Optional)"}
@@ -3508,7 +3508,7 @@ export default function AdminPage() {
                 <textarea
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
-                  className="w-full h-24 px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full h-24 px-4 py-2 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                   placeholder={
                     commentModal.action === "reject"
                       ? "Please provide a reason for rejection..."
@@ -3532,7 +3532,7 @@ export default function AdminPage() {
                   className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-colors ${
                     commentModal.action === "approve"
                       ? "bg-emerald-500 text-black hover:bg-emerald-600"
-                      : "bg-red-500 text-white hover:bg-red-600"
+                      : "bg-red-500 text-stone-900 hover:bg-red-600"
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   {commentModal.action === "approve" ? "Approve" : "Reject"}
@@ -3540,7 +3540,7 @@ export default function AdminPage() {
 
                 <button
                   onClick={closeCommentModal}
-                  className="flex-1 py-3 px-4 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-colors"
+                  className="flex-1 py-3 px-4 bg-cream-200/60 text-stone-900 rounded-xl hover:bg-cream-300/60 transition-colors"
                 >
                   Cancel
                 </button>
@@ -3555,7 +3555,7 @@ export default function AdminPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black/80  flex items-center justify-center z-50 p-4"
             onClick={() =>
               setCancelStakeModal({
                 open: false,
@@ -3569,33 +3569,33 @@ export default function AdminPage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-crypto-charcoal border border-white/20 rounded-2xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto"
+              className="bg-cream-100 border border-stone-300/50 rounded-2xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto"
             >
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
                   <AlertTriangle className="w-6 h-6 text-red-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white">
+                  <h3 className="text-xl font-bold text-stone-900">
                     Cancel Stakes
                   </h3>
-                  <p className="text-white/60 text-sm">
+                  <p className="text-stone-900/60 text-sm">
                     10% penalty will be applied
                   </p>
                 </div>
               </div>
 
               {/* User Info */}
-              <div className="bg-white/5 rounded-xl p-4 mb-4">
+              <div className="bg-cream-100/80 rounded-xl p-4 mb-4">
                 <div className="flex justify-between mb-2">
-                  <span className="text-white/60">User:</span>
-                  <span className="text-white font-medium">
+                  <span className="text-stone-900/60">User:</span>
+                  <span className="text-stone-900 font-medium">
                     {cancelStakeModal.user.name}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-white/60">Email:</span>
-                  <span className="text-white">
+                  <span className="text-stone-900/60">Email:</span>
+                  <span className="text-stone-900">
                     {cancelStakeModal.user.email}
                   </span>
                 </div>
@@ -3607,7 +3607,7 @@ export default function AdminPage() {
                 (s: any) => s.status === "active"
               ).length > 0 ? (
                 <div className="mb-4">
-                  <h4 className="text-white/80 font-medium mb-3">
+                  <h4 className="text-stone-900/80 font-medium mb-3">
                     Active Stakes:
                   </h4>
                   <div className="space-y-2 max-h-48 overflow-y-auto">
@@ -3616,10 +3616,10 @@ export default function AdminPage() {
                       .map((stake: any) => (
                         <div
                           key={stake.stakeId}
-                          className={`bg-white/5 rounded-lg p-3 border transition-colors cursor-pointer ${
+                          className={`bg-cream-100/80 rounded-lg p-3 border transition-colors cursor-pointer ${
                             cancelStakeModal.selectedStakeId === stake.stakeId
                               ? "border-red-500/50 bg-red-500/10"
-                              : "border-white/10 hover:border-white/20"
+                              : "border-stone-300/40 hover:border-stone-300/50"
                           }`}
                           onClick={() =>
                             setCancelStakeModal({
@@ -3637,10 +3637,10 @@ export default function AdminPage() {
                               <p className="text-blue-400 font-bold">
                                 ${stake.amount?.toLocaleString()}
                               </p>
-                              <p className="text-white/60 text-xs">
+                              <p className="text-stone-900/60 text-xs">
                                 {stake.packageType} package
                               </p>
-                              <p className="text-white/40 text-xs">
+                              <p className="text-stone-900/40 text-xs">
                                 {new Date(stake.startDate).toLocaleDateString()}{" "}
                                 - {new Date(stake.endDate).toLocaleDateString()}
                               </p>
@@ -3649,22 +3649,22 @@ export default function AdminPage() {
                               <p className="text-red-400 text-sm">
                                 -${(stake.amount * 0.1).toLocaleString()}
                               </p>
-                              <p className="text-white/40 text-xs">penalty</p>
+                              <p className="text-stone-900/40 text-xs">penalty</p>
                             </div>
                           </div>
                         </div>
                       ))}
                   </div>
-                  <p className="text-white/40 text-xs mt-2">
+                  <p className="text-stone-900/40 text-xs mt-2">
                     {cancelStakeModal.selectedStakeId
                       ? "Click to deselect and cancel ALL stakes"
                       : "Click a stake to cancel only that one, or leave unselected to cancel ALL"}
                   </p>
                 </div>
               ) : (
-                <div className="bg-white/5 rounded-xl p-4 mb-4">
+                <div className="bg-cream-100/80 rounded-xl p-4 mb-4">
                   <div className="flex justify-between mb-2">
-                    <span className="text-white/60">Total Staked:</span>
+                    <span className="text-stone-900/60">Total Staked:</span>
                     <span className="text-blue-400 font-bold">
                       $
                       {cancelStakeModal.user.wallet?.stakedAmount?.toLocaleString() ||
@@ -3675,9 +3675,9 @@ export default function AdminPage() {
               )}
 
               {/* Summary */}
-              <div className="bg-white/5 rounded-xl p-4 mb-4">
+              <div className="bg-cream-100/80 rounded-xl p-4 mb-4">
                 <div className="flex justify-between mb-2">
-                  <span className="text-white/60">
+                  <span className="text-stone-900/60">
                     {cancelStakeModal.selectedStakeId
                       ? "Selected Stake:"
                       : "All Stakes:"}
@@ -3696,7 +3696,7 @@ export default function AdminPage() {
                   </span>
                 </div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-white/60">Penalty (10%):</span>
+                  <span className="text-stone-900/60">Penalty (10%):</span>
                   <span className="text-red-400 font-bold">
                     -$
                     {cancelStakeModal.selectedStakeId
@@ -3712,9 +3712,9 @@ export default function AdminPage() {
                         ).toLocaleString()}
                   </span>
                 </div>
-                <div className="border-t border-white/10 pt-2 mt-2">
+                <div className="border-t border-stone-300/40 pt-2 mt-2">
                   <div className="flex justify-between">
-                    <span className="text-white/80 font-medium">
+                    <span className="text-stone-900/80 font-medium">
                       Return to User:
                     </span>
                     <span className="text-emerald-400 font-bold">
@@ -3736,13 +3736,13 @@ export default function AdminPage() {
               </div>
 
               <div className="mb-4">
-                <label className="block text-white/80 text-sm mb-2">
+                <label className="block text-stone-900/80 text-sm mb-2">
                   Reason for Cancellation (Required)
                 </label>
                 <textarea
                   value={cancelStakeReason}
                   onChange={(e) => setCancelStakeReason(e.target.value)}
-                  className="w-full h-24 px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                  className="w-full h-24 px-4 py-2 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-red-500/50"
                   placeholder="Enter the reason for early stake cancellation..."
                 />
               </div>
@@ -3753,7 +3753,7 @@ export default function AdminPage() {
                     handleCancelStake(cancelStakeModal.selectedStakeId)
                   }
                   disabled={!cancelStakeReason.trim() || isCancellingStake}
-                  className="flex-1 py-3 px-4 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3 px-4 bg-red-500 text-stone-900 rounded-xl hover:bg-red-600 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isCancellingStake
                     ? "Processing..."
@@ -3771,7 +3771,7 @@ export default function AdminPage() {
                     });
                     setCancelStakeReason("");
                   }}
-                  className="flex-1 py-3 px-4 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-colors"
+                  className="flex-1 py-3 px-4 bg-cream-200/60 text-stone-900 rounded-xl hover:bg-cream-300/60 transition-colors"
                 >
                   Close
                 </button>
@@ -3786,7 +3786,7 @@ export default function AdminPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black/80  flex items-center justify-center z-50 p-4"
             onClick={() => {
               setDeleteUserModal({ open: false, userId: null, userName: null });
               setDeleteConfirmText("");
@@ -3798,7 +3798,7 @@ export default function AdminPage() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-crypto-charcoal border border-red-500/30 rounded-2xl p-6 max-w-lg w-full"
+              className="bg-cream-100 border border-red-500/30 rounded-2xl p-6 max-w-lg w-full"
             >
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
@@ -3808,7 +3808,7 @@ export default function AdminPage() {
                   <h3 className="text-xl font-bold text-red-400">
                     Delete User Permanently
                   </h3>
-                  <p className="text-white/60 text-sm">
+                  <p className="text-stone-900/60 text-sm">
                     This action cannot be undone
                   </p>
                 </div>
@@ -3822,7 +3822,7 @@ export default function AdminPage() {
                     <p className="text-red-400 font-medium mb-2">
                       Warning: Permanent Deletion
                     </p>
-                    <ul className="text-white/70 text-sm space-y-1">
+                    <ul className="text-stone-900/70 text-sm space-y-1">
                       <li>• All user data will be permanently deleted</li>
                       <li>• Wallet and balance will be lost</li>
                       <li>• All transactions history will be removed</li>
@@ -3834,9 +3834,9 @@ export default function AdminPage() {
               </div>
 
               {/* User Info */}
-              <div className="bg-white/5 rounded-xl p-4 mb-4">
+              <div className="bg-cream-100/80 rounded-xl p-4 mb-4">
                 <div className="flex justify-between mb-2">
-                  <span className="text-white/60">User to delete:</span>
+                  <span className="text-stone-900/60">User to delete:</span>
                   <span className="text-red-400 font-semibold">
                     {deleteUserModal.userName}
                   </span>
@@ -3845,20 +3845,20 @@ export default function AdminPage() {
 
               {/* Reason */}
               <div className="mb-4">
-                <label className="block text-white/80 text-sm mb-2">
+                <label className="block text-stone-900/80 text-sm mb-2">
                   Reason for Deletion (Optional - for audit log)
                 </label>
                 <textarea
                   value={deleteReason}
                   onChange={(e) => setDeleteReason(e.target.value)}
-                  className="w-full h-20 px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                  className="w-full h-20 px-4 py-2 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-red-500/50"
                   placeholder="Enter reason for deleting this user..."
                 />
               </div>
 
               {/* Confirmation Input */}
               <div className="mb-6">
-                <label className="block text-white/80 text-sm mb-2">
+                <label className="block text-stone-900/80 text-sm mb-2">
                   Type <span className="text-red-400 font-bold">DELETE</span> to
                   confirm
                 </label>
@@ -3866,7 +3866,7 @@ export default function AdminPage() {
                   type="text"
                   value={deleteConfirmText}
                   onChange={(e) => setDeleteConfirmText(e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                  className="w-full px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-500/50"
                   placeholder="Type DELETE to confirm"
                 />
               </div>
@@ -3875,7 +3875,7 @@ export default function AdminPage() {
                 <button
                   onClick={handleDeleteUser}
                   disabled={deleteConfirmText !== "DELETE" || isDeletingUser}
-                  className="flex-1 py-3 px-4 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  className="flex-1 py-3 px-4 bg-red-600 text-stone-900 rounded-xl hover:bg-red-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
                   {isDeletingUser ? (
                     <>
@@ -3900,7 +3900,7 @@ export default function AdminPage() {
                     setDeleteConfirmText("");
                     setDeleteReason("");
                   }}
-                  className="flex-1 py-3 px-4 bg-white/10 text-white rounded-xl hover:bg-white/20 transition-colors"
+                  className="flex-1 py-3 px-4 bg-cream-200/60 text-stone-900 rounded-xl hover:bg-cream-300/60 transition-colors"
                 >
                   Cancel
                 </button>
@@ -3912,3 +3912,5 @@ export default function AdminPage() {
     </div>
   );
 }
+
+

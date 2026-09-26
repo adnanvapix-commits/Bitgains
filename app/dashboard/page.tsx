@@ -134,7 +134,25 @@ export default function DashboardPage() {
   const { user, logout, isAuthenticated } = useAuth();
   const router = useRouter();
 
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTabState] = useState("overview");
+
+  // Read tab from URL on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const tab = new URLSearchParams(window.location.search).get("tab");
+      if (tab) setActiveTabState(tab);
+    }
+  }, []);
+
+  // Sync URL on tab change
+  const setActiveTab = (tab: string) => {
+    setActiveTabState(tab);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", tab);
+      window.history.replaceState({}, "", url.toString());
+    }
+  };
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [screenWidth, setScreenWidth] = useState(1024); // Default to desktop width
@@ -420,10 +438,10 @@ export default function DashboardPage() {
     return () => window.removeEventListener("resize", handleResize);
   }, [isClient]);
 
-  // Close mobile menu when tab changes
+  // Close mobile menu when tab changes (only on very small screens)
   useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [activeTab]);
+    if (screenWidth < 640) setMobileMenuOpen(false);
+  }, [activeTab, screenWidth]);
 
   // Close notification dropdown when clicking outside
   useEffect(() => {
@@ -877,10 +895,11 @@ export default function DashboardPage() {
                     </div>
                     <button
                       onClick={handleLogout}
-                      className="text-warm-700 hover:text-white transition-colors p-2 rounded-lg hover:bg-warm-400/15"
+                      className="flex items-center gap-1.5 text-red-500 hover:text-red-600 transition-colors px-2 py-1.5 rounded-lg hover:bg-red-50 border border-red-200"
                       title="Logout"
                     >
                       <LogOut className="w-4 h-4" />
+                      <span className="text-xs font-medium">Logout</span>
                     </button>
                   </>
                 )}
@@ -7328,399 +7347,188 @@ function AffiliateTab({
   );
 }
 
-// Settings Tab Component
+
+// Settings Tab — clean redesign
 function SettingsTab() {
   const { user, updateProfile } = useAuth();
-  const [activeSection, setActiveSection] = useState("profile");
-  const [isEditing, setIsEditing] = useState({
-    name: false,
-    email: false,
-  });
-  const [formData, setFormData] = useState({
-    name: user?.name || "",
-    email: user?.email || "",
-  });
+  const [editingName, setEditingName] = useState(false);
+  const [nameValue, setNameValue] = useState(user?.name || "");
   const [isUpdating, setIsUpdating] = useState(false);
-  const [updateMessage, setUpdateMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
+  const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [showPw, setShowPw] = useState(false);
+  const [pw, setPw] = useState({ newPass: "", confirm: "" });
+  const [pwLoading, setPwLoading] = useState(false);
+  const [pwMsg, setPwMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  // Update form data when user data changes
-  useEffect(() => {
-    if (user) {
-      setFormData((prev) => ({
-        ...prev,
-        name: user.name || "",
-        email: user.email || "",
-      }));
-    }
-  }, [user]);
+  useEffect(() => { if (user) setNameValue(user.name || ""); }, [user]);
 
-  const settingsSections = [
-    { id: "profile", label: "Profile", icon: User },
-
-    { id: "notifications", label: "Notifications", icon: Bell },
-  ];
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  const flash = (setter: any, type: "success" | "error", text: string) => {
+    setter({ type, text });
+    setTimeout(() => setter(null), 4000);
   };
 
-  const handleSave = async (field: "name" | "email") => {
-    if (!formData[field] || formData[field].trim() === "") {
-      setUpdateMessage({
-        type: "error",
-        text: `${field === "name" ? "Name" : "Email"} cannot be empty`,
-      });
-      setTimeout(() => setUpdateMessage(null), 3000);
-      return;
-    }
-
+  const saveName = async () => {
+    if (!nameValue.trim()) return flash(setMsg, "error", "Name cannot be empty");
     setIsUpdating(true);
     try {
-      const updateData = { [field]: formData[field].trim() };
-      const response = await updateProfile(updateData);
-
-      if (response.success) {
-        setIsEditing((prev) => ({ ...prev, [field]: false }));
-        setUpdateMessage({
-          type: "success",
-          text: `${field === "name" ? "Name" : "Email"} updated successfully`,
-        });
-      } else {
-        setUpdateMessage({
-          type: "error",
-          text: response.message || `Failed to update ${field}`,
-        });
-        // Reset form data to original value
-        setFormData((prev) => ({
-          ...prev,
-          [field]: user?.[field] || "",
-        }));
-      }
-    } catch (error) {
-      console.error(`Error updating ${field}:`, error);
-      setUpdateMessage({
-        type: "error",
-        text: `Failed to update ${field}`,
-      });
-      // Reset form data to original value
-      setFormData((prev) => ({
-        ...prev,
-        [field]: user?.[field] || "",
-      }));
-    } finally {
-      setIsUpdating(false);
-      setTimeout(() => setUpdateMessage(null), 3000);
-    }
+      const res = await updateProfile({ name: nameValue.trim() });
+      if (res?.success) { setEditingName(false); flash(setMsg, "success", "Name updated!"); }
+      else flash(setMsg, "error", res?.message || "Failed to update");
+    } catch { flash(setMsg, "error", "Failed to update"); }
+    finally { setIsUpdating(false); }
   };
 
-  const handleCancel = (field: "name" | "email") => {
-    setIsEditing((prev) => ({ ...prev, [field]: false }));
-    setFormData((prev) => ({
-      ...prev,
-      [field]: user?.[field] || "",
-    }));
+  const changePw = async () => {
+    if (pw.newPass.length < 6) return flash(setPwMsg, "error", "Min 6 characters");
+    if (pw.newPass !== pw.confirm) return flash(setPwMsg, "error", "Passwords do not match");
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(pw.newPass)) return flash(setPwMsg, "error", "Needs uppercase, lowercase & number");
+    setPwLoading(true);
+    try {
+      const { default: apiClient } = await import("../../lib/api/client.js");
+      const res = await apiClient.put("/auth/change-password", { newPassword: pw.newPass });
+      if (res?.success) { setShowPw(false); setPw({ newPass: "", confirm: "" }); flash(setMsg, "success", "Password changed!"); }
+      else flash(setPwMsg, "error", res?.message || "Failed");
+    } catch { flash(setPwMsg, "error", "Failed to change password"); }
+    finally { setPwLoading(false); }
   };
+
+  const info = [
+    { label: "Account Type", value: user?.role === "admin" ? "Administrator" : "Premium Member" },
+    { label: "Member Since", value: user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : "—" },
+    { label: "Last Login", value: user?.lastLogin ? new Date(user.lastLogin).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—" },
+    { label: "Email Status", value: user?.isEmailVerified ? "✅ Verified" : "⏳ Pending" },
+    { label: "Referral Code", value: user?.referralCode || "—" },
+    { label: "User ID", value: user?.id ? `${user.id.slice(0, 8)}...${user.id.slice(-4)}` : "—" },
+  ];
 
   return (
-    <div className="space-y-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="glass-card p-6"
-      >
-        <h2 className="text-2xl font-bold text-white mb-2">Account Settings</h2>
-        <p className="text-warm-700">
-          Manage your account preferences and security settings
-        </p>
-
-        {/* Update Message */}
-        {updateMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`mt-4 p-3 rounded-lg border ${
-              updateMessage.type === "success"
-                ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-400"
-                : "bg-red-500/20 border-red-500/30 text-red-400"
-            }`}
-          >
-            {updateMessage.text}
-          </motion.div>
+    <div className="space-y-4 sm:space-y-6">
+      {/* Header */}
+      <div className="glass-card p-4 sm:p-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-dark-900">Account Settings</h2>
+        <p className="text-warm-700 text-sm mt-1">Manage your profile and security</p>
+        {msg && (
+          <div className={`mt-3 p-3 rounded-xl text-sm font-medium ${msg.type === "success" ? "bg-green-50 border border-green-300 text-green-700" : "bg-red-50 border border-red-300 text-red-700"}`}>
+            {msg.type === "success" ? "✅ " : "❌ "}{msg.text}
+          </div>
         )}
-      </motion.div>
+      </div>
 
-      <div className="grid lg:grid-cols-4 gap-6">
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="lg:col-span-1"
-        >
-          <div className="glass-card p-4">
-            <nav className="space-y-2">
-              {settingsSections.map((section) => (
-                <button
-                  key={section.id}
-                  onClick={() => setActiveSection(section.id)}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ${
-                    activeSection === section.id
-                      ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                      : "text-warm-700 hover:text-white hover:bg-warm-400/15"
-                  }`}
-                >
-                  <section.icon className="w-5 h-5" />
-                  <span className="font-medium">{section.label}</span>
-                </button>
-              ))}
-            </nav>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        {/* Profile */}
+        <div className="glass-card p-4 sm:p-6 space-y-4">
+          <div className="flex items-center gap-3 pb-3 border-b border-warm-400/20">
+            <div className="w-9 h-9 rounded-xl bg-warm-400/20 flex items-center justify-center flex-shrink-0">
+              <User className="w-4 h-4 text-warm-600" />
+            </div>
+            <div><div className="font-bold text-dark-900 text-sm">Profile</div><div className="text-xs text-warm-600">Update your display name</div></div>
           </div>
-        </motion.div>
+          {/* Avatar row */}
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-xl font-bold text-white flex-shrink-0">
+              {user?.name?.charAt(0)?.toUpperCase() || "U"}
+            </div>
+            <div className="min-w-0">
+              <div className="font-bold text-dark-900 truncate">{user?.name || "—"}</div>
+              <div className="text-xs text-warm-600 truncate">{user?.email}</div>
+            </div>
+          </div>
+          {/* Name */}
+          <div>
+            <label className="block text-xs font-semibold text-warm-600 mb-1.5 uppercase tracking-wide">Display Name</label>
+            {editingName ? (
+              <div className="space-y-2">
+                <input value={nameValue} onChange={e => setNameValue(e.target.value)}
+                  className="w-full px-3 py-2.5 rounded-xl border-2 border-amber-500 bg-amber-50 text-dark-900 outline-none text-sm" />
+                <div className="flex gap-2">
+                  <button onClick={saveName} disabled={isUpdating} className="flex-1 py-2 bg-amber-600 text-white rounded-xl text-xs font-semibold disabled:opacity-60">{isUpdating ? "Saving..." : "Save"}</button>
+                  <button onClick={() => { setEditingName(false); setNameValue(user?.name || ""); }} className="flex-1 py-2 border border-warm-400/30 text-warm-700 rounded-xl text-xs">Cancel</button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <div className="flex-1 px-3 py-2.5 rounded-xl bg-warm-400/10 border border-warm-400/20 text-dark-900 text-sm truncate">{user?.name || "Not set"}</div>
+                <button onClick={() => setEditingName(true)} className="px-3 py-2.5 bg-warm-400/15 hover:bg-warm-400/25 text-warm-700 rounded-xl text-xs font-semibold border border-warm-400/20 flex-shrink-0">Edit</button>
+              </div>
+            )}
+          </div>
+          {/* Email readonly */}
+          <div>
+            <label className="block text-xs font-semibold text-warm-600 mb-1.5 uppercase tracking-wide">Email Address</label>
+            <div className="flex gap-2 items-center">
+              <div className="flex-1 px-3 py-2.5 rounded-xl bg-warm-400/10 border border-warm-400/20 text-dark-900 text-sm truncate">{user?.email || "—"}</div>
+              <span className="px-2 py-1 text-xs text-warm-600 bg-warm-400/10 rounded-lg border border-warm-400/20 flex-shrink-0">🔒 Fixed</span>
+            </div>
+            <p className="text-xs text-warm-500 mt-1">Contact support to change email.</p>
+          </div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="lg:col-span-3"
-        >
-          <div className="glass-card p-8">
-            {activeSection === "profile" && (
+        {/* Account Info */}
+        <div className="glass-card p-4 sm:p-6 space-y-3">
+          <div className="flex items-center gap-3 pb-3 border-b border-warm-400/20">
+            <div className="w-9 h-9 rounded-xl bg-warm-400/20 flex items-center justify-center flex-shrink-0">
+              <Shield className="w-4 h-4 text-warm-600" />
+            </div>
+            <div><div className="font-bold text-dark-900 text-sm">Account Information</div><div className="text-xs text-warm-600">Your account details</div></div>
+          </div>
+          <div className="space-y-2">
+            {info.map(item => (
+              <div key={item.label} className="flex justify-between items-center py-2 border-b border-warm-400/10 last:border-0 gap-2">
+                <span className="text-xs text-warm-600 font-medium flex-shrink-0">{item.label}</span>
+                <span className="text-xs text-dark-900 font-semibold text-right truncate">{item.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Security */}
+        <div className="glass-card p-4 sm:p-6 space-y-3">
+          <div className="flex items-center gap-3 pb-3 border-b border-warm-400/20">
+            <div className="w-9 h-9 rounded-xl bg-warm-400/20 flex items-center justify-center flex-shrink-0">
+              <Lock className="w-4 h-4 text-warm-600" />
+            </div>
+            <div><div className="font-bold text-dark-900 text-sm">Security</div><div className="text-xs text-warm-600">Change your password</div></div>
+          </div>
+          {!showPw ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-warm-400/10">
+                <div><div className="text-sm font-semibold text-dark-900">Password</div><div className="text-xs text-warm-600">••••••••••</div></div>
+                <button onClick={() => setShowPw(true)} className="px-3 py-1.5 bg-amber-600 text-white rounded-xl text-xs font-semibold hover:bg-amber-700 flex-shrink-0">Change</button>
+              </div>
+              <div className="p-3 rounded-xl bg-green-50 border border-green-200 text-xs text-green-700">🔐 Auth secured via Supabase JWT.</div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {pwMsg && <div className={`p-3 rounded-xl text-xs font-medium ${pwMsg.type === "success" ? "bg-green-50 border border-green-300 text-green-700" : "bg-red-50 border border-red-300 text-red-700"}`}>{pwMsg.text}</div>}
               <div>
-                <h3 className="text-xl font-semibold text-white mb-6">
-                  Profile Settings
-                </h3>
-                <div className="space-y-6">
-                  {/* Name Field */}
-                  <div>
-                    <label className="block text-sm font-medium text-white mb-2">
-                      Full Name
-                    </label>
-                    <div className="flex items-center space-x-3">
-                      <div className="flex-1">
-                        {isEditing.name ? (
-                          <input
-                            type="text"
-                            value={formData.name}
-                            onChange={(e) =>
-                              handleInputChange("name", e.target.value)
-                            }
-                            className="input-crypto w-full"
-                            placeholder="Enter your name"
-                            disabled={isUpdating}
-                          />
-                        ) : (
-                          <input
-                            type="text"
-                            value={user?.name || "Not set"}
-                            className="input-crypto w-full bg-white/5"
-                            disabled
-                          />
-                        )}
-                      </div>
-                      <div className="flex space-x-2">
-                        {isEditing.name ? (
-                          <>
-                            <button
-                              onClick={() => handleSave("name")}
-                              disabled={isUpdating}
-                              className="px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-                            >
-                              {isUpdating ? (
-                                <Loader className="w-4 h-4 animate-spin" />
-                              ) : (
-                                <span>Save</span>
-                              )}
-                            </button>
-                            <button
-                              onClick={() => handleCancel("name")}
-                              disabled={isUpdating}
-                              className="px-4 py-2 bg-warm-400/15 text-white rounded-lg hover:bg-warm-400/25 transition-colors disabled:opacity-50"
-                            >
-                              Cancel
-                            </button>
-                          </>
-                        ) : (
-                          <button
-                            onClick={() =>
-                              setIsEditing((prev) => ({ ...prev, name: true }))
-                            }
-                            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-400 transition-colors"
-                          >
-                            Edit
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Email Field */}
-                  <div>
-                    <label className="block text-sm font-medium text-white mb-2">
-                      Email Address
-                    </label>
-                    <div className="flex items-center space-x-3">
-                      <div className="flex-1">
-                        {isEditing.email ? (
-                          <input
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) =>
-                              handleInputChange("email", e.target.value)
-                            }
-                            className="input-crypto w-full"
-                            placeholder="Enter your email"
-                            disabled={isUpdating}
-                          />
-                        ) : (
-                          <input
-                            type="email"
-                            value={user?.email || "Not set"}
-                            className="input-crypto w-full bg-white/5"
-                            disabled
-                          />
-                        )}
-                      </div>
-                      <div className="flex space-x-2">
-                        {isEditing.email ? (
-                          <>
-                            <button
-                              onClick={() => handleSave("email")}
-                              disabled={isUpdating}
-                              className="px-4 py-2 bg-emerald-500 text-black rounded-lg hover:bg-emerald-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-                            >
-                              {isUpdating ? (
-                                <Loader className="w-4 h-4 animate-spin" />
-                              ) : (
-                                <span>Save</span>
-                              )}
-                            </button>
-                            <button
-                              onClick={() => handleCancel("email")}
-                              disabled={isUpdating}
-                              className="px-4 py-2 bg-warm-400/15 text-white rounded-lg hover:bg-warm-400/25 transition-colors disabled:opacity-50"
-                            >
-                              Cancel
-                            </button>
-                          </>
-                        ) : (
-                          <button
-                            onClick={() =>
-                              setIsEditing((prev) => ({ ...prev, email: true }))
-                            }
-                            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-400 transition-colors"
-                          >
-                            Edit
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Account Info */}
-                  <div className="border-t border-warm-400/30 pt-6">
-                    <h4 className="text-lg font-semibold text-white mb-4">
-                      Account Information
-                    </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-warm-700 mb-1">
-                          Account Type
-                        </label>
-                        <p className="text-white capitalize">
-                          {user?.role || "User"}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-warm-700 mb-1">
-                          Member Since
-                        </label>
-                        <p className="text-white">
-                          {user?.createdAt
-                            ? new Date(user.createdAt).toLocaleDateString()
-                            : "Unknown"}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-warm-700 mb-1">
-                          Email Verified
-                        </label>
-                        <p
-                          className={
-                            user?.isEmailVerified
-                              ? "text-emerald-400"
-                              : "text-yellow-400"
-                          }
-                        >
-                          {user?.isEmailVerified ? "Verified" : "Pending"}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-warm-700 mb-1">
-                          Last Login
-                        </label>
-                        <p className="text-white">
-                          {user?.lastLogin
-                            ? new Date(user.lastLogin).toLocaleDateString()
-                            : "Never"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <label className="block text-xs font-semibold text-warm-600 mb-1">New Password</label>
+                <input type="password" value={pw.newPass} onChange={e => setPw(p => ({ ...p, newPass: e.target.value }))} className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-50 text-dark-900 outline-none text-sm focus:ring-2 focus:ring-amber-500" />
               </div>
-            )}
-
-            {activeSection === "notifications" && (
-              <div className="space-y-6">
-                <h3 className="text-xl font-semibold text-white mb-6">
-                  Notification Preferences
-                </h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
-                    <div>
-                      <h4 className="text-dark-900 font-medium">
-                        Email Notifications
-                      </h4>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        value=""
-                        className="sr-only peer"
-                        defaultChecked
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                    </label>
-                  </div>
-                  <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
-                    <div>
-                      <h4 className="text-dark-900 font-medium">
-                        Push Notifications
-                      </h4>
-                      <p className="text-warm-700 text-sm">
-                        Get instant alerts for important activities
-                      </p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        value=""
-                        className="sr-only peer"
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                    </label>
-                  </div>
-                </div>
+              <div>
+                <label className="block text-xs font-semibold text-warm-600 mb-1">Confirm Password</label>
+                <input type="password" value={pw.confirm} onChange={e => setPw(p => ({ ...p, confirm: e.target.value }))} className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-50 text-dark-900 outline-none text-sm focus:ring-2 focus:ring-amber-500" />
               </div>
-            )}
+              <div className="flex gap-2">
+                <button onClick={changePw} disabled={pwLoading} className="flex-1 py-2.5 bg-amber-600 text-white rounded-xl text-sm font-semibold disabled:opacity-60">{pwLoading ? "Updating..." : "Update Password"}</button>
+                <button onClick={() => { setShowPw(false); setPw({ newPass: "", confirm: "" }); setPwMsg(null); }} className="flex-1 py-2.5 border border-warm-400/30 text-warm-700 rounded-xl text-sm">Cancel</button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Danger Zone */}
+        <div className="glass-card p-4 sm:p-6 border border-red-200 bg-red-50/30 space-y-3">
+          <div className="flex items-center gap-3 pb-3 border-b border-red-200/50">
+            <div className="w-9 h-9 rounded-xl bg-red-100 flex items-center justify-center flex-shrink-0">
+              <AlertTriangle className="w-4 h-4 text-red-500" />
+            </div>
+            <div><div className="font-bold text-dark-900 text-sm">Danger Zone</div><div className="text-xs text-warm-600">Irreversible actions</div></div>
           </div>
-        </motion.div>
+          <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-red-200 gap-3">
+            <div className="min-w-0"><div className="text-sm font-semibold text-dark-900">Delete Account</div><div className="text-xs text-warm-600 truncate">Permanently delete all data</div></div>
+            <button className="px-3 py-1.5 bg-red-500 text-white rounded-xl text-xs font-semibold opacity-60 cursor-not-allowed flex-shrink-0">Contact Support</button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -8392,7 +8200,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
         <p className="text-warm-700">Simulate your potential returns before you stake</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Input Panel */}
         <div className="glass-card p-6 space-y-6">
           <h3 className="text-lg font-semibold text-dark-900 flex items-center gap-2">
@@ -8426,7 +8234,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
           {/* Duration */}
           <div>
             <label className="block text-sm font-medium text-warm-700 mb-2">Lock Duration</label>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {[
                 { days: "30", label: "1 Month", rate: "5% APM" },
                 { days: "60", label: "2 Months", rate: "8% APM" },
@@ -8666,7 +8474,7 @@ function StakingPlansTab() {
       </div>
 
       {/* Tier Comparison Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {plans.map(plan => (
           <div key={plan.id}
             onClick={() => setSelectedPlan(plan.id === selectedPlan ? null : plan.id)}
@@ -8783,9 +8591,9 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
         <p className="text-warm-700">Automatically reinvest your rewards to maximize exponential growth</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Main Toggle Card */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="lg:col-span-2 space-y-4 min-w-0">
           {/* Global Toggle */}
           <div className="glass-card p-6">
             <div className="flex items-center justify-between mb-4">
@@ -8944,7 +8752,7 @@ function AddressBookTab() {
       {showAddForm && (
         <div className="glass-card p-6 border-2 border-warm-400/40">
           <h3 className="font-semibold text-dark-900 mb-4">Add New Address</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
             <div>
               <label className="block text-xs text-warm-600 mb-1.5 font-medium">Label</label>
               <input value={newLabel} onChange={e => setNewLabel(e.target.value)}
@@ -9099,7 +8907,7 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
       </div>
 
       {/* KPI Metrics Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {performanceMetrics.map(m => (
           <div key={m.label} className="glass-card p-4">
             <div className="text-xl mb-2">{m.icon}</div>
@@ -9114,7 +8922,7 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Allocation Chart */}
         <div className="glass-card p-6">
           <h3 className="font-semibold text-dark-900 mb-4">Portfolio Allocation</h3>
@@ -9207,3 +9015,4 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
     </div>
   );
 }
+
