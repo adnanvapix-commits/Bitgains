@@ -286,8 +286,8 @@ export default function DashboardPage() {
   useEffect(() => {
     if (isAuthenticated && user) {
       fetchWalletData();
-      // Set up periodic refresh for real-time updates
-      const interval = setInterval(fetchWalletData, 30000); // Every 30 seconds
+      // Refresh only every 5 minutes to avoid DB overuse
+      const interval = setInterval(fetchWalletData, 300000);
       return () => clearInterval(interval);
     }
   }, [isAuthenticated, user]);
@@ -338,8 +338,8 @@ export default function DashboardPage() {
   useEffect(() => {
     if (isAuthenticated && user) {
       fetchNotifications();
-      // Refresh notifications every minute
-      const interval = setInterval(fetchNotifications, 60000);
+      // Refresh notifications every 5 minutes
+      const interval = setInterval(fetchNotifications, 300000);
       return () => clearInterval(interval);
     }
   }, [isAuthenticated, user]);
@@ -459,22 +459,7 @@ export default function DashboardPage() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showNotificationDropdown]);
 
-  // Live update functionality - fetch real rewards from backend
-  useEffect(() => {
-    if (isLive && stakedBalance > 0 && isAuthenticated) {
-      const interval = setInterval(async () => {
-        try {
-          // Update rewards from backend
-          await walletApi.updateRewards();
-          // Refresh wallet data to get updated balances
-          await fetchWalletData();
-        } catch (error) {
-          console.error("Error updating rewards:", error);
-        }
-      }, 60000); // Update every minute for real rewards
-      return () => clearInterval(interval);
-    }
-  }, [isLive, stakedBalance, isAuthenticated]);
+  // Live update removed — rewards calculated on wallet load, no polling needed
 
   const formatCurrency = (amount: number, showDecimals = true) => {
     return new Intl.NumberFormat("en-US", {
@@ -944,19 +929,11 @@ export default function DashboardPage() {
 
                 <div>
                   <div className="flex items-center space-x-2 sm:space-x-4">
-                    <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-white capitalize">
+                    <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-dark-900 capitalize">
                       {activeTab === "overview"
                         ? "Account Overview"
                         : activeTab}
                     </h1>
-                    {isLive && (
-                      <div className="flex items-center space-x-2 px-3 py-1 bg-emerald-500/20 rounded-full border border-emerald-500/30">
-                        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                        <span className="text-xs text-emerald-400 font-medium">
-                          Live Updates
-                        </span>
-                      </div>
-                    )}
                   </div>
                   <p className="text-warm-700 mt-1 text-sm sm:text-base hidden sm:block">
                     {activeTab === "overview" &&
@@ -993,21 +970,14 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                {/* Live Toggle */}
+                {/* Manual Refresh */}
                 <button
-                  onClick={() => setIsLive(!isLive)}
-                  className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg sm:rounded-xl transition-all duration-300 ${
-                    isLive
-                      ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                      : "bg-warm-400/15 text-warm-700 hover:bg-warm-400/25"
-                  }`}
+                  onClick={() => fetchWalletData()}
+                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg sm:rounded-xl transition-all duration-300 bg-warm-400/15 text-warm-700 hover:bg-warm-400/25"
+                  title="Refresh data"
                 >
-                  <RefreshCw
-                    className={`w-4 h-4 ${isLive ? "animate-spin" : ""}`}
-                  />
-                  <span className="text-xs sm:text-sm font-medium hidden sm:inline">
-                    {isLive ? "Live" : "Paused"}
-                  </span>
+                  <RefreshCw className="w-4 h-4" />
+                  <span className="text-xs sm:text-sm font-medium hidden sm:inline">Refresh</span>
                 </button>
 
                 {/* Notification Bell */}
@@ -9015,4 +8985,5 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
     </div>
   );
 }
+
 
