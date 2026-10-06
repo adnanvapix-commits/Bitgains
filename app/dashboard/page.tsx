@@ -49,6 +49,7 @@ import {
   Loader,
   HelpCircle,
   MessageSquare,
+  Lock,
   Mail,
 } from "lucide-react";
 import {
@@ -6910,7 +6911,7 @@ function AffiliateTab({
 
 // Settings Tab — clean redesign
 function SettingsTab() {
-  const { user, updateProfile } = useAuth();
+  const { user, updateUser } = useAuth();
   const [editingName, setEditingName] = useState(false);
   const [nameValue, setNameValue] = useState(user?.name || "");
   const [isUpdating, setIsUpdating] = useState(false);
@@ -6931,9 +6932,16 @@ function SettingsTab() {
     if (!nameValue.trim()) return flash(setMsg, "error", "Name cannot be empty");
     setIsUpdating(true);
     try {
-      const res = await updateProfile({ name: nameValue.trim() });
-      if (res?.success) { setEditingName(false); flash(setMsg, "success", "Name updated!"); }
-      else flash(setMsg, "error", res?.message || "Failed to update");
+      // updateUser only updates local state — call API directly
+      const { default: apiClient } = await import("../../lib/api/client.js");
+      const res = await apiClient.put("/auth/profile", { name: nameValue.trim() });
+      if (res?.success) {
+        updateUser({ name: nameValue.trim() });
+        setEditingName(false);
+        flash(setMsg, "success", "Name updated!");
+      } else {
+        flash(setMsg, "error", res?.message || "Failed to update");
+      }
     } catch { flash(setMsg, "error", "Failed to update"); }
     finally { setIsUpdating(false); }
   };
@@ -6965,10 +6973,14 @@ function SettingsTab() {
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div className="glass-card p-4 sm:p-6">
-        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Account Settings</h2>
-        <p className="text-slate-600 dark:text-slate-300 text-sm mt-1">Manage your profile and security</p>
+        <h2 className="text-xl sm:text-2xl font-bold text-foreground">Account Settings</h2>
+        <p className="text-muted-foreground text-sm mt-1">Manage your profile and security</p>
         {msg && (
-          <div className={`mt-3 p-3 rounded-xl text-sm font-medium ${msg.type === "success" ? "bg-green-50 border border-green-300 text-green-700" : "bg-red-50 border border-red-300 text-red-700"}`}>
+          <div className={`mt-3 p-3 rounded-xl text-sm font-medium border ${
+            msg.type === "success"
+              ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+              : "bg-destructive/8 border-destructive/25 text-destructive"
+          }`}>
             {msg.type === "success" ? "✅ " : "❌ "}{msg.text}
           </div>
         )}
@@ -6977,65 +6989,97 @@ function SettingsTab() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Profile */}
         <div className="glass-card p-4 sm:p-6 space-y-4">
-          <div className="flex items-center gap-3 pb-3 border-b border-warm-400/20">
-            <div className="w-9 h-9 rounded-xl bg-warm-400/20 flex items-center justify-center flex-shrink-0">
-              <User className="w-4 h-4 text-warm-600" />
+          <div className="flex items-center gap-3 pb-3 border-b border-border">
+            <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+              <User className="w-4 h-4 text-primary" />
             </div>
-            <div><div className="font-bold text-slate-900 dark:text-white text-sm">Profile</div><div className="text-xs text-warm-600">Update your display name</div></div>
+            <div>
+              <div className="font-bold text-foreground text-sm">Profile</div>
+              <div className="text-xs text-muted-foreground">Update your display name</div>
+            </div>
           </div>
+
           {/* Avatar row */}
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-xl font-bold text-white flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-xl font-bold text-primary-foreground flex-shrink-0">
               {user?.name?.charAt(0)?.toUpperCase() || "U"}
             </div>
             <div className="min-w-0">
-              <div className="font-bold text-slate-900 dark:text-white truncate">{user?.name || "—"}</div>
-              <div className="text-xs text-warm-600 truncate">{user?.email}</div>
+              <div className="font-bold text-foreground truncate">{user?.name || "—"}</div>
+              <div className="text-xs text-muted-foreground truncate">{user?.email}</div>
             </div>
           </div>
+
           {/* Name */}
           <div>
-            <label className="block text-xs font-semibold text-warm-600 mb-1.5 uppercase tracking-wide">Display Name</label>
+            <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wide">Display Name</label>
             {editingName ? (
               <div className="space-y-2">
-                <input value={nameValue} onChange={e => setNameValue(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl border-2 border-amber-500 bg-amber-50 text-slate-900 dark:text-white outline-none text-sm" />
+                <input
+                  value={nameValue}
+                  onChange={e => setNameValue(e.target.value)}
+                  className="w-full px-3 py-2.5 rounded-xl border-2 border-primary bg-primary/5 text-foreground outline-none text-sm focus:ring-2 focus:ring-primary/30"
+                />
                 <div className="flex gap-2">
-                  <button onClick={saveName} disabled={isUpdating} className="flex-1 py-2 bg-amber-600 text-white rounded-xl text-xs font-semibold disabled:opacity-60">{isUpdating ? "Saving..." : "Save"}</button>
-                  <button onClick={() => { setEditingName(false); setNameValue(user?.name || ""); }} className="flex-1 py-2 border border-warm-400/30 text-slate-600 dark:text-slate-300 rounded-xl text-xs">Cancel</button>
+                  <button
+                    onClick={saveName}
+                    disabled={isUpdating}
+                    className="flex-1 py-2 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl text-xs font-semibold disabled:opacity-60"
+                  >
+                    {isUpdating ? "Saving..." : "Save"}
+                  </button>
+                  <button
+                    onClick={() => { setEditingName(false); setNameValue(user?.name || ""); }}
+                    className="flex-1 py-2 border border-border text-muted-foreground rounded-xl text-xs hover:bg-secondary transition-colors"
+                  >
+                    Cancel
+                  </button>
                 </div>
               </div>
             ) : (
               <div className="flex gap-2">
-                <div className="flex-1 px-3 py-2.5 rounded-xl bg-warm-400/10 border border-warm-400/20 text-slate-900 dark:text-white text-sm truncate">{user?.name || "Not set"}</div>
-                <button onClick={() => setEditingName(true)} className="px-3 py-2.5 bg-warm-400/15 hover:bg-warm-400/25 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-semibold border border-warm-400/20 flex-shrink-0">Edit</button>
+                <div className="flex-1 px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground text-sm truncate">
+                  {user?.name || "Not set"}
+                </div>
+                <button
+                  onClick={() => setEditingName(true)}
+                  className="px-3 py-2.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-semibold border border-primary/25 flex-shrink-0 transition-colors"
+                >
+                  Edit
+                </button>
               </div>
             )}
           </div>
+
           {/* Email readonly */}
           <div>
-            <label className="block text-xs font-semibold text-warm-600 mb-1.5 uppercase tracking-wide">Email Address</label>
+            <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wide">Email Address</label>
             <div className="flex gap-2 items-center">
-              <div className="flex-1 px-3 py-2.5 rounded-xl bg-warm-400/10 border border-warm-400/20 text-slate-900 dark:text-white text-sm truncate">{user?.email || "—"}</div>
-              <span className="px-2 py-1 text-xs text-warm-600 bg-warm-400/10 rounded-lg border border-warm-400/20 flex-shrink-0">🔒 Fixed</span>
+              <div className="flex-1 px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground text-sm truncate">
+                {user?.email || "—"}
+              </div>
+              <span className="px-2 py-1 text-xs text-muted-foreground bg-secondary rounded-lg border border-border flex-shrink-0">🔒 Fixed</span>
             </div>
-            <p className="text-xs text-warm-500 mt-1">Contact support to change email.</p>
+            <p className="text-xs text-muted-foreground/70 mt-1">Contact support to change email.</p>
           </div>
         </div>
 
         {/* Account Info */}
         <div className="glass-card p-4 sm:p-6 space-y-3">
-          <div className="flex items-center gap-3 pb-3 border-b border-warm-400/20">
-            <div className="w-9 h-9 rounded-xl bg-warm-400/20 flex items-center justify-center flex-shrink-0">
-              <Shield className="w-4 h-4 text-warm-600" />
+          <div className="flex items-center gap-3 pb-3 border-b border-border">
+            <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+              <Shield className="w-4 h-4 text-primary" />
             </div>
-            <div><div className="font-bold text-slate-900 dark:text-white text-sm">Account Information</div><div className="text-xs text-warm-600">Your account details</div></div>
+            <div>
+              <div className="font-bold text-foreground text-sm">Account Information</div>
+              <div className="text-xs text-muted-foreground">Your account details</div>
+            </div>
           </div>
           <div className="space-y-2">
             {info.map(item => (
-              <div key={item.label} className="flex justify-between items-center py-2 border-b border-warm-400/10 last:border-0 gap-2">
-                <span className="text-xs text-warm-600 font-medium flex-shrink-0">{item.label}</span>
-                <span className="text-xs text-slate-900 dark:text-white font-semibold text-right truncate">{item.value}</span>
+              <div key={item.label} className="flex justify-between items-center py-2 border-b border-border/50 last:border-0 gap-2">
+                <span className="text-xs text-muted-foreground font-medium flex-shrink-0">{item.label}</span>
+                <span className="text-xs text-foreground font-semibold text-right truncate">{item.value}</span>
               </div>
             ))}
           </div>
@@ -7043,50 +7087,100 @@ function SettingsTab() {
 
         {/* Security */}
         <div className="glass-card p-4 sm:p-6 space-y-3">
-          <div className="flex items-center gap-3 pb-3 border-b border-warm-400/20">
-            <div className="w-9 h-9 rounded-xl bg-warm-400/20 flex items-center justify-center flex-shrink-0">
-              <Lock className="w-4 h-4 text-warm-600" />
+          <div className="flex items-center gap-3 pb-3 border-b border-border">
+            <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+              <Lock className="w-4 h-4 text-primary" />
             </div>
-            <div><div className="font-bold text-slate-900 dark:text-white text-sm">Security</div><div className="text-xs text-warm-600">Change your password</div></div>
+            <div>
+              <div className="font-bold text-foreground text-sm">Security</div>
+              <div className="text-xs text-muted-foreground">Change your password</div>
+            </div>
           </div>
           {!showPw ? (
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 rounded-xl bg-warm-400/10">
-                <div><div className="text-sm font-semibold text-slate-900 dark:text-white">Password</div><div className="text-xs text-warm-600">••••••••••</div></div>
-                <button onClick={() => setShowPw(true)} className="px-3 py-1.5 bg-amber-600 text-white rounded-xl text-xs font-semibold hover:bg-amber-700 flex-shrink-0">Change</button>
+              <div className="flex items-center justify-between p-3 rounded-xl bg-secondary border border-border">
+                <div>
+                  <div className="text-sm font-semibold text-foreground">Password</div>
+                  <div className="text-xs text-muted-foreground">••••••••••</div>
+                </div>
+                <button
+                  onClick={() => setShowPw(true)}
+                  className="px-3 py-1.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl text-xs font-semibold hover:opacity-90 flex-shrink-0 transition-opacity"
+                >
+                  Change
+                </button>
               </div>
-              <div className="p-3 rounded-xl bg-green-50 border border-green-200 text-xs text-green-700">🔐 Auth secured via Supabase JWT.</div>
+              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-700">
+                🔐 Auth secured via Supabase JWT.
+              </div>
             </div>
           ) : (
             <div className="space-y-3">
-              {pwMsg && <div className={`p-3 rounded-xl text-xs font-medium ${pwMsg.type === "success" ? "bg-green-50 border border-green-300 text-green-700" : "bg-red-50 border border-red-300 text-red-700"}`}>{pwMsg.text}</div>}
+              {pwMsg && (
+                <div className={`p-3 rounded-xl text-xs font-medium border ${
+                  pwMsg.type === "success"
+                    ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+                    : "bg-destructive/8 border-destructive/25 text-destructive"
+                }`}>
+                  {pwMsg.text}
+                </div>
+              )}
               <div>
-                <label className="block text-xs font-semibold text-warm-600 mb-1">New Password</label>
-                <input type="password" value={pw.newPass} onChange={e => setPw(p => ({ ...p, newPass: e.target.value }))} className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-50 text-slate-900 dark:text-white outline-none text-sm focus:ring-2 focus:ring-amber-500" />
+                <label className="block text-xs font-semibold text-muted-foreground mb-1">New Password</label>
+                <input
+                  type="password"
+                  value={pw.newPass}
+                  onChange={e => setPw(p => ({ ...p, newPass: e.target.value }))}
+                  className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none text-sm focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
+                />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-warm-600 mb-1">Confirm Password</label>
-                <input type="password" value={pw.confirm} onChange={e => setPw(p => ({ ...p, confirm: e.target.value }))} className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-50 text-slate-900 dark:text-white outline-none text-sm focus:ring-2 focus:ring-amber-500" />
+                <label className="block text-xs font-semibold text-muted-foreground mb-1">Confirm Password</label>
+                <input
+                  type="password"
+                  value={pw.confirm}
+                  onChange={e => setPw(p => ({ ...p, confirm: e.target.value }))}
+                  className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none text-sm focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
+                />
               </div>
               <div className="flex gap-2">
-                <button onClick={changePw} disabled={pwLoading} className="flex-1 py-2.5 bg-amber-600 text-white rounded-xl text-sm font-semibold disabled:opacity-60">{pwLoading ? "Updating..." : "Update Password"}</button>
-                <button onClick={() => { setShowPw(false); setPw({ newPass: "", confirm: "" }); setPwMsg(null); }} className="flex-1 py-2.5 border border-warm-400/30 text-slate-600 dark:text-slate-300 rounded-xl text-sm">Cancel</button>
+                <button
+                  onClick={changePw}
+                  disabled={pwLoading}
+                  className="flex-1 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl text-sm font-semibold disabled:opacity-60 hover:opacity-90 transition-opacity"
+                >
+                  {pwLoading ? "Updating..." : "Update Password"}
+                </button>
+                <button
+                  onClick={() => { setShowPw(false); setPw({ newPass: "", confirm: "" }); setPwMsg(null); }}
+                  className="flex-1 py-2.5 border border-border text-muted-foreground rounded-xl text-sm hover:bg-secondary transition-colors"
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           )}
         </div>
 
         {/* Danger Zone */}
-        <div className="glass-card p-4 sm:p-6 border border-red-200 bg-red-50/30 space-y-3">
-          <div className="flex items-center gap-3 pb-3 border-b border-red-200/50">
-            <div className="w-9 h-9 rounded-xl bg-red-100 flex items-center justify-center flex-shrink-0">
-              <AlertTriangle className="w-4 h-4 text-red-500" />
+        <div className="glass-card p-4 sm:p-6 border border-destructive/20 bg-destructive/5 space-y-3">
+          <div className="flex items-center gap-3 pb-3 border-b border-destructive/15">
+            <div className="w-9 h-9 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center justify-center flex-shrink-0">
+              <AlertTriangle className="w-4 h-4 text-destructive" />
             </div>
-            <div><div className="font-bold text-slate-900 dark:text-white text-sm">Danger Zone</div><div className="text-xs text-warm-600">Irreversible actions</div></div>
+            <div>
+              <div className="font-bold text-foreground text-sm">Danger Zone</div>
+              <div className="text-xs text-muted-foreground">Irreversible actions</div>
+            </div>
           </div>
-          <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-red-200 gap-3">
-            <div className="min-w-0"><div className="text-sm font-semibold text-slate-900 dark:text-white">Delete Account</div><div className="text-xs text-warm-600 truncate">Permanently delete all data</div></div>
-            <button className="px-3 py-1.5 bg-red-500 text-white rounded-xl text-xs font-semibold opacity-60 cursor-not-allowed flex-shrink-0">Contact Support</button>
+          <div className="flex items-center justify-between p-3 rounded-xl bg-card border border-destructive/20 gap-3">
+            <div className="min-w-0">
+              <div className="text-sm font-semibold text-foreground">Delete Account</div>
+              <div className="text-xs text-muted-foreground truncate">Permanently delete all data</div>
+            </div>
+            <button className="px-3 py-1.5 bg-destructive/80 text-white rounded-xl text-xs font-semibold opacity-60 cursor-not-allowed flex-shrink-0">
+              Contact Support
+            </button>
           </div>
         </div>
       </div>
@@ -7747,10 +7841,10 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
   const total = num + earning;
 
   const tiers = [
-    { label: "Bronze", min: 100, max: 999, rate: "5%", color: "from-amber-600 to-amber-500", icon: "🥉" },
-    { label: "Silver", min: 1000, max: 4999, rate: "8%", color: "from-slate-400 to-slate-300", icon: "🥈" },
-    { label: "Gold", min: 5000, max: 24999, rate: "12%", color: "from-yellow-500 to-yellow-400", icon: "🥇" },
-    { label: "Platinum", min: 25000, max: Infinity, rate: "15%", color: "from-purple-500 to-purple-400", icon: "💎" },
+    { label: "Bronze",   min: 100,   max: 999,      rate: "5%",  icon: "🥉" },
+    { label: "Silver",   min: 1000,  max: 4999,     rate: "8%",  icon: "🥈" },
+    { label: "Gold",     min: 5000,  max: 24999,    rate: "12%", icon: "🥇" },
+    { label: "Platinum", min: 25000, max: Infinity,  rate: "15%", icon: "💎" },
   ];
   const currentTier = tiers.find(t => num >= t.min && num <= t.max) ?? tiers[0];
 
@@ -7758,35 +7852,35 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
     <div className="space-y-6">
       {/* Header */}
       <div className="glass-card p-6">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Staking Calculator</h2>
-        <p className="text-slate-600 dark:text-slate-300">Simulate your potential returns before you stake</p>
+        <h2 className="text-2xl font-bold text-foreground mb-1">Staking Calculator</h2>
+        <p className="text-muted-foreground">Simulate your potential returns before you stake</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Input Panel */}
         <div className="glass-card p-6 space-y-6">
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-            <span className="w-8 h-8 bg-warm-400/20 rounded-lg flex items-center justify-center text-warm-600">⚙</span>
+          <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <span className="w-8 h-8 bg-primary/10 border border-primary/20 rounded-lg flex items-center justify-center text-primary text-sm">⚙</span>
             Configure Your Stake
           </h3>
 
           {/* Amount */}
           <div>
-            <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">Stake Amount (USDT)</label>
+            <label className="block text-sm font-medium text-muted-foreground mb-2">Stake Amount (USDT)</label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-warm-600 font-semibold">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-semibold">$</span>
               <input
                 type="number"
                 value={amount}
                 onChange={e => setAmount(e.target.value)}
-                className="w-full pl-8 pr-4 py-3 rounded-xl border border-warm-400/30 bg-cream-100 text-slate-900 dark:text-white focus:ring-2 focus:ring-warm-400 focus:border-transparent outline-none text-lg font-semibold"
+                className="w-full pl-8 pr-4 py-3 rounded-xl border border-border bg-card text-foreground focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none text-lg font-semibold transition-all"
                 placeholder="1000"
               />
             </div>
-            <div className="flex gap-2 mt-2">
+            <div className="flex flex-wrap gap-2 mt-2">
               {[100, 500, 1000, 5000, 25000].map(v => (
                 <button key={v} onClick={() => setAmount(String(v))}
-                  className="px-2 py-1 text-xs rounded-lg bg-warm-400/15 text-slate-600 dark:text-slate-300 hover:bg-warm-400/30 transition-all font-medium">
+                  className="px-2 py-1 text-xs rounded-lg bg-secondary border border-border text-muted-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-all font-medium">
                   ${v >= 1000 ? `${v/1000}K` : v}
                 </button>
               ))}
@@ -7795,38 +7889,36 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
 
           {/* Duration */}
           <div>
-            <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">Lock Duration</label>
+            <label className="block text-sm font-medium text-muted-foreground mb-2">Lock Duration</label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {[
-                { days: "30", label: "1 Month", rate: "5% APM" },
-                { days: "60", label: "2 Months", rate: "8% APM" },
-                { days: "90", label: "3 Months", rate: "12% APM" },
+                { days: "30",  label: "1 Month",  rate: "5% APM"  },
+                { days: "60",  label: "2 Months", rate: "8% APM"  },
+                { days: "90",  label: "3 Months", rate: "12% APM" },
                 { days: "180", label: "6 Months", rate: "15% APM" },
               ].map(opt => (
                 <button key={opt.days} onClick={() => setDuration(opt.days)}
                   className={`p-3 rounded-xl border-2 text-center transition-all duration-200 ${
                     duration === opt.days
-                      ? "border-amber-600 bg-amber-600 text-white shadow-md shadow-amber-600/30 scale-[1.03]"
-                      : "border-warm-400/30 bg-white text-slate-600 dark:text-slate-300 hover:border-amber-500/60 hover:bg-amber-50"
+                      ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25 scale-[1.03]"
+                      : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:bg-primary/5"
                   }`}>
                   <div className="font-bold text-sm">{opt.label}</div>
-                  <div className="text-xs text-warm-600">{opt.rate}</div>
+                  <div className={`text-xs ${duration === opt.days ? "text-primary-foreground/80" : "text-muted-foreground"}`}>{opt.rate}</div>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Compound Toggle */}
-          <div className="flex items-center justify-between p-4 rounded-xl bg-warm-400/10 border border-warm-400/20">
+          <div className="flex items-center justify-between p-4 rounded-xl bg-secondary border border-border">
             <div>
-              <div className="font-semibold text-slate-900 dark:text-white text-sm">Auto-Compound Rewards</div>
-              <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">Reinvest earnings for exponential growth</div>
+              <div className="font-semibold text-foreground text-sm">Auto-Compound Rewards</div>
+              <div className="text-xs text-muted-foreground mt-0.5">Reinvest earnings for exponential growth</div>
             </div>
             <button onClick={() => setCompoundEnabled(!compoundEnabled)}
               className={`relative w-12 h-6 rounded-full transition-all duration-300 ring-2 ${
-                compoundEnabled
-                  ? "bg-amber-600 ring-amber-600"
-                  : "bg-stone-300 ring-stone-300"
+                compoundEnabled ? "bg-primary ring-primary" : "bg-muted ring-border"
               }`}>
               <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 ${compoundEnabled ? "left-6" : "left-0.5"}`} />
             </button>
@@ -7836,13 +7928,13 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
         {/* Results Panel */}
         <div className="space-y-4">
           {/* Tier Badge */}
-          <div className={`glass-card p-5 bg-gradient-to-r ${currentTier.color} text-white`}>
+          <div className="glass-card p-5 bg-gradient-to-r from-primary to-accent text-primary-foreground">
             <div className="flex items-center gap-3">
               <span className="text-3xl">{currentTier.icon}</span>
               <div>
                 <div className="text-sm font-medium opacity-90">Your Tier</div>
                 <div className="text-2xl font-bold">{currentTier.label} Member</div>
-                <div className="text-sm opacity-90">{currentTier.rate} monthly rate • ${currentTier.min.toLocaleString()}–{currentTier.max === Infinity ? "∞" : `$${currentTier.max.toLocaleString()}`}</div>
+                <div className="text-sm opacity-80">{currentTier.rate} monthly rate · ${currentTier.min.toLocaleString()}–{currentTier.max === Infinity ? "∞" : `$${currentTier.max.toLocaleString()}`}</div>
               </div>
             </div>
           </div>
@@ -7850,46 +7942,46 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
           {/* Result Cards */}
           <div className="grid grid-cols-2 gap-4">
             {[
-              { label: "Monthly Rate", value: `${(rate * 100).toFixed(0)}% APM`, sub: "Per month return" },
-              { label: "Total Earnings", value: `$${earning.toFixed(2)}`, sub: `Over ${months} month${months > 1 ? "s" : ""}` },
-              { label: "Total Return", value: `$${total.toFixed(2)}`, sub: "Principal + rewards" },
-              { label: "ROI", value: `${num > 0 ? ((earning / num) * 100).toFixed(1) : "0"}%`, sub: "Return on investment" },
+              { label: "Monthly Rate",   value: `${(rate * 100).toFixed(0)}% APM`,                                 sub: "Per month return" },
+              { label: "Total Earnings", value: `$${earning.toFixed(2)}`,                                         sub: `Over ${months} month${months > 1 ? "s" : ""}` },
+              { label: "Total Return",   value: `$${total.toFixed(2)}`,                                            sub: "Principal + rewards" },
+              { label: "ROI",            value: `${num > 0 ? ((earning / num) * 100).toFixed(1) : "0"}%`,         sub: "Return on investment" },
             ].map(item => (
               <div key={item.label} className="glass-card p-4 text-center">
-                <div className="text-xs text-warm-600 mb-1">{item.label}</div>
-                <div className="text-xl font-bold text-slate-900 dark:text-white">{item.value}</div>
-                <div className="text-xs text-slate-600 dark:text-slate-300">{item.sub}</div>
+                <div className="text-xs text-muted-foreground mb-1">{item.label}</div>
+                <div className="text-xl font-bold text-foreground">{item.value}</div>
+                <div className="text-xs text-muted-foreground">{item.sub}</div>
               </div>
             ))}
           </div>
 
           {/* Projection Bar */}
           <div className="glass-card p-5">
-            <div className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Earnings Breakdown</div>
+            <div className="text-sm font-semibold text-foreground mb-3">Earnings Breakdown</div>
             <div className="space-y-3">
               <div>
-                <div className="flex justify-between text-xs text-slate-600 dark:text-slate-300 mb-1">
+                <div className="flex justify-between text-xs text-muted-foreground mb-1">
                   <span>Principal</span><span>${num.toLocaleString()}</span>
                 </div>
-                <div className="h-2 bg-warm-400/20 rounded-full overflow-hidden">
-                  <div className="h-full bg-warm-400 rounded-full" style={{ width: `${total > 0 ? (num / total) * 100 : 100}%` }} />
+                <div className="h-2 bg-border rounded-full overflow-hidden">
+                  <div className="h-full bg-primary/60 rounded-full" style={{ width: `${total > 0 ? (num / total) * 100 : 100}%` }} />
                 </div>
               </div>
               <div>
-                <div className="flex justify-between text-xs text-slate-600 dark:text-slate-300 mb-1">
+                <div className="flex justify-between text-xs text-muted-foreground mb-1">
                   <span>Earnings</span><span>${earning.toFixed(2)}</span>
                 </div>
-                <div className="h-2 bg-green-500/20 rounded-full overflow-hidden">
-                  <div className="h-full bg-green-500 rounded-full" style={{ width: `${total > 0 ? (earning / total) * 100 : 0}%` }} />
+                <div className="h-2 bg-border rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${total > 0 ? (earning / total) * 100 : 0}%` }} />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="glass-card p-4 border border-amber-400/30 bg-amber-50/50">
+          <div className="glass-card p-4 border border-primary/25 bg-primary/5">
             <div className="flex gap-2 items-start">
-              <span className="text-amber-500 text-lg mt-0.5">⚠</span>
-              <p className="text-xs text-slate-600 dark:text-slate-300">This is a projection based on current rates. Actual returns may vary. Rates are locked at time of staking.</p>
+              <span className="text-primary text-lg mt-0.5">⚠</span>
+              <p className="text-xs text-muted-foreground">This is a projection based on current rates. Actual returns may vary. Rates are locked at time of staking.</p>
             </div>
           </div>
         </div>
@@ -7897,16 +7989,16 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
 
       {/* Monthly Projection Table */}
       <div className="glass-card p-6">
-        <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Month-by-Month Projection</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Month-by-Month Projection</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left">
-                <th className="pb-3 text-warm-600 font-semibold">Month</th>
-                <th className="pb-3 text-warm-600 font-semibold">Balance</th>
-                <th className="pb-3 text-warm-600 font-semibold">Earnings</th>
-                <th className="pb-3 text-warm-600 font-semibold">Total Return</th>
-                <th className="pb-3 text-warm-600 font-semibold">ROI %</th>
+                <th className="pb-3 text-muted-foreground font-semibold">Month</th>
+                <th className="pb-3 text-muted-foreground font-semibold">Balance</th>
+                <th className="pb-3 text-muted-foreground font-semibold">Earnings</th>
+                <th className="pb-3 text-muted-foreground font-semibold">Total Return</th>
+                <th className="pb-3 text-muted-foreground font-semibold">ROI %</th>
               </tr>
             </thead>
             <tbody>
@@ -7915,12 +8007,12 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
                 const bal = compoundEnabled ? num * Math.pow(1 + rate, m) : num + num * rate * m;
                 const earn = bal - num;
                 return (
-                  <tr key={m} className="border-t border-warm-400/10">
-                    <td className="py-3 text-slate-900 dark:text-white font-medium">Month {m}</td>
-                    <td className="py-3 text-slate-900 dark:text-white">${bal.toFixed(2)}</td>
-                    <td className="py-3 text-green-600 font-medium">+${earn.toFixed(2)}</td>
-                    <td className="py-3 text-slate-900 dark:text-white">${(num + earn).toFixed(2)}</td>
-                    <td className="py-3 text-warm-600">{num > 0 ? ((earn / num) * 100).toFixed(2) : "0"}%</td>
+                  <tr key={m} className="border-t border-border">
+                    <td className="py-3 text-foreground font-medium">Month {m}</td>
+                    <td className="py-3 text-foreground">${bal.toFixed(2)}</td>
+                    <td className="py-3 text-emerald-600 font-medium">+${earn.toFixed(2)}</td>
+                    <td className="py-3 text-foreground">${(num + earn).toFixed(2)}</td>
+                    <td className="py-3 text-primary font-medium">{num > 0 ? ((earn / num) * 100).toFixed(2) : "0"}%</td>
                   </tr>
                 );
               })}
@@ -7946,10 +8038,6 @@ function StakingPlansTab() {
       min: 100, max: 999,
       rate: "5%",
       duration: "30 days",
-      color: "from-amber-700 to-amber-500",
-      bg: "bg-amber-50",
-      border: "border-amber-300",
-      badge: "bg-amber-100 text-amber-800",
       features: [
         "5% monthly return",
         "30-day lock period",
@@ -7966,10 +8054,6 @@ function StakingPlansTab() {
       min: 1000, max: 4999,
       rate: "8%",
       duration: "30 days",
-      color: "from-slate-500 to-slate-400",
-      bg: "bg-slate-50",
-      border: "border-slate-300",
-      badge: "bg-slate-100 text-slate-700",
       features: [
         "8% monthly return",
         "30-day lock period",
@@ -7987,10 +8071,6 @@ function StakingPlansTab() {
       min: 5000, max: 24999,
       rate: "12%",
       duration: "30 days",
-      color: "from-yellow-600 to-yellow-400",
-      bg: "bg-yellow-50",
-      border: "border-yellow-400",
-      badge: "bg-yellow-100 text-yellow-800",
       features: [
         "12% monthly return",
         "30-day lock period",
@@ -8009,10 +8089,6 @@ function StakingPlansTab() {
       min: 25000, max: Infinity,
       rate: "15%",
       duration: "30 days",
-      color: "from-purple-600 to-purple-400",
-      bg: "bg-purple-50",
-      border: "border-purple-400",
-      badge: "bg-purple-100 text-purple-800",
       features: [
         "15% monthly return",
         "30-day lock period",
@@ -8031,57 +8107,63 @@ function StakingPlansTab() {
   return (
     <div className="space-y-6">
       <div className="glass-card p-6">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Staking Plans & Tiers</h2>
-        <p className="text-slate-600 dark:text-slate-300">Higher stakes unlock better rates and exclusive benefits</p>
+        <h2 className="text-2xl font-bold text-foreground mb-1">Staking Plans &amp; Tiers</h2>
+        <p className="text-muted-foreground">Higher stakes unlock better rates and exclusive benefits</p>
       </div>
 
-      {/* Tier Comparison Grid */}
+      {/* Tier Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {plans.map(plan => (
-          <div key={plan.id}
+          <div
+            key={plan.id}
             onClick={() => setSelectedPlan(plan.id === selectedPlan ? null : plan.id)}
             className={`glass-card p-6 cursor-pointer transition-all duration-200 hover:-translate-y-1 ${
-              selectedPlan === plan.id ? `border-2 ${plan.border} shadow-lg` : "border border-warm-400/20"
-            }`}>
+              selectedPlan === plan.id
+                ? "border-2 border-primary shadow-lg shadow-primary/10"
+                : "border border-border hover:border-primary/40"
+            }`}
+          >
             {/* Badge */}
-            <div className={`inline-block px-2.5 py-0.5 text-xs font-semibold rounded-full mb-4 ${plan.badge}`}>
+            <div className="inline-block px-2.5 py-0.5 text-xs font-semibold rounded-full mb-4 bg-primary/10 border border-primary/20 text-primary">
               {plan.badge_label}
             </div>
 
             {/* Icon + Name */}
             <div className="flex items-center gap-3 mb-4">
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${plan.color} flex items-center justify-center text-2xl shadow`}>
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-2xl shadow-sm shadow-primary/20">
                 {plan.icon}
               </div>
               <div>
-                <div className="text-xl font-bold text-slate-900 dark:text-white">{plan.name}</div>
-                <div className="text-xs text-warm-600">${plan.min.toLocaleString()}–{plan.max === Infinity ? "∞" : `$${plan.max.toLocaleString()}`}</div>
+                <div className="text-xl font-bold text-foreground">{plan.name}</div>
+                <div className="text-xs text-muted-foreground">
+                  ${plan.min.toLocaleString()}–{plan.max === Infinity ? "∞" : `$${plan.max.toLocaleString()}`}
+                </div>
               </div>
             </div>
 
             {/* Rate */}
-            <div className={`p-3 rounded-xl bg-gradient-to-r ${plan.color} text-white text-center mb-4`}>
+            <div className="p-3 rounded-xl bg-gradient-to-r from-primary to-accent text-primary-foreground text-center mb-4">
               <div className="text-3xl font-black">{plan.rate}</div>
               <div className="text-xs opacity-80">Per Month (APM)</div>
             </div>
 
             {/* Duration */}
-            <div className="text-center text-sm text-slate-600 dark:text-slate-300 mb-4">
+            <div className="text-center text-sm text-muted-foreground mb-4">
               🔒 {plan.duration} lock period
             </div>
 
             {/* Features */}
             <ul className="space-y-2">
               {plan.features.map(f => (
-                <li key={f} className="flex items-center gap-2 text-sm text-slate-900 dark:text-white">
-                  <span className="w-4 h-4 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs flex-shrink-0">✓</span>
+                <li key={f} className="flex items-center gap-2 text-sm text-foreground">
+                  <span className="w-4 h-4 rounded-full bg-primary/10 border border-primary/20 text-primary flex items-center justify-center text-xs flex-shrink-0">✓</span>
                   {f}
                 </li>
               ))}
             </ul>
 
             {/* CTA placeholder */}
-            <div className={`mt-5 w-full py-2.5 rounded-xl text-center text-sm font-semibold bg-gradient-to-r ${plan.color} text-white opacity-70 cursor-not-allowed`}>
+            <div className="mt-5 w-full py-2.5 rounded-xl text-center text-sm font-semibold bg-secondary border border-border text-muted-foreground opacity-70 cursor-not-allowed">
               Coming Soon
             </div>
           </div>
@@ -8090,14 +8172,14 @@ function StakingPlansTab() {
 
       {/* Rate Comparison Table */}
       <div className="glass-card p-6">
-        <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Rate Comparison</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Rate Comparison</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr>
-                <th className="text-left pb-3 text-warm-600">Feature</th>
+                <th className="text-left pb-3 text-muted-foreground font-semibold">Feature</th>
                 {plans.map(p => (
-                  <th key={p.id} className="text-center pb-3 text-warm-600">
+                  <th key={p.id} className="text-center pb-3 text-muted-foreground font-semibold">
                     {p.icon} {p.name}
                   </th>
                 ))}
@@ -8105,19 +8187,23 @@ function StakingPlansTab() {
             </thead>
             <tbody>
               {[
-                ["Min. Stake", "$100", "$1,000", "$5,000", "$25,000"],
-                ["Monthly Rate", "5%", "8%", "12%", "15%"],
-                ["Lock Period", "30 days", "30 days", "30 days", "30 days"],
-                ["Withdrawal Speed", "Manual", "Priority", "Instant", "Instant"],
-                ["Analytics", "Basic", "Advanced", "Full", "VIP"],
-                ["Support", "Email", "Email+SMS", "Dedicated", "24/7 VIP"],
-                ["Auto-Compound", "✗", "✗", "✓", "✓"],
-                ["Referral Bonus", "Standard", "Enhanced", "Enhanced+", "Maximum"],
+                ["Min. Stake",        "$100",     "$1,000",   "$5,000",   "$25,000"],
+                ["Monthly Rate",      "5%",       "8%",       "12%",      "15%"],
+                ["Lock Period",       "30 days",  "30 days",  "30 days",  "30 days"],
+                ["Withdrawal Speed",  "Manual",   "Priority", "Instant",  "Instant"],
+                ["Analytics",         "Basic",    "Advanced", "Full",     "VIP"],
+                ["Support",           "Email",    "Email+SMS","Dedicated","24/7 VIP"],
+                ["Auto-Compound",     "✗",        "✗",        "✓",        "✓"],
+                ["Referral Bonus",    "Standard", "Enhanced", "Enhanced+","Maximum"],
               ].map(([feat, ...vals]) => (
-                <tr key={feat} className="border-t border-warm-400/10">
-                  <td className="py-3 font-medium text-slate-900 dark:text-white">{feat}</td>
+                <tr key={feat} className="border-t border-border">
+                  <td className="py-3 font-medium text-foreground">{feat}</td>
                   {vals.map((v, i) => (
-                    <td key={i} className="py-3 text-center text-slate-600 dark:text-slate-300">{v}</td>
+                    <td key={i} className={`py-3 text-center ${
+                      v === "✓" ? "text-primary font-bold" :
+                      v === "✗" ? "text-muted-foreground/50" :
+                      "text-muted-foreground"
+                    }`}>{v}</td>
                   ))}
                 </tr>
               ))}
@@ -8522,10 +8608,10 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="glass-card p-6 flex items-start justify-between">
+      <div className="glass-card p-6 flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Portfolio Analytics</h2>
-          <p className="text-slate-600 dark:text-slate-300">Deep insights into your investment performance</p>
+          <h2 className="text-2xl font-bold text-foreground mb-1">Portfolio Analytics</h2>
+          <p className="text-muted-foreground">Deep insights into your investment performance</p>
         </div>
         <div className="flex gap-2 flex-wrap">
           {["7d", "30d", "90d", "1y", "All"].map(p => (
@@ -8541,15 +8627,15 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
         </div>
       </div>
 
-      {/* KPI Metrics Grid */}
+      {/* KPI Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {performanceMetrics.map(m => (
           <div key={m.label} className="glass-card p-4">
             <div className="text-xl mb-2">{m.icon}</div>
-            <div className="text-lg font-bold text-slate-900 dark:text-white">{m.value}</div>
-            <div className="text-xs text-warm-600 mt-0.5">{m.label}</div>
+            <div className="text-lg font-bold text-foreground">{m.value}</div>
+            <div className="text-xs text-muted-foreground mt-0.5">{m.label}</div>
             {m.change && (
-              <div className={`text-xs font-medium mt-1 ${m.positive ? "text-green-600" : "text-red-500"}`}>
+              <div className={`text-xs font-medium mt-1 ${m.positive ? "text-emerald-600" : "text-destructive"}`}>
                 {m.change}
               </div>
             )}
@@ -8560,21 +8646,21 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Allocation Chart */}
         <div className="glass-card p-6">
-          <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Portfolio Allocation</h3>
+          <h3 className="font-semibold text-foreground mb-4">Portfolio Allocation</h3>
           {allocationData.every(d => d.value === 0) ? (
             <div className="text-center py-8">
               <div className="text-4xl mb-2">📊</div>
-              <div className="text-sm text-slate-600 dark:text-slate-300">No funds yet</div>
+              <div className="text-sm text-muted-foreground">No funds yet</div>
             </div>
           ) : (
             <div className="space-y-3">
               {allocationData.map(d => (
                 <div key={d.name}>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="font-medium text-slate-900 dark:text-white">{d.name}</span>
-                    <span className="text-slate-600 dark:text-slate-300">${d.value.toFixed(2)} ({((d.value / totalAlloc) * 100).toFixed(1)}%)</span>
+                    <span className="font-medium text-foreground">{d.name}</span>
+                    <span className="text-muted-foreground">${d.value.toFixed(2)} ({((d.value / totalAlloc) * 100).toFixed(1)}%)</span>
                   </div>
-                  <div className="h-3 bg-warm-400/20 rounded-full overflow-hidden">
+                  <div className="h-3 bg-border rounded-full overflow-hidden">
                     <div className="h-full rounded-full transition-all duration-500"
                       style={{ width: `${(d.value / totalAlloc) * 100}%`, backgroundColor: d.color }} />
                   </div>
@@ -8586,20 +8672,20 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
 
         {/* Performance Scores */}
         <div className="glass-card p-6">
-          <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Performance Score</h3>
+          <h3 className="font-semibold text-foreground mb-4">Performance Score</h3>
           <div className="space-y-4">
             {[
-              { label: "Portfolio Health", score: deposited > 0 ? Math.min(95, Math.round(70 + (earned / Math.max(deposited, 1)) * 100)) : 0, color: "#C4966A" },
-              { label: "Staking Efficiency", score: deposited > 0 ? Math.min(100, Math.round((staked / Math.max(bal, 1)) * 100)) : 0, color: "#8B5E3C" },
-              { label: "Risk Score", score: bal >= 0 ? 90 : 50, color: "#B8700A" },
-              { label: "Diversification", score: (walletData?.wallet?.stakes?.length ?? 0) > 1 ? 75 : 30, color: "#7C5C3E" },
+              { label: "Portfolio Health",    score: deposited > 0 ? Math.min(95, Math.round(70 + (earned / Math.max(deposited, 1)) * 100)) : 0, color: "#C4966A" },
+              { label: "Staking Efficiency",  score: deposited > 0 ? Math.min(100, Math.round((staked / Math.max(bal, 1)) * 100)) : 0, color: "#8B5E3C" },
+              { label: "Risk Score",          score: bal >= 0 ? 90 : 50, color: "#B8700A" },
+              { label: "Diversification",     score: (walletData?.wallet?.stakes?.length ?? 0) > 1 ? 75 : 30, color: "#7C5C3E" },
             ].map(item => (
               <div key={item.label}>
                 <div className="flex justify-between text-sm mb-1.5">
-                  <span className="text-slate-900 dark:text-white font-medium">{item.label}</span>
+                  <span className="text-foreground font-medium">{item.label}</span>
                   <span className="font-bold" style={{ color: item.color }}>{item.score}/100</span>
                 </div>
-                <div className="h-2 bg-warm-400/20 rounded-full overflow-hidden">
+                <div className="h-2 bg-border rounded-full overflow-hidden">
                   <div className="h-full rounded-full transition-all duration-700"
                     style={{ width: `${item.score}%`, backgroundColor: item.color }} />
                 </div>
@@ -8608,19 +8694,19 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
           </div>
         </div>
 
-        {/* Activity Heatmap */}
+        {/* Monthly Summary */}
         <div className="glass-card p-6">
-          <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Monthly Summary</h3>
+          <h3 className="font-semibold text-foreground mb-4">Monthly Summary</h3>
           <div className="space-y-3">
             {[
-              { label: "Stake Events", value: walletData?.wallet?.stakes?.length ?? 0 },
-              { label: "Active Stakes", value: walletData?.wallet?.stakes?.filter((s: any) => s.status === "active").length ?? 0 },
-              { label: "Matured Stakes", value: walletData?.wallet?.maturedStakes?.length ?? 0 },
+              { label: "Stake Events",    value: walletData?.wallet?.stakes?.length ?? 0 },
+              { label: "Active Stakes",   value: walletData?.wallet?.stakes?.filter((s: any) => s.status === "active").length ?? 0 },
+              { label: "Matured Stakes",  value: walletData?.wallet?.maturedStakes?.length ?? 0 },
               { label: "Avg. Stake Size", value: staked > 0 ? `$${staked.toFixed(0)}` : "$0" },
             ].map(s => (
-              <div key={s.label} className="flex justify-between items-center p-3 rounded-xl bg-warm-400/10">
-                <span className="text-sm text-slate-600 dark:text-slate-300">{s.label}</span>
-                <span className="font-bold text-slate-900 dark:text-white">{s.value}</span>
+              <div key={s.label} className="flex justify-between items-center p-3 rounded-xl bg-secondary border border-border">
+                <span className="text-sm text-muted-foreground">{s.label}</span>
+                <span className="font-bold text-foreground">{s.value}</span>
               </div>
             ))}
           </div>
@@ -8629,20 +8715,20 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
 
       {/* Insights */}
       <div className="glass-card p-6">
-        <h3 className="font-semibold text-slate-900 dark:text-white mb-4">📊 Portfolio Insights</h3>
+        <h3 className="font-semibold text-foreground mb-4">📊 Portfolio Insights</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
-            { icon: "🎯", title: "Optimization Tip", desc: bal < 1000 ? `Add $${(1000 - bal).toFixed(2)} to reach Silver tier (8%/month).` : bal < 5000 ? `Add $${(5000 - bal).toFixed(2)} to reach Gold tier (12%/month).` : "You're at a great tier! Keep compounding.", color: "bg-blue-50 border-blue-200" },
-            { icon: "🔄", title: "Compounding Boost", desc: earned > 0 ? `You've earned $${earned.toFixed(2)} so far. Auto-compound could boost this by ~33% over 12 months.` : "Enable auto-compound after your first stake to maximize growth.", color: "bg-green-50 border-green-200" },
-            { icon: "📅", title: "Active Stakes", desc: (walletData?.wallet?.stakes?.filter((s: any) => s.status === "active")?.length ?? 0) > 0 ? `${walletData.wallet.stakes.filter((s: any) => s.status === "active").length} active stake(s) currently running.` : "No active stakes. Deposit and stake USDT to start earning.", color: "bg-amber-50 border-amber-200" },
-            { icon: "🏆", title: "Tier Status", desc: bal >= 25000 ? "Platinum tier — earning maximum 15%/month! 🎉" : bal >= 5000 ? `Gold tier. Add $${(25000 - bal).toFixed(2)} for Platinum.` : bal >= 1000 ? `Silver tier. Add $${(5000 - bal).toFixed(2)} for Gold.` : `Add $${(1000 - bal).toFixed(2)} for Silver tier.`, color: "bg-purple-50 border-purple-200" },
-            { icon: "📈", title: "Monthly Potential", desc: bal > 0 ? `Staking $${bal.toFixed(2)} could earn ~$${(bal * 0.05).toFixed(2)}–$${(bal * 0.15).toFixed(2)}/month.` : "Deposit USDT to see your earning potential.", color: "bg-warm-50 border-warm-200" },
-            { icon: "🛡️", title: "Risk Assessment", desc: "Your portfolio risk is LOW. USDT staking provides stable, predictable monthly returns with no market volatility.", color: "bg-emerald-50 border-emerald-200" },
+            { icon: "🎯", title: "Optimization Tip",  desc: bal < 1000 ? `Add $${(1000 - bal).toFixed(2)} to reach Silver tier (8%/month).` : bal < 5000 ? `Add $${(5000 - bal).toFixed(2)} to reach Gold tier (12%/month).` : "You're at a great tier! Keep compounding." },
+            { icon: "🔄", title: "Compounding Boost", desc: earned > 0 ? `You've earned $${earned.toFixed(2)} so far. Auto-compound could boost this by ~33% over 12 months.` : "Enable auto-compound after your first stake to maximize growth." },
+            { icon: "📅", title: "Active Stakes",     desc: (walletData?.wallet?.stakes?.filter((s: any) => s.status === "active")?.length ?? 0) > 0 ? `${walletData.wallet.stakes.filter((s: any) => s.status === "active").length} active stake(s) currently running.` : "No active stakes. Deposit and stake USDT to start earning." },
+            { icon: "🏆", title: "Tier Status",       desc: bal >= 25000 ? "Platinum tier — earning maximum 15%/month! 🎉" : bal >= 5000 ? `Gold tier. Add $${(25000 - bal).toFixed(2)} for Platinum.` : bal >= 1000 ? `Silver tier. Add $${(5000 - bal).toFixed(2)} for Gold.` : `Add $${(1000 - bal).toFixed(2)} for Silver tier.` },
+            { icon: "📈", title: "Monthly Potential", desc: bal > 0 ? `Staking $${bal.toFixed(2)} could earn ~$${(bal * 0.05).toFixed(2)}–$${(bal * 0.15).toFixed(2)}/month.` : "Deposit USDT to see your earning potential." },
+            { icon: "🛡️", title: "Risk Assessment",  desc: "Your portfolio risk is LOW. USDT staking provides stable, predictable monthly returns with no market volatility." },
           ].map(ins => (
-            <div key={ins.title} className={`p-4 rounded-xl border ${ins.color}`}>
+            <div key={ins.title} className="p-4 rounded-xl bg-secondary border border-border hover:border-primary/30 hover:bg-primary/5 transition-all duration-200">
               <div className="text-xl mb-2">{ins.icon}</div>
-              <div className="font-semibold text-slate-900 dark:text-white text-sm mb-1">{ins.title}</div>
-              <div className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{ins.desc}</div>
+              <div className="font-semibold text-foreground text-sm mb-1">{ins.title}</div>
+              <div className="text-xs text-muted-foreground leading-relaxed">{ins.desc}</div>
             </div>
           ))}
         </div>
