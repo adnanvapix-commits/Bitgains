@@ -3315,17 +3315,17 @@ function StakingTab({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-gradient-to-r from-blue-500/20 to-purple-400/20 backdrop-blur-xl border border-blue-500/30 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8"
+        className="bg-primary/10 border border-primary/30 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8"
       >
         <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-4 sm:mb-6">
-          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-blue-500 to-purple-400 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-white font-bold" />
+          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-primary to-accent rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+            <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-primary-foreground font-bold" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
               Stake Your Funds
             </h1>
-            <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base">
+            <p className="text-muted-foreground text-sm sm:text-base">
               Earn passive income by staking your deposited funds
             </p>
           </div>
@@ -3333,31 +3333,23 @@ function StakingTab({
 
         {/* Balance Overview */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-4 sm:mt-6">
-          <div className="flex items-center space-x-2 sm:space-x-3 bg-warm-400/15 rounded-xl sm:rounded-2xl p-3 sm:p-4">
-            <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
+          <div className="flex items-center space-x-2 sm:space-x-3 bg-card border border-border rounded-xl sm:rounded-2xl p-3 sm:p-4">
+            <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             <div>
-              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
-                Available to Stake
-              </p>
-              <p className="text-white font-bold text-sm sm:text-base">
+              <p className="text-muted-foreground text-xs sm:text-sm">Available to Stake</p>
+              <p className="text-foreground font-bold text-sm sm:text-base">
                 {formatCurrency(availableBalance)}
               </p>
-              {availableBalance === 0 &&
-                walletData &&
-                walletData.totalDeposited === 0 && (
-                  <p className="text-yellow-400 text-xs">
-                    No deposits yet - deposit funds first
-                  </p>
-                )}
+              {availableBalance === 0 && walletData && walletData.totalDeposited === 0 && (
+                <p className="text-primary text-xs">No deposits yet — deposit funds first</p>
+              )}
             </div>
           </div>
-          <div className="flex items-center space-x-2 sm:space-x-3 bg-warm-400/15 rounded-xl sm:rounded-2xl p-3 sm:p-4">
-            <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+          <div className="flex items-center space-x-2 sm:space-x-3 bg-card border border-border rounded-xl sm:rounded-2xl p-3 sm:p-4">
+            <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             <div>
-              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
-                Currently Staked
-              </p>
-              <p className="text-white font-bold text-sm sm:text-base">
+              <p className="text-muted-foreground text-xs sm:text-sm">Currently Staked</p>
+              <p className="text-foreground font-bold text-sm sm:text-base">
                 {formatCurrency(stakedBalance)}
               </p>
             </div>
@@ -3420,9 +3412,9 @@ function StakingTab({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-warm-400/30 rounded-3xl p-8"
+        className="bg-card border border-border rounded-3xl p-6 sm:p-8"
       >
-        <h3 className="text-2xl font-bold text-white mb-6">
+        <h3 className="text-2xl font-bold text-foreground mb-6">
           Choose Staking Package
         </h3>
 
@@ -3435,69 +3427,39 @@ function StakingTab({
               onClick={() => setSelectedPackage(pkg.id)}
               className={`relative p-6 rounded-2xl cursor-pointer transition-all duration-300 border-2 ${
                 selectedPackage === pkg.id
-                  ? `border-${pkg.color}-500 bg-${pkg.color}-500/10`
-                  : "border-warm-400/30 bg-slate-800/80 dark:bg-slate-700/60 hover:border-white/30"
+                  ? "border-primary bg-primary/10 shadow-sm shadow-primary/15"
+                  : "border-border bg-secondary hover:border-primary/50 hover:bg-primary/5"
               }`}
             >
               <div className="flex items-center space-x-3 mb-4">
-                <div
-                  className={`w-12 h-12 bg-gradient-to-r ${
-                    pkg.color === "emerald"
-                      ? "from-emerald-500 to-green-400"
-                      : pkg.color === "blue"
-                      ? "from-blue-500 to-cyan-400"
-                      : "from-purple-500 to-pink-400"
-                  } rounded-xl flex items-center justify-center`}
-                >
-                  <pkg.icon className="w-6 h-6 text-white" />
+                <div className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center shadow-sm shadow-primary/15">
+                  <pkg.icon className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <div>
-                  <h4 className="text-white font-bold text-lg">{pkg.label}</h4>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm">{pkg.description}</p>
+                  <h4 className="text-foreground font-bold text-lg">{pkg.label}</h4>
+                  <p className="text-muted-foreground text-sm">{pkg.description}</p>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-300 text-sm">Current Rate</span>
-                  <span
-                    className={`font-bold ${
-                      pkg.color === "emerald"
-                        ? "text-emerald-400"
-                        : pkg.color === "blue"
-                        ? "text-blue-400"
-                        : "text-purple-400"
-                    }`}
-                  >
-                    {pkg.apr}
-                  </span>
+                  <span className="text-muted-foreground text-sm">Current Rate</span>
+                  <span className="font-bold text-primary">{pkg.apr}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-300 text-sm">Min. Stake</span>
-                  <span className="text-slate-900 dark:text-white font-medium">
-                    {formatCurrency(pkg.minStake)}
-                  </span>
+                  <span className="text-muted-foreground text-sm">Min. Stake</span>
+                  <span className="text-foreground font-medium">{formatCurrency(pkg.minStake)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-300 text-sm">Lock Period</span>
-                  <span className="text-slate-900 dark:text-white font-medium">
-                    {pkg.lockPeriod}
-                  </span>
+                  <span className="text-muted-foreground text-sm">Lock Period</span>
+                  <span className="text-foreground font-medium">{pkg.lockPeriod}</span>
                 </div>
               </div>
 
               {selectedPackage === pkg.id && (
                 <div className="absolute top-3 right-3">
-                  <div
-                    className={`w-6 h-6 rounded-full ${
-                      pkg.color === "emerald"
-                        ? "bg-emerald-500"
-                        : pkg.color === "blue"
-                        ? "bg-blue-500"
-                        : "bg-purple-500"
-                    } flex items-center justify-center`}
-                  >
-                    <Check className="w-4 h-4 text-white" />
+                  <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                    <Check className="w-4 h-4 text-primary-foreground" />
                   </div>
                 </div>
               )}
@@ -3507,27 +3469,23 @@ function StakingTab({
 
         {/* Staking Form */}
         <form onSubmit={handleStake} className="space-y-6">
-          {availableBalance === 0 &&
-          walletData &&
-          walletData.totalDeposited === 0 ? (
+          {availableBalance === 0 && walletData && walletData.totalDeposited === 0 ? (
             <div className="text-center py-12">
-              <div className="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Wallet className="w-8 h-8 text-yellow-400" />
+              <div className="w-16 h-16 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Wallet className="w-8 h-8 text-primary" />
               </div>
-              <h4 className="text-slate-600 dark:text-slate-300 text-lg mb-2">
-                No Funds Available for Staking
-              </h4>
-              <p className="text-slate-600 dark:text-slate-300 text-sm mb-4">
+              <h4 className="text-muted-foreground text-lg mb-2">No Funds Available for Staking</h4>
+              <p className="text-muted-foreground text-sm mb-4">
                 You need to deposit funds first before you can start staking.
               </p>
-              <p className="text-white/40 text-xs">
+              <p className="text-muted-foreground/60 text-xs">
                 Go to the Deposit tab to add funds to your wallet.
               </p>
             </div>
           ) : (
             <>
               <div>
-                <label className="block text-lg font-semibold text-white mb-4">
+                <label className="block text-lg font-semibold text-foreground mb-4">
                   Staking Amount
                 </label>
                 <div className="relative">
@@ -3535,7 +3493,7 @@ function StakingTab({
                     type="number"
                     value={stakingAmount}
                     onChange={(e) => setStakingAmount(e.target.value)}
-                    className="w-full px-4 sm:px-6 py-3 sm:py-4 text-lg sm:text-xl bg-warm-400/15 border border-warm-400/30 rounded-xl sm:rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300"
+                    className="w-full px-4 sm:px-6 py-3 sm:py-4 text-lg sm:text-xl bg-secondary border border-border rounded-xl sm:rounded-2xl text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all duration-300"
                     placeholder="0.00"
                     step="0.01"
                     min={selectedPackageData.minStake}
@@ -3557,11 +3515,9 @@ function StakingTab({
                       <button
                         key={percent}
                         type="button"
-                        onClick={() =>
-                          setStakingAmount(percentAmount.toFixed(2))
-                        }
+                        onClick={() => setStakingAmount(percentAmount.toFixed(2))}
                         disabled={availableBalance <= 0}
-                        className="px-3 sm:px-4 py-2 bg-warm-400/15 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-warm-400/25 hover:text-white transition-all duration-300 text-xs sm:text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-3 sm:px-4 py-2 bg-secondary border border-border text-muted-foreground rounded-lg hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-all duration-300 text-xs sm:text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {percent}%
                       </button>
@@ -3569,31 +3525,25 @@ function StakingTab({
                   })}
                   <button
                     type="button"
-                    onClick={() =>
-                      setStakingAmount(availableBalance.toFixed(2))
-                    }
+                    onClick={() => setStakingAmount(availableBalance.toFixed(2))}
                     disabled={availableBalance <= 0}
-                    className="px-3 sm:px-4 py-2 bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500/30 transition-all duration-300 text-xs sm:text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3 sm:px-4 py-2 bg-primary/15 border border-primary/30 text-primary rounded-lg hover:bg-primary/25 transition-all duration-300 text-xs sm:text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     MAX
                   </button>
                 </div>
 
-                <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300 mt-3">
+                <div className="flex justify-between text-sm text-muted-foreground mt-3">
                   <span>Available: {formatCurrency(availableBalance)}</span>
-                  <span>
-                    Min: {formatCurrency(selectedPackageData.minStake)}
-                  </span>
+                  <span>Min: {formatCurrency(selectedPackageData.minStake)}</span>
                 </div>
 
                 {/* Debug Information */}
                 {stakingAmount && (
-                  <div className="mt-2 p-2 bg-slate-800/80 dark:bg-slate-700/60 rounded text-xs text-slate-600 dark:text-slate-300">
+                  <div className="mt-2 p-2 bg-secondary border border-border rounded text-xs text-muted-foreground">
                     Debug: Amount={amount}, Available={availableBalance}, Min=
                     {selectedPackageData.minStake}, Valid=
-                    {amount > 0 &&
-                      amount >= selectedPackageData.minStake &&
-                      amount <= availableBalance}
+                    {amount > 0 && amount >= selectedPackageData.minStake && amount <= availableBalance}
                   </div>
                 )}
               </div>
@@ -3604,22 +3554,18 @@ function StakingTab({
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 disabled={
-                  !stakingAmount ||
-                  amount <= 0 ||
+                  !stakingAmount || amount <= 0 ||
                   amount < selectedPackageData.minStake ||
                   amount > availableBalance ||
-                  isProcessing ||
-                  availableBalance <= 0
+                  isProcessing || availableBalance <= 0
                 }
                 className={`w-full py-4 px-8 rounded-2xl font-bold text-lg transition-all duration-300 ${
-                  !stakingAmount ||
-                  amount <= 0 ||
+                  !stakingAmount || amount <= 0 ||
                   amount < selectedPackageData.minStake ||
                   amount > availableBalance ||
-                  isProcessing ||
-                  availableBalance <= 0
-                    ? "bg-warm-400/15 text-white/50 cursor-not-allowed"
-                    : "bg-gradient-to-r from-blue-500 to-purple-400 text-white shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
+                  isProcessing || availableBalance <= 0
+                    ? "bg-muted text-muted-foreground cursor-not-allowed border border-border"
+                    : "bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-primary/30 border border-primary/20"
                 }`}
               >
                 {isProcessing ? (
@@ -3643,31 +3589,23 @@ function StakingTab({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-warm-400/30 rounded-3xl p-8"
+        className="bg-card border border-border rounded-3xl p-6 sm:p-8"
       >
-        <h3 className="text-2xl font-bold text-white mb-6">
-          Your Active Stakes
-        </h3>
+        <h3 className="text-2xl font-bold text-foreground mb-6">Your Active Stakes</h3>
 
         {walletData?.stakes && walletData.stakes.length > 0 ? (
           <div className="space-y-4">
             {/* Summary Card */}
-            <div className="p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl border border-blue-500/20 mb-6">
+            <div className="p-4 bg-primary/8 border border-primary/20 rounded-xl mb-6">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm">Total Staked</p>
-                  <p className="text-2xl font-bold text-white">
-                    {formatCurrency(stakedBalance)}
-                  </p>
+                  <p className="text-muted-foreground text-sm">Total Staked</p>
+                  <p className="text-2xl font-bold text-foreground">{formatCurrency(stakedBalance)}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-slate-600 dark:text-slate-300 text-sm">Active Stakes</p>
-                  <p className="text-2xl font-bold text-blue-400">
-                    {
-                      walletData.stakes.filter(
-                        (s: any) => s.status === "active"
-                      ).length
-                    }
+                  <p className="text-muted-foreground text-sm">Active Stakes</p>
+                  <p className="text-2xl font-bold text-primary">
+                    {walletData.stakes.filter((s: any) => s.status === "active").length}
                   </p>
                 </div>
               </div>
@@ -3679,20 +3617,9 @@ function StakingTab({
                 const startDate = new Date(stake.startDate);
                 const endDate = new Date(stake.endDate);
                 const now = new Date();
-                const totalDays = Math.ceil(
-                  (endDate.getTime() - startDate.getTime()) /
-                    (1000 * 60 * 60 * 24)
-                );
-                const daysRemaining = Math.max(
-                  0,
-                  Math.ceil(
-                    (endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-                  )
-                );
-                const progress = Math.min(
-                  100,
-                  ((totalDays - daysRemaining) / totalDays) * 100
-                );
+                const totalDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+                const daysRemaining = Math.max(0, Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
+                const progress = Math.min(100, ((totalDays - daysRemaining) / totalDays) * 100);
                 const isMatured = stake.status === "matured";
                 const isCancelled = stake.status === "cancelled";
 
@@ -3700,55 +3627,39 @@ function StakingTab({
                   <div
                     key={stake.stakeId}
                     className={`p-4 rounded-xl border ${
-                      isMatured
-                        ? "bg-emerald-500/10 border-emerald-500/30"
-                        : isCancelled
-                        ? "bg-red-500/10 border-red-500/30"
-                        : "bg-slate-800/80 dark:bg-slate-700/60 border-warm-400/20"
+                      isMatured ? "bg-emerald-50 border-emerald-200"
+                      : isCancelled ? "bg-destructive/5 border-destructive/20"
+                      : "bg-secondary border-border"
                     }`}
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                       <div className="flex items-center space-x-3">
-                        <div
-                          className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                            isMatured
-                              ? "bg-emerald-500"
-                              : isCancelled
-                              ? "bg-red-500"
-                              : "bg-gradient-to-r from-blue-500 to-purple-400"
-                          }`}
-                        >
-                          {isMatured ? (
-                            <Check className="w-5 h-5 text-white" />
-                          ) : isCancelled ? (
-                            <X className="w-5 h-5 text-white" />
-                          ) : (
-                            <Clock className="w-5 h-5 text-white" />
-                          )}
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                          isMatured ? "bg-emerald-500"
+                          : isCancelled ? "bg-destructive"
+                          : "bg-gradient-to-r from-primary to-accent"
+                        }`}>
+                          {isMatured ? <Check className="w-5 h-5 text-white" />
+                          : isCancelled ? <X className="w-5 h-5 text-white" />
+                          : <Clock className="w-5 h-5 text-primary-foreground" />}
                         </div>
                         <div>
-                          <p className="text-slate-900 dark:text-white font-semibold">
-                            {formatCurrency(stake.amount)}
-                          </p>
-                          <p className="text-slate-600 dark:text-slate-300 text-xs">
-                            {stake.packageType} package
-                          </p>
+                          <p className="text-foreground font-semibold">{formatCurrency(stake.amount)}</p>
+                          <p className="text-muted-foreground text-xs">{stake.packageType} package</p>
                         </div>
                       </div>
 
                       <div className="flex-1 px-4">
-                        <div className="flex justify-between text-xs text-slate-600 dark:text-slate-300 mb-1">
+                        <div className="flex justify-between text-xs text-muted-foreground mb-1">
                           <span>{startDate.toLocaleDateString()}</span>
                           <span>{endDate.toLocaleDateString()}</span>
                         </div>
-                        <div className="w-full h-2 bg-warm-400/15 rounded-full overflow-hidden">
+                        <div className="w-full h-2 bg-border rounded-full overflow-hidden">
                           <div
                             className={`h-full rounded-full transition-all duration-500 ${
-                              isMatured
-                                ? "bg-emerald-500"
-                                : isCancelled
-                                ? "bg-red-500"
-                                : "bg-gradient-to-r from-blue-500 to-purple-400"
+                              isMatured ? "bg-emerald-500"
+                              : isCancelled ? "bg-destructive"
+                              : "bg-gradient-to-r from-primary to-accent"
                             }`}
                             style={{ width: `${progress}%` }}
                           />
@@ -3756,26 +3667,16 @@ function StakingTab({
                       </div>
 
                       <div className="text-right">
-                        <p
-                          className={`text-sm font-medium ${
-                            isMatured
-                              ? "text-emerald-400"
-                              : isCancelled
-                              ? "text-red-400"
-                              : "text-blue-400"
-                          }`}
-                        >
-                          {isMatured
-                            ? `+${formatCurrency(
-                                stake.actualRewards || 0
-                              )} earned`
-                            : isCancelled
-                            ? "Cancelled"
-                            : `${daysRemaining} days left`}
+                        <p className={`text-sm font-medium ${
+                          isMatured ? "text-emerald-600"
+                          : isCancelled ? "text-destructive"
+                          : "text-primary"
+                        }`}>
+                          {isMatured ? `+${formatCurrency(stake.actualRewards || 0)} earned`
+                          : isCancelled ? "Cancelled"
+                          : `${daysRemaining} days left`}
                         </p>
-                        <p className="text-white/40 text-xs capitalize">
-                          {stake.status}
-                        </p>
+                        <p className="text-muted-foreground/60 text-xs capitalize">{stake.status}</p>
                       </div>
                     </div>
                   </div>
@@ -3785,39 +3686,31 @@ function StakingTab({
           </div>
         ) : stakedBalance > 0 ? (
           <div className="space-y-4">
-            <div className="p-6 bg-slate-800/80 dark:bg-slate-700/60 rounded-2xl border border-warm-400/20">
+            <div className="p-6 bg-secondary border border-border rounded-2xl">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-400 rounded-xl flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center">
+                    <TrendingUp className="w-6 h-6 text-primary-foreground" />
                   </div>
                   <div>
-                    <h4 className="text-white font-bold text-lg">
-                      Active Staking
-                    </h4>
-                    <p className="text-slate-600 dark:text-slate-300 text-sm">
-                      Earning rewards on maturity
-                    </p>
+                    <h4 className="text-foreground font-bold text-lg">Active Staking</h4>
+                    <p className="text-muted-foreground text-sm">Earning rewards on maturity</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-bold text-white">
-                    {formatCurrency(stakedBalance)}
-                  </p>
-                  <p className="text-blue-400 text-sm">Earning 5-10% monthly</p>
+                  <p className="text-2xl font-bold text-foreground">{formatCurrency(stakedBalance)}</p>
+                  <p className="text-primary text-sm">Earning 5-10% monthly</p>
                 </div>
               </div>
             </div>
           </div>
         ) : (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-warm-400/15 rounded-full flex items-center justify-center mx-auto mb-4">
-              <TrendingUp className="w-8 h-8 text-white/40" />
+            <div className="w-16 h-16 bg-secondary border border-border rounded-full flex items-center justify-center mx-auto mb-4">
+              <TrendingUp className="w-8 h-8 text-muted-foreground/40" />
             </div>
-            <h4 className="text-slate-600 dark:text-slate-300 text-lg mb-2">No Active Stakes</h4>
-            <p className="text-white/40 text-sm">
-              Start staking to earn passive income
-            </p>
+            <h4 className="text-muted-foreground text-lg mb-2">No Active Stakes</h4>
+            <p className="text-muted-foreground/60 text-sm">Start staking to earn passive income</p>
           </div>
         )}
       </motion.div>
@@ -3827,36 +3720,32 @@ function StakingTab({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-warm-400/30 rounded-3xl p-8"
+        className="bg-card border border-border rounded-3xl p-6 sm:p-8"
       >
-        <h3 className="text-2xl font-bold text-white mb-6">
-          How Staking Works
-        </h3>
+        <h3 className="text-2xl font-bold text-foreground mb-6">How Staking Works</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <span className="text-white font-bold text-sm">1</span>
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <span className="text-primary-foreground font-bold text-sm">1</span>
               </div>
               <div>
-                <h4 className="text-slate-900 dark:text-white font-semibold">Stake Your Funds</h4>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">
-                  Enter the amount you want to stake from your available deposit
-                  balance.
+                <h4 className="text-foreground font-semibold">Stake Your Funds</h4>
+                <p className="text-muted-foreground text-sm">
+                  Enter the amount you want to stake from your available deposit balance.
                 </p>
               </div>
             </div>
 
             <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <span className="text-white font-bold text-sm">2</span>
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <span className="text-primary-foreground font-bold text-sm">2</span>
               </div>
               <div>
-                <h4 className="text-slate-900 dark:text-white font-semibold">Compound Growth</h4>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">
-                  Rewards are automatically added to your balance for compound
-                  growth.
+                <h4 className="text-foreground font-semibold">Compound Growth</h4>
+                <p className="text-muted-foreground text-sm">
+                  Rewards are automatically added to your balance for compound growth.
                 </p>
               </div>
             </div>
@@ -3864,27 +3753,16 @@ function StakingTab({
 
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <span className="text-white font-bold text-sm">3</span>
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <span className="text-primary-foreground font-bold text-sm">3</span>
               </div>
               <div>
-                <h4 className="text-slate-900 dark:text-white font-semibold">Earn Daily Rewards</h4>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">
-                  Your staked funds earn rewards daily based on the current
-                  month&apos;s rate.
+                <h4 className="text-foreground font-semibold">Earn Daily Rewards</h4>
+                <p className="text-muted-foreground text-sm">
+                  Your staked funds earn rewards daily based on the current month&apos;s rate.
                 </p>
               </div>
             </div>
-
-            {/* <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                <span className="text-white font-bold text-sm">3</span>
-              </div>
-              <div>
-                <h4 className="text-slate-900 dark:text-white font-semibold"></h4>
-                <p className="text-slate-600 dark:text-slate-300 text-sm"></p>
-              </div>
-            </div> */}
           </div>
         </div>
       </motion.div>
@@ -6773,8 +6651,8 @@ function AffiliateTab({
     return (
       <div className="flex items-center justify-center py-20">
         <div className="flex items-center space-x-3">
-          <Loader className="w-6 h-6 animate-spin text-emerald-400" />
-          <span className="text-slate-600 dark:text-slate-300">Loading affiliate data...</span>
+          <Loader className="w-6 h-6 animate-spin text-primary" />
+          <span className="text-muted-foreground">Loading affiliate data...</span>
         </div>
       </div>
     );
@@ -6787,164 +6665,118 @@ function AffiliateTab({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-gradient-to-r from-purple-500/20 to-blue-400/20 backdrop-blur-xl border border-purple-500/30 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8"
+        className="bg-primary/10 border border-primary/30 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8"
       >
         <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-4 sm:mb-6">
-          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-purple-500 to-blue-400 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/20">
-            <Users className="w-6 h-6 sm:w-8 sm:h-8 text-white font-bold" />
+          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-primary to-accent rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+            <Users className="w-6 h-6 sm:w-8 sm:h-8 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white">
-              Affiliate Program
-            </h1>
-            <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base">
-              Earn rewards by inviting friends to join our platform
-            </p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Affiliate Program</h1>
+            <p className="text-muted-foreground text-sm sm:text-base">Earn rewards by inviting friends to join our platform</p>
           </div>
         </div>
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 sm:gap-4 mt-4 sm:mt-6">
-          <div className="flex items-center space-x-2 sm:space-x-3 bg-warm-400/15 rounded-xl sm:rounded-2xl p-3 sm:p-4">
-            <Users className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+          <div className="flex items-center space-x-2 sm:space-x-3 bg-card border border-border rounded-xl sm:rounded-2xl p-3 sm:p-4">
+            <Users className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             <div>
-              <p className="text-white font-semibold text-sm sm:text-base">
-                {totalReferrals} Referrals
-              </p>
-              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
-                Total friends joined
-              </p>
+              <p className="text-foreground font-semibold text-sm sm:text-base">{totalReferrals} Referrals</p>
+              <p className="text-muted-foreground text-xs sm:text-sm">Total friends joined</p>
             </div>
           </div>
-          <div className="flex items-center space-x-2 sm:space-x-3 bg-warm-400/15 rounded-xl sm:rounded-2xl p-3 sm:p-4">
-            <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-green-400" />
+          <div className="flex items-center space-x-2 sm:space-x-3 bg-card border border-border rounded-xl sm:rounded-2xl p-3 sm:p-4">
+            <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             <div>
-              <p className="text-white font-semibold text-sm sm:text-base">
-                ${totalEarnings.toFixed(2)}
-              </p>
-              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">Total earnings</p>
+              <p className="text-foreground font-semibold text-sm sm:text-base">${totalEarnings.toFixed(2)}</p>
+              <p className="text-muted-foreground text-xs sm:text-sm">Total earnings</p>
               {earningsByLevel.firstDeposit > 0 && (
-                <p className="text-emerald-400 text-[11px] sm:text-xs mt-1">
-                  +${earningsByLevel.firstDeposit.toFixed(2)} first deposit
-                  bonus
-                </p>
+                <p className="text-primary text-[11px] sm:text-xs mt-1">+${earningsByLevel.firstDeposit.toFixed(2)} first deposit bonus</p>
               )}
             </div>
           </div>
-          <div className="bg-warm-400/15 rounded-xl sm:rounded-2xl p-3 sm:p-4">
+          <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-3 sm:p-4">
             <div className="flex items-center space-x-2 sm:space-x-3">
-              <Award className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400" />
+              <Award className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
               <div>
-                <p className="text-white font-semibold text-sm sm:text-base">
-                  Multi-level rewards
-                </p>
-                <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
-                  Level 1 · 8% &nbsp;|&nbsp; Level 2 · 4% &nbsp;|&nbsp; Level 3
-                  · 3%
+                <p className="text-foreground font-semibold text-sm sm:text-base">Multi-level rewards</p>
+                <p className="text-muted-foreground text-xs sm:text-sm">
+                  Level 1 · 8%&nbsp;&nbsp;|&nbsp;&nbsp;Level 2 · 4%&nbsp;&nbsp;|&nbsp;&nbsp;Level 3 · 3%
                 </p>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-2 mt-3">
               {[1, 2, 3].map((level) => (
-                <div key={level} className="bg-slate-800/80 dark:bg-slate-700/60 rounded-lg p-2">
-                  <p className="text-white text-xs font-semibold">L{level}</p>
-                  <p className="text-slate-600 dark:text-slate-300 text-[11px]">
-                    {level === 1
-                      ? `${level1Count} refs`
-                      : level === 2
-                      ? `${level2Count} refs`
-                      : `${level3Count} refs`}
+                <div key={level} className="bg-secondary border border-border rounded-lg p-2">
+                  <p className="text-foreground text-xs font-semibold">L{level}</p>
+                  <p className="text-muted-foreground text-[11px]">
+                    {level === 1 ? `${level1Count} refs` : level === 2 ? `${level2Count} refs` : `${level3Count} refs`}
                   </p>
-                  <p className="text-emerald-400 text-xs font-semibold">
-                    $
-                    {level === 1
-                      ? earningsByLevel.level1.toFixed(2)
-                      : level === 2
-                      ? earningsByLevel.level2.toFixed(2)
-                      : earningsByLevel.level3.toFixed(2)}
+                  <p className="text-primary text-xs font-semibold">
+                    ${level === 1 ? earningsByLevel.level1.toFixed(2) : level === 2 ? earningsByLevel.level2.toFixed(2) : earningsByLevel.level3.toFixed(2)}
                   </p>
                 </div>
               ))}
             </div>
           </div>
-          <div className="flex items-center space-x-2 sm:space-x-3 bg-gradient-to-r from-purple-500/20 to-blue-400/20 rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-purple-500/30">
-            <Copy className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+          <div className="flex items-center space-x-2 sm:space-x-3 bg-primary/10 border border-primary/25 rounded-xl sm:rounded-2xl p-3 sm:p-4">
+            <Copy className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             <div>
-              <p className="text-white font-semibold text-sm sm:text-base font-mono">
-                {actualReferralCode}
-              </p>
-              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">Your code</p>
+              <p className="text-foreground font-semibold text-sm sm:text-base font-mono">{actualReferralCode}</p>
+              <p className="text-muted-foreground text-xs sm:text-sm">Your code</p>
             </div>
           </div>
         </div>
+
         {referrer && (
-          <div className="mt-6 bg-slate-800/80 dark:bg-slate-700/60 border border-white/15 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="mt-6 bg-secondary border border-border rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500/30 to-blue-400/30 flex items-center justify-center border border-warm-400/20">
-                <Users className="w-5 h-5 text-white" />
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                <Users className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <p className="text-slate-600 dark:text-slate-300 text-xs uppercase tracking-wide">
-                  You were invited by
-                </p>
-                <p className="text-white text-lg font-bold leading-tight">
-                  {referrer.name || "Referral Partner"}
-                </p>
-                {referrer.email && (
-                  <p className="text-slate-600 dark:text-slate-300 text-sm">{referrer.email}</p>
-                )}
+                <p className="text-muted-foreground text-xs uppercase tracking-wide">You were invited by</p>
+                <p className="text-foreground text-lg font-bold leading-tight">{referrer.name || "Referral Partner"}</p>
+                {referrer.email && <p className="text-muted-foreground text-sm">{referrer.email}</p>}
               </div>
             </div>
-            <div className="bg-warm-400/15 rounded-xl px-4 py-3">
-              <p className="text-slate-600 dark:text-slate-300 text-[11px] uppercase tracking-wide">
-                Their referral code
-              </p>
-              <p className="text-white font-mono text-base">
-                {referrer.referralCode || "N/A"}
-              </p>
+            <div className="bg-card border border-border rounded-xl px-4 py-3">
+              <p className="text-muted-foreground text-[11px] uppercase tracking-wide">Their referral code</p>
+              <p className="text-foreground font-mono text-base">{referrer.referralCode || "N/A"}</p>
             </div>
           </div>
         )}
       </motion.div>
 
-      {/* Referral Link Section */}
+      {/* Share & Earn */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-warm-400/30 rounded-3xl p-8"
+        className="bg-card border border-border rounded-3xl p-6 sm:p-8"
       >
-        <h3 className="text-2xl font-bold text-white mb-6">Share & Earn</h3>
+        <h3 className="text-2xl font-bold text-foreground mb-6">Share &amp; Earn</h3>
 
         <div className="space-y-6">
-          {/* Prominent Referral Code Display */}
-          <div className="bg-gradient-to-r from-purple-500/20 to-blue-400/20 rounded-2xl p-6 border border-purple-500/30 text-center">
-            <h4 className="text-slate-600 dark:text-slate-300 text-sm font-medium mb-3 uppercase tracking-wide">
-              Your Referral Code
-            </h4>
-            <div className="bg-warm-400/15 rounded-xl p-4 mb-4">
-              <div className="text-4xl font-bold text-white font-mono tracking-wider mb-2">
-                {actualReferralCode}
-              </div>
-              <p className="text-purple-300 text-sm">
-                Share this code with friends
-              </p>
+          {/* Referral Code Display */}
+          <div className="bg-primary/10 border border-primary/25 rounded-2xl p-6 text-center">
+            <h4 className="text-muted-foreground text-sm font-medium mb-3 uppercase tracking-wide">Your Referral Code</h4>
+            <div className="bg-card border border-border rounded-xl p-4 mb-4">
+              <div className="text-4xl font-bold text-foreground font-mono tracking-wider mb-2">{actualReferralCode}</div>
+              <p className="text-muted-foreground text-sm">Share this code with friends</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={copyReferralCode}
-                className="px-6 py-2 bg-warm-400/25 text-white rounded-lg font-semibold hover:bg-white/30 transition-all duration-300 flex items-center space-x-2"
+                className="px-6 py-2.5 bg-secondary border border-border text-foreground rounded-lg font-semibold hover:bg-primary/10 hover:border-primary/30 transition-all duration-300 flex items-center justify-center space-x-2"
               >
-                {copied ? (
-                  <Check className="w-4 h-4" />
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
+                {copied ? <Check className="w-4 h-4 text-primary" /> : <Copy className="w-4 h-4" />}
                 <span>{copied ? "Copied!" : "Copy Code"}</span>
               </button>
               <button
                 onClick={shareReferralLink}
-                className="px-6 py-2 bg-gradient-to-r from-purple-500 to-blue-400 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-blue-500 transition-all duration-300 flex items-center space-x-2"
+                className="px-6 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-lg font-semibold hover:opacity-90 transition-all duration-300 flex items-center justify-center space-x-2"
               >
                 <Users className="w-4 h-4" />
                 <span>Share Link</span>
@@ -6954,25 +6786,22 @@ function AffiliateTab({
         </div>
       </motion.div>
 
-      {/* Referred Users Section */}
+      {/* Referred Users */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-warm-400/30 rounded-3xl p-8"
+        className="bg-card border border-border rounded-3xl p-6 sm:p-8"
       >
-        <h3 className="text-2xl font-bold text-white mb-6">Referred Users</h3>
+        <h3 className="text-2xl font-bold text-foreground mb-6">Referred Users</h3>
 
         {referredUsersList.length > 0 ? (
           <div className="space-y-4">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-slate-600 dark:text-slate-300 text-sm">
-                You have referred {referredUsersList.length} user
-                {referredUsersList.length !== 1 ? "s" : ""}
+              <p className="text-muted-foreground text-sm">
+                You have referred {referredUsersList.length} user{referredUsersList.length !== 1 ? "s" : ""}
               </p>
-              <div className="text-emerald-400 text-sm font-semibold">
-                Total Earned: ${totalEarnings.toFixed(2)}
-              </div>
+              <div className="text-primary text-sm font-semibold">Total Earned: ${totalEarnings.toFixed(2)}</div>
             </div>
             {referredUsersList.map((referredUser: any, index: number) => (
               <motion.div
@@ -6980,76 +6809,52 @@ function AffiliateTab({
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="flex items-center justify-between p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-2xl border border-warm-400/20 hover:bg-warm-400/15 transition-all duration-300"
+                className="flex items-center justify-between p-4 bg-secondary border border-border rounded-2xl hover:bg-primary/5 hover:border-primary/25 transition-all duration-300"
               >
                 <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-400 rounded-full flex items-center justify-center">
-                    <User className="w-5 h-5 text-white" />
+                  <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center">
+                    <User className="w-5 h-5 text-primary-foreground" />
                   </div>
                   <div>
-                    <p className="text-slate-900 dark:text-white font-semibold">
-                      {referredUser.name ||
-                        referredUser.fullName ||
-                        "Referred User"}
+                    <p className="text-foreground font-semibold">
+                      {referredUser.name || referredUser.fullName || "Referred User"}
                     </p>
-                    <p className="text-slate-600 dark:text-slate-300 text-sm">
+                    <p className="text-muted-foreground text-sm">
                       Joined{" "}
                       {referredUser.createdAt
-                        ? new Date(referredUser.createdAt).toLocaleDateString(
-                            "en-US",
-                            {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            }
-                          )
+                        ? new Date(referredUser.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
                         : "Date unavailable"}
                     </p>
                     {referredUser.email && (
-                      <p className="text-white/40 text-xs font-mono">
-                        {referredUser.email.split("@")[0]}***
-                      </p>
+                      <p className="text-muted-foreground/60 text-xs font-mono">{referredUser.email.split("@")[0]}***</p>
                     )}
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-emerald-400 font-semibold">
-                    $
-                    {(
-                      referredUser.earnings ??
-                      referredUser.totalReward ??
-                      referredUser.bonus ??
-                      0
-                    ).toFixed(2)}
+                  <p className="text-primary font-semibold">
+                    ${(referredUser.earnings ?? referredUser.totalReward ?? referredUser.bonus ?? 0).toFixed(2)}
                   </p>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm">
-                    Level {referredUser.level || 1} ·{" "}
-                    {referredUser.commissionRate
-                      ? `${referredUser.commissionRate}%`
-                      : "Referral bonus"}
+                  <p className="text-muted-foreground text-sm">
+                    Level {referredUser.level || 1} · {referredUser.commissionRate ? `${referredUser.commissionRate}%` : "Referral bonus"}
                   </p>
-                  <div className="flex items-center space-x-1 mt-1">
-                    <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-                    <span className="text-emerald-400 text-xs">Active</span>
+                  <div className="flex items-center justify-end space-x-1 mt-1">
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                    <span className="text-emerald-600 text-xs">Active</span>
                   </div>
                 </div>
               </motion.div>
             ))}
 
-            {/* Summary Card */}
-            <div className="mt-6 p-4 bg-gradient-to-r from-emerald-500/10 to-green-400/10 rounded-2xl border border-emerald-500/20">
-              <div className="flex items-center justify-between">
+            {/* Summary */}
+            <div className="mt-6 p-4 bg-primary/8 border border-primary/20 rounded-2xl">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div>
-                  <p className="text-emerald-400 font-semibold">
-                    Keep sharing your referral code!
-                  </p>
-                  <p className="text-slate-600 dark:text-slate-300 text-sm">
-                    Earn 10% commission on every successful referral
-                  </p>
+                  <p className="text-foreground font-semibold">Keep sharing your referral code!</p>
+                  <p className="text-muted-foreground text-sm">Earn 10% commission on every successful referral</p>
                 </div>
                 <button
                   onClick={shareReferralLink}
-                  className="px-4 py-2 bg-emerald-500 text-black rounded-lg font-semibold hover:bg-emerald-400 transition-all duration-300"
+                  className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-lg font-semibold hover:opacity-90 transition-all duration-300"
                 >
                   Share More
                 </button>
@@ -7058,16 +6863,14 @@ function AffiliateTab({
           </div>
         ) : (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-warm-400/15 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Users className="w-8 h-8 text-white/40" />
+            <div className="w-16 h-16 bg-secondary border border-border rounded-full flex items-center justify-center mx-auto mb-4">
+              <Users className="w-8 h-8 text-muted-foreground/40" />
             </div>
-            <h4 className="text-slate-600 dark:text-slate-300 text-lg mb-2">No referrals yet</h4>
-            <p className="text-white/40 text-sm mb-6">
-              Start sharing your referral link to earn rewards!
-            </p>
+            <h4 className="text-muted-foreground text-lg mb-2">No referrals yet</h4>
+            <p className="text-muted-foreground/60 text-sm mb-6">Start sharing your referral link to earn rewards!</p>
             <button
               onClick={shareReferralLink}
-              className="px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-400 text-white rounded-xl font-semibold hover:from-purple-600 hover:to-blue-500 transition-all duration-300 shadow-lg shadow-purple-500/20"
+              className="px-6 py-3 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl font-semibold hover:opacity-90 transition-all duration-300 shadow-sm shadow-primary/20"
             >
               Share Now
             </button>
@@ -7080,49 +6883,24 @@ function AffiliateTab({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-warm-400/30 rounded-3xl p-8"
+        className="bg-card border border-border rounded-3xl p-6 sm:p-8"
       >
-        <h3 className="text-2xl font-bold text-white mb-6">How It Works</h3>
+        <h3 className="text-2xl font-bold text-foreground mb-6">How It Works</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-400 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Copy className="w-8 h-8 text-white" />
+          {[
+            { icon: Copy,        step: "1", title: "Share Your Link",  desc: "Copy your unique referral link and share it with friends via social media, email, or messaging apps." },
+            { icon: User,        step: "2", title: "Friends Sign Up",  desc: "When someone uses your link to register, they automatically become your referral and you both get benefits." },
+            { icon: DollarSign,  step: "3", title: "Earn Rewards",     desc: "Get 10% commission on your referrals' staking rewards and track your earnings in real-time." },
+          ].map(({ icon: Icon, step, title, desc }) => (
+            <div key={step} className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm shadow-primary/20">
+                <Icon className="w-8 h-8 text-primary-foreground" />
+              </div>
+              <h4 className="text-foreground font-semibold text-lg mb-2">{step}. {title}</h4>
+              <p className="text-muted-foreground text-sm">{desc}</p>
             </div>
-            <h4 className="text-white font-semibold text-lg mb-2">
-              1. Share Your Link
-            </h4>
-            <p className="text-slate-600 dark:text-slate-300 text-sm">
-              Copy your unique referral link and share it with friends via
-              social media, email, or messaging apps.
-            </p>
-          </div>
-
-          <div className="text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-400 rounded-full flex items-center justify-center mx-auto mb-4">
-              <User className="w-8 h-8 text-white" />
-            </div>
-            <h4 className="text-white font-semibold text-lg mb-2">
-              2. Friends Sign Up
-            </h4>
-            <p className="text-slate-600 dark:text-slate-300 text-sm">
-              When someone uses your link to register, they automatically become
-              your referral and you both get benefits.
-            </p>
-          </div>
-
-          <div className="text-center">
-            <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-400 rounded-full flex items-center justify-center mx-auto mb-4">
-              <DollarSign className="w-8 h-8 text-white" />
-            </div>
-            <h4 className="text-white font-semibold text-lg mb-2">
-              3. Earn Rewards
-            </h4>
-            <p className="text-slate-600 dark:text-slate-300 text-sm">
-              Get 10% commission on your referrals' staking rewards and track
-              your earnings in real-time.
-            </p>
-          </div>
+          ))}
         </div>
       </motion.div>
     </div>
