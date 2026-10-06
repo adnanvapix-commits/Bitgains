@@ -13,13 +13,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import LaunchPopup from "@/components/LaunchPopup";
+import { ThemeToggle } from "@/components/ThemeToggle";
+
 
 export default function Home() {
   return (
     <div className="min-h-screen" style={{ background: 'linear-gradient(150deg, #FDFAF6 0%, #F0EBE3 60%, #FDFAF6 100%)' }}>
-      {/* Launch Celebration Popup */}
-      <LaunchPopup />
       {/* Navigation */}
       <nav className="relative z-10 px-4 sm:px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -57,6 +56,7 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="flex items-center space-x-2 sm:space-x-4"
           >
+            <ThemeToggle />
             <Link
               href="/support"
               className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-cyan-500/20 to-blue-400/20 text-cyan-400 border border-cyan-500/30 rounded-lg hover:from-cyan-500/30 hover:to-blue-400/30 transition-all duration-300 group"
@@ -626,5 +626,7 @@ export default function Home() {
     </div>
   );
 }
+
+
 
 

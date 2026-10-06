@@ -451,3 +451,171 @@ nav .text-white, aside .text-white { color: #3D2B1F !important; }
 footer a, footer p, footer h3, footer li { color: #7C5C3E !important; }
 footer a:hover { color: #3D2B1F !important; }
 footer .border-warm-600\/20 { border-color: rgba(196,150,106,0.2) !important; }
+
+
+/* ══════════════════════════════════════════════════════════
+   DARK MODE — .dark class applied by next-themes
+   ══════════════════════════════════════════════════════════ */
+
+.dark {
+  --background:           #1a1612;
+  --foreground:           #f5f0e8;
+  --card:                 #241e18;
+  --card-foreground:      #f5f0e8;
+  --popover:              #241e18;
+  --popover-foreground:   #f5f0e8;
+  --primary:              #c4966a;
+  --primary-foreground:   #1a1612;
+  --secondary:            #2a2018;
+  --secondary-foreground: #f5f0e8;
+  --muted:                #2a2018;
+  --muted-foreground:     #c4966a;
+  --accent:               #c4966a;
+  --accent-foreground:    #1a1612;
+  --destructive:          #e05252;
+  --border:               #3d2b1f;
+  --input:                #241e18;
+  --ring:                 #c4966a;
+  --sidebar:              #1a1612;
+  --sidebar-foreground:   #f5f0e8;
+  --sidebar-border:       #3d2b1f;
+  --sidebar-accent:       #2a2018;
+  --sidebar-accent-foreground: #f5f0e8;
+  --sidebar-primary:      #c4966a;
+  --sidebar-primary-foreground: #1a1612;
+}
+
+/* ── Dark mode base overrides ─────────────────────────── */
+.dark html,
+.dark body {
+  background-color: #1a1612 !important;
+  color: #f5f0e8 !important;
+}
+
+/* All text defaults to cream in dark mode */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: #f5f0e8 !important;
+}
+
+/* Fix .text-white in dark mode — now it should actually be white/cream */
+.dark .text-white {
+  color: #f5f0e8 !important;
+}
+
+/* Gray shades → readable on dark */
+.dark .text-gray-100, .dark .text-gray-200 { color: #d4c4b0 !important; }
+.dark .text-gray-300, .dark .text-gray-400 { color: #b8a090 !important; }
+.dark .text-gray-500, .dark .text-gray-600 { color: #9a8070 !important; }
+.dark .text-slate-300, .dark .text-slate-400 { color: #b8a090 !important; }
+.dark .text-warm-700 { color: #c4966a !important; }
+.dark .text-warm-600 { color: #d4a882 !important; }
+.dark .text-dark-900 { color: #f5f0e8 !important; }
+
+/* ── Dark cards ────────────────────────────────────────── */
+.dark .glass-card {
+  background-color: #241e18 !important;
+  border-color: #3d2b1f !important;
+  color: #f5f0e8 !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
+}
+.dark .glass-card * { color: #f5f0e8; }
+.dark .glass-card-strong {
+  background-color: #2a2018 !important;
+  border-color: #4d3b2f !important;
+  color: #f5f0e8 !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+}
+.dark .glass-card-strong * { color: #f5f0e8; }
+
+/* ── Dark sidebar ──────────────────────────────────────── */
+.dark .mobile-nav-sidebar,
+.dark .mobile-sidebar,
+.dark .desktop-sidebar {
+  background: linear-gradient(180deg, #1a1612 0%, #141210 100%) !important;
+  border-right-color: #3d2b1f !important;
+  color: #f5f0e8 !important;
+}
+
+/* ── Dark inputs ───────────────────────────────────────── */
+.dark input, .dark textarea, .dark select {
+  background-color: #241e18 !important;
+  color: #f5f0e8 !important;
+  border-color: #3d2b1f !important;
+}
+.dark input::placeholder, .dark textarea::placeholder {
+  color: #7c5c3e !important;
+}
+.dark input:focus, .dark textarea:focus, .dark select:focus {
+  border-color: #c4966a !important;
+  box-shadow: 0 0 0 3px rgba(196,150,106,0.2) !important;
+}
+
+/* ── Dark tables ───────────────────────────────────────── */
+.dark table  { background-color: #241e18 !important; color: #f5f0e8 !important; }
+.dark thead  { background-color: #2a2018 !important; }
+.dark th     { color: #f5f0e8 !important; border-color: #3d2b1f !important; }
+.dark td     { color: #f5f0e8 !important; border-color: #3d2b1f !important; }
+.dark tr:hover td { background-color: #2a2018 !important; }
+
+/* ── Dark backgrounds ──────────────────────────────────── */
+.dark .animated-bg,
+.dark .gradient-crypto {
+  background: linear-gradient(-45deg, #1a1612, #241e18, #1a1612, #2a2018) !important;
+  background-size: 400% 400% !important;
+}
+
+/* ── Dark buttons ──────────────────────────────────────── */
+.dark .btn-crypto {
+  background: linear-gradient(135deg, #c4966a, #8b5e3c) !important;
+  color: #f5f0e8 !important;
+}
+.dark .btn-crypto-outline {
+  border-color: #c4966a !important;
+  color: #c4966a !important;
+}
+.dark .btn-crypto-outline:hover {
+  background: linear-gradient(135deg, #c4966a, #8b5e3c) !important;
+  color: #1a1612 !important;
+}
+
+/* ── Dark page backgrounds ─────────────────────────────── */
+.dark [style*="background-color: #FDFAF6"],
+.dark [style*="background-color: #F9F8F6"],
+.dark [style*="backgroundColor: '#FDFAF6'"],
+.dark [style*="backgroundColor: '#F9F8F6'"] {
+  background-color: #1a1612 !important;
+}
+
+/* ── Dashboard specific dark fixes ─────────────────────── */
+.dark .main-content,
+.dark [class*="min-h-screen"] {
+  background-color: #1a1612;
+  color: #f5f0e8;
+}
+
+/* Warm color classes in dark mode */
+.dark .bg-warm-400\/10 { background-color: rgba(196,150,106,0.15) !important; }
+.dark .bg-warm-400\/15 { background-color: rgba(196,150,106,0.18) !important; }
+.dark .bg-warm-400\/20 { background-color: rgba(196,150,106,0.22) !important; }
+.dark .bg-warm-400\/25 { background-color: rgba(196,150,106,0.28) !important; }
+.dark .border-warm-400\/20 { border-color: rgba(196,150,106,0.3) !important; }
+.dark .border-warm-400\/30 { border-color: rgba(196,150,106,0.4) !important; }
+
+/* Green/positive states stay visible in dark */
+.dark .text-green-600, .dark .text-green-700 { color: #6ee7b7 !important; }
+.dark .bg-green-50 { background-color: rgba(52,211,153,0.1) !important; }
+.dark .border-green-200, .dark .border-green-300 { border-color: rgba(52,211,153,0.3) !important; }
+
+/* Red/danger stays visible */
+.dark .text-red-500, .dark .text-red-600 { color: #f87171 !important; }
+.dark .bg-red-50 { background-color: rgba(248,113,113,0.1) !important; }
+
+/* Admin panel dark mode */
+.dark .container, .dark .container * {
+  color: #f5f0e8;
+}
+
+/* ── Scrollbar dark ────────────────────────────────────── */
+.dark ::-webkit-scrollbar-track { background: #1a1612; }
+.dark ::-webkit-scrollbar-thumb { background: #3d2b1f; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #5c4030; }

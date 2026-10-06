@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../contexts/AuthContext";
+import { ThemeToggle } from "../../components/ThemeToggle";
 import { walletApi } from "../../lib/api/transactions.js";
 import { notificationsApi } from "../../lib/api/notifications.js";
 import Image from "next/image";
@@ -1136,6 +1137,8 @@ export default function DashboardPage() {
                     Support
                   </span>
                 </a>
+                {/* Theme Toggle */}
+                <ThemeToggle />
               </div>
             </div>
           </div>
@@ -8985,5 +8988,6 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
     </div>
   );
 }
+
 
 
