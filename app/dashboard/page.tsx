@@ -8360,19 +8360,23 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
   const [frequency, setFrequency] = useState("monthly");
   const [reinvestPercent, setReinvestPercent] = useState(100);
 
+  // Derive principal and monthly rate from wallet data
+  const num = walletData?.wallet?.stakedAmount ?? 1000;
+  const rate = 0.05; // 5% monthly (display projection baseline)
+
   const projections = [
-    { months: 1, simple: +(num * rate).toFixed(2), compound: +(num * (Math.pow(1 + rate, 1) - 1)).toFixed(2) },
-    { months: 3, simple: +(num * rate * 3).toFixed(2), compound: +(num * (Math.pow(1 + rate, 3) - 1)).toFixed(2) },
-    { months: 6, simple: +(num * rate * 6).toFixed(2), compound: +(num * (Math.pow(1 + rate, 6) - 1)).toFixed(2) },
-    { months: 12, simple: +(num * rate * 12).toFixed(2), compound: +(num * (Math.pow(1 + rate, 12) - 1)).toFixed(2) },
-    { months: 24, simple: +(num * rate * 24).toFixed(2), compound: +(num * (Math.pow(1 + rate, 24) - 1)).toFixed(2) },
+    { months: 1,  simple: +(num * rate).toFixed(2),       compound: +(num * (Math.pow(1 + rate, 1)  - 1)).toFixed(2) },
+    { months: 3,  simple: +(num * rate * 3).toFixed(2),   compound: +(num * (Math.pow(1 + rate, 3)  - 1)).toFixed(2) },
+    { months: 6,  simple: +(num * rate * 6).toFixed(2),   compound: +(num * (Math.pow(1 + rate, 6)  - 1)).toFixed(2) },
+    { months: 12, simple: +(num * rate * 12).toFixed(2),  compound: +(num * (Math.pow(1 + rate, 12) - 1)).toFixed(2) },
+    { months: 24, simple: +(num * rate * 24).toFixed(2),  compound: +(num * (Math.pow(1 + rate, 24) - 1)).toFixed(2) },
   ];
 
   return (
     <div className="space-y-6">
       <div className="glass-card p-6">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Auto-Compound Settings</h2>
-        <p className="text-slate-600 dark:text-slate-300">Automatically reinvest your rewards to maximize exponential growth</p>
+        <h2 className="text-2xl font-bold text-foreground mb-1">Auto-Compound Settings</h2>
+        <p className="text-muted-foreground">Automatically reinvest your rewards to maximize exponential growth</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -8382,25 +8386,31 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
           <div className="glass-card p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-warm-400/20 flex items-center justify-center">
-                  <RefreshCw className="w-5 h-5 text-warm-600" />
+                <div className="w-10 h-10 rounded-xl bg-primary/15 border border-primary/20 flex items-center justify-center">
+                  <RefreshCw className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <div className="font-bold text-slate-900 dark:text-white">Auto-Compound</div>
-                  <div className="text-sm text-slate-600 dark:text-slate-300">Reinvest rewards automatically</div>
+                  <div className="font-bold text-foreground">Auto-Compound</div>
+                  <div className="text-sm text-muted-foreground">Reinvest rewards automatically</div>
                 </div>
               </div>
               <button onClick={() => setGlobalEnabled(!globalEnabled)}
                 className={`relative w-14 h-7 rounded-full transition-all duration-300 ring-2 ${
                   globalEnabled
-                    ? "bg-amber-600 ring-amber-600"
-                    : "bg-stone-300 ring-stone-300"
+                    ? "bg-primary ring-primary"
+                    : "bg-muted ring-border"
                 }`}>
                 <span className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow-md transition-all duration-300 ${globalEnabled ? "left-7" : "left-0.5"}`} />
               </button>
             </div>
-            <div className={`p-3 rounded-xl text-sm ${globalEnabled ? "bg-green-50 border border-green-200 text-green-700" : "bg-warm-400/10 border border-warm-400/20 text-slate-600 dark:text-slate-300"}`}>
-              {globalEnabled ? "✓ Auto-compound is ACTIVE. Your rewards will be reinvested automatically." : "○ Auto-compound is OFF. Enable to start growing faster."}
+            <div className={`p-3 rounded-xl text-sm border ${
+              globalEnabled
+                ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-700/40 text-emerald-700 dark:text-emerald-400"
+                : "bg-secondary border-border text-muted-foreground"
+            }`}>
+              {globalEnabled
+                ? "✓ Auto-compound is ACTIVE. Your rewards will be reinvested automatically."
+                : "○ Auto-compound is OFF. Enable to start growing faster."}
             </div>
           </div>
 
@@ -8408,29 +8418,31 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Reinvest % */}
             <div className="glass-card p-5">
-              <div className="font-semibold text-slate-900 dark:text-white mb-3">Reinvestment Rate</div>
-              <div className="text-3xl font-black text-warm-600 mb-2">{reinvestPercent}%</div>
+              <div className="font-semibold text-foreground mb-3">Reinvestment Rate</div>
+              <div className="text-3xl font-black text-primary mb-2">{reinvestPercent}%</div>
               <input type="range" min="10" max="100" step="10" value={reinvestPercent}
                 onChange={e => setReinvestPercent(Number(e.target.value))}
-                className="w-full accent-amber-600" />
-              <div className="flex justify-between text-xs text-warm-600 mt-1">
+                className="w-full accent-[#C4966A]" />
+              <div className="flex justify-between text-xs text-muted-foreground mt-1">
                 <span>10%</span><span>50%</span><span>100%</span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-300 mt-2">{100 - reinvestPercent}% will be sent to your available balance.</p>
+              <p className="text-xs text-muted-foreground mt-2">{100 - reinvestPercent}% will be sent to your available balance.</p>
             </div>
 
             {/* Frequency */}
             <div className="glass-card p-5">
-              <div className="font-semibold text-slate-900 dark:text-white mb-3">Compound Frequency</div>
+              <div className="font-semibold text-foreground mb-3">Compound Frequency</div>
               <div className="space-y-2">
                 {["daily", "weekly", "monthly"].map(f => (
                   <button key={f} onClick={() => setFrequency(f)}
-                    className={`w-full py-2.5 px-4 rounded-xl text-sm font-medium text-left transition-all ${
-                      frequency === f ? "bg-warm-400/25 border border-warm-500 text-slate-900 dark:text-white" : "bg-warm-400/10 border border-warm-400/10 text-slate-600 dark:text-slate-300 hover:bg-warm-400/20"
+                    className={`w-full py-2.5 px-4 rounded-xl text-sm font-medium text-left transition-all border ${
+                      frequency === f
+                        ? "bg-primary/15 border-primary/40 text-foreground"
+                        : "bg-secondary border-border text-muted-foreground hover:bg-primary/10 hover:border-primary/25"
                     }`}>
                     <span className="capitalize">{f}</span>
-                    {f === "monthly" && <span className="ml-2 text-xs text-warm-600">(default)</span>}
-                    {f === "daily" && <span className="ml-2 text-xs text-amber-600">⚡ Max growth</span>}
+                    {f === "monthly" && <span className="ml-2 text-xs text-muted-foreground">(default)</span>}
+                    {f === "daily" && <span className="ml-2 text-xs text-primary">⚡ Max growth</span>}
                   </button>
                 ))}
               </div>
@@ -8438,21 +8450,21 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
 
             {/* Minimum Threshold */}
             <div className="glass-card p-5">
-              <div className="font-semibold text-slate-900 dark:text-white mb-1">Minimum Threshold</div>
-              <p className="text-xs text-slate-600 dark:text-slate-300 mb-3">Only compound when rewards exceed this amount</p>
+              <div className="font-semibold text-foreground mb-1">Minimum Threshold</div>
+              <p className="text-xs text-muted-foreground mb-3">Only compound when rewards exceed this amount</p>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-warm-600 font-semibold">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-semibold">$</span>
                 <input type="number" value={threshold} onChange={e => setThreshold(e.target.value)}
-                  className="w-full pl-8 pr-4 py-3 rounded-xl border border-warm-400/30 bg-cream-100 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-warm-400" />
+                  className="w-full pl-8 pr-4 py-3 rounded-xl border border-border bg-card text-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary" />
               </div>
             </div>
 
             {/* Next Compound */}
             <div className="glass-card p-5">
-              <div className="font-semibold text-slate-900 dark:text-white mb-3">Next Compound Event</div>
-              <div className="text-2xl font-bold text-warm-600">—</div>
-              <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">No active stakes</div>
-              <div className="mt-3 p-2 rounded-lg bg-warm-400/10 text-xs text-slate-600 dark:text-slate-300">
+              <div className="font-semibold text-foreground mb-3">Next Compound Event</div>
+              <div className="text-2xl font-bold text-primary">—</div>
+              <div className="text-sm text-muted-foreground mt-1">No active stakes</div>
+              <div className="mt-3 p-2 rounded-lg bg-secondary border border-border text-xs text-muted-foreground">
                 Stake funds to activate compounding schedule
               </div>
             </div>
@@ -8461,39 +8473,44 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
 
         {/* Compound vs Simple Projection */}
         <div className="glass-card p-6">
-          <h3 className="font-semibold text-slate-900 dark:text-white mb-4">📈 Compound vs Simple</h3>
-          <p className="text-xs text-slate-600 dark:text-slate-300 mb-4">Based on $1,000 principal at 5%/month</p>
+          <h3 className="font-semibold text-foreground mb-1">📈 Compound vs Simple</h3>
+          <p className="text-xs text-muted-foreground mb-4">
+            Based on {num > 0 ? `$${num.toLocaleString()}` : "$1,000"} principal at 5%/month
+          </p>
           <div className="space-y-3">
-            {projections.map(p => (
-              <div key={p.months} className="p-3 rounded-xl bg-warm-400/10">
-                <div className="text-xs font-semibold text-warm-600 mb-2">{p.months} Month{p.months > 1 ? "s" : ""}</div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="text-slate-900 dark:text-white">Simple</span>
-                  <span className="font-medium text-slate-900 dark:text-white">+${p.simple.toFixed(1)}</span>
+            {projections.map(p => {
+              const maxVal = Math.max(p.simple, p.compound, 1);
+              return (
+                <div key={p.months} className="p-3 rounded-xl bg-secondary border border-border">
+                  <div className="text-xs font-semibold text-primary mb-2">{p.months} Month{p.months > 1 ? "s" : ""}</div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-foreground">Simple</span>
+                    <span className="font-medium text-foreground">+${p.simple.toFixed(1)}</span>
+                  </div>
+                  <div className="h-1.5 bg-border rounded-full mb-2">
+                    <div className="h-full bg-primary/60 rounded-full" style={{ width: `${Math.min((p.simple / maxVal) * 100, 100)}%` }} />
+                  </div>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-emerald-600 dark:text-emerald-400 font-medium">Compound ⚡</span>
+                    <span className="font-bold text-emerald-600 dark:text-emerald-400">+${p.compound.toFixed(1)}</span>
+                  </div>
+                  <div className="h-1.5 bg-border rounded-full">
+                    <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${Math.min((p.compound / maxVal) * 100, 100)}%` }} />
+                  </div>
                 </div>
-                <div className="h-1.5 bg-warm-400/20 rounded-full mb-2">
-                  <div className="h-full bg-warm-400 rounded-full" style={{ width: `${Math.min(p.simple / 2.2, 100)}%` }} />
-                </div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="text-green-700 font-medium">Compound ⚡</span>
-                  <span className="font-bold text-green-700">+${p.compound.toFixed(1)}</span>
-                </div>
-                <div className="h-1.5 bg-green-100 rounded-full">
-                  <div className="h-full bg-green-500 rounded-full" style={{ width: `${Math.min(p.compound / 2.2, 100)}%` }} />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
-          <div className="mt-4 p-3 rounded-xl bg-green-50 border border-green-200 text-xs text-green-700">
+          <div className="mt-4 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700/40 text-xs text-emerald-700 dark:text-emerald-400">
             💡 Compound interest grows <strong>exponentially</strong> — the difference doubles every 12 months!
           </div>
         </div>
       </div>
 
-      {/* Save Button (placeholder) */}
-      <div className="glass-card p-4 flex items-center justify-between">
-        <div className="text-sm text-slate-600 dark:text-slate-300">Settings will apply to your next staking cycle</div>
-        <button className="px-6 py-2.5 bg-gradient-to-r from-warm-500 to-warm-600 text-white rounded-xl font-semibold text-sm opacity-70 cursor-not-allowed">
+      {/* Save Button */}
+      <div className="glass-card p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="text-sm text-muted-foreground">Settings will apply to your next staking cycle</div>
+        <button className="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl font-semibold text-sm opacity-60 cursor-not-allowed">
           Save Settings (Coming Soon)
         </button>
       </div>
