@@ -618,7 +618,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#FDFAF6' }}>
+    <div className="min-h-screen bg-background">
       <div className="flex">
         {/* Mobile Overlay */}
         <AnimatePresence>
@@ -650,17 +650,19 @@ export default function DashboardPage() {
             sidebarCollapsed && isClient && screenWidth >= 1024
               ? "w-20"
               : "w-80"
-          } border-r border-warm-400/30 z-50 overflow-hidden transition-all duration-300 ${
+          } border-r border-border z-50 overflow-hidden transition-all duration-300 ${
             mobileMenuOpen ? "block" : "hidden lg:block"
-          }`}
-          style={{ background: 'linear-gradient(180deg, #F0EBE3 0%, #EDE5D8 100%)' }}
+          } desktop-sidebar`}
+          style={{
+            background: 'linear-gradient(180deg, var(--sidebar) 0%, color-mix(in srgb, var(--sidebar) 85%, var(--background)) 100%)'
+          }}
         >
           <div className="flex flex-col h-full overflow-hidden">
             {/* Logo Section */}
-            <div className="p-6 border-b border-warm-400/20">
+            <div className="p-6 border-b border-border">
               <div className="flex items-center space-x-3">
                 <div className="relative">
-                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-warm-400/20 border border-warm-400/30 p-1 shadow-lg shadow-warm-400/15">
+                  <div className="w-12 h-12 rounded-xl overflow-hidden bg-primary/10 border border-primary/30 p-1 shadow-lg shadow-primary/15">
                     <Image
                       src="/bitgain.PNG"
                       alt="BitGain Logo"
@@ -676,8 +678,8 @@ export default function DashboardPage() {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.1 }}
                   >
-                    <h1 className="text-xl font-bold text-white relative">
-                      <span className="bg-gradient-to-r from-emerald-400 via-green-400 to-emerald-300 bg-clip-text text-transparent drop-shadow-lg">
+                    <h1 className="text-xl font-bold relative">
+                      <span className="neon-text">
                         BitGains
                       </span>
                     </h1>
@@ -688,7 +690,7 @@ export default function DashboardPage() {
               {/* Mobile Close Button (only on mobile) */}
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="absolute right-3 top-6 p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors rounded-lg hover:bg-warm-400/15 lg:hidden"
+                className="absolute right-3 top-6 p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-primary/10 lg:hidden"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -700,19 +702,19 @@ export default function DashboardPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="p-6 border-b border-warm-400/20"
+                className="p-6 border-b border-border"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-slate-600 dark:text-slate-300">Total Balance</p>
-                      <p className="text-lg font-bold text-white">
+                      <p className="text-xs text-muted-foreground">Total Balance</p>
+                      <p className="text-lg font-bold text-foreground">
                         {showBalance ? formatCurrency(balance) : "••••••"}
                       </p>
                     </div>
                     <button
                       onClick={() => setShowBalance(!showBalance)}
-                      className="p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors rounded-lg hover:bg-warm-400/15"
+                      className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-primary/10"
                     >
                       {showBalance ? (
                         <Eye className="w-4 h-4" />
@@ -723,17 +725,17 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-lg p-3">
-                      <p className="text-xs text-emerald-400">Staked</p>
-                      <p className="text-sm font-semibold text-white">
+                    <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
+                      <p className="text-xs text-primary font-medium">Staked</p>
+                      <p className="text-sm font-semibold text-foreground">
                         {showBalance
                           ? formatCurrency(stakedBalance, false)
                           : "••••"}
                       </p>
                     </div>
-                    <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-lg p-3">
-                      <p className="text-xs text-cyan-400">Available</p>
-                      <p className="text-sm font-semibold text-white">
+                    <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
+                      <p className="text-xs text-primary font-medium">Available</p>
+                      <p className="text-sm font-semibold text-foreground">
                         {showBalance
                           ? formatCurrency(availableBalance, false)
                           : "••••"}
@@ -744,10 +746,10 @@ export default function DashboardPage() {
                   <div className="flex items-center space-x-2 text-xs">
                     <div
                       className={`w-2 h-2 rounded-full ${
-                        isLive ? "bg-emerald-500 animate-pulse" : "bg-gray-500"
+                        isLive ? "bg-emerald-500 animate-pulse" : "bg-muted-foreground"
                       }`}
                     ></div>
-                    <span className="text-slate-600 dark:text-slate-300">
+                    <span className="text-muted-foreground">
                       {isLive ? "Live" : "Paused"} •{" "}
                       {isClient ? lastUpdate.toLocaleTimeString() : "--:--:--"}
                     </span>
@@ -776,9 +778,9 @@ export default function DashboardPage() {
                         sidebarCollapsed && isClient && screenWidth >= 1024
                           ? "justify-center px-2 py-3"
                           : "space-x-3 px-4 py-3.5"
-                      } rounded-2xl transition-all duration-300 group text-slate-600 dark:text-slate-300 hover:text-white hover:bg-warm-400/15`}
+                      } rounded-2xl transition-all duration-300 group text-muted-foreground hover:text-foreground hover:bg-primary/10`}
                     >
-                      <item.icon className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-white" />
+                      <item.icon className="w-5 h-5 text-muted-foreground group-hover:text-primary" />
                       {(!sidebarCollapsed ||
                         mobileMenuOpen ||
                         (isClient && screenWidth < 1024)) && (
@@ -786,7 +788,7 @@ export default function DashboardPage() {
                           <span className="font-medium block">
                             {item.label}
                           </span>
-                          <span className="text-xs text-white/50 block">
+                          <span className="text-xs text-muted-foreground/70 block">
                             {item.description}
                           </span>
                         </div>
@@ -810,15 +812,15 @@ export default function DashboardPage() {
                         : "space-x-3 px-4 py-3.5"
                     } rounded-2xl transition-all duration-300 group ${
                       activeTab === item.id
-                        ? "bg-gradient-to-r from-emerald-500/20 to-green-400/20 text-emerald-400 border border-emerald-500/30 shadow-lg shadow-emerald-500/10"
-                        : "text-slate-600 dark:text-slate-300 hover:text-white hover:bg-warm-400/15"
+                        ? "bg-primary/15 text-primary border border-primary/30 shadow-sm shadow-primary/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-primary/10"
                     }`}
                   >
                     <item.icon
                       className={`w-5 h-5 ${
                         activeTab === item.id
-                          ? "text-emerald-400"
-                          : "text-slate-600 dark:text-slate-300 group-hover:text-white"
+                          ? "text-primary"
+                          : "text-muted-foreground group-hover:text-primary"
                       }`}
                     />
                     {(!sidebarCollapsed ||
@@ -826,7 +828,7 @@ export default function DashboardPage() {
                       (isClient && screenWidth < 1024)) && (
                       <div className="text-left">
                         <span className="font-medium block">{item.label}</span>
-                        <span className="text-xs text-white/50 block">
+                        <span className="text-xs text-muted-foreground/70 block">
                           {item.description}
                         </span>
                       </div>
@@ -838,7 +840,7 @@ export default function DashboardPage() {
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
-                          className="ml-auto w-2 h-2 bg-emerald-400 rounded-full"
+                          className="ml-auto w-2 h-2 bg-primary rounded-full"
                         />
                       )}
                   </motion.button>
@@ -847,13 +849,13 @@ export default function DashboardPage() {
             </nav>
 
             {/* User Profile */}
-            <div className="flex-shrink-0 p-4 border-t border-warm-400/20">
+            <div className="flex-shrink-0 p-4 border-t border-border">
               <div
                 className={`flex items-center ${
                   sidebarCollapsed && isClient && screenWidth >= 1024
                     ? "justify-center p-2"
                     : "space-x-3 p-3"
-                } rounded-2xl bg-slate-800/80 dark:bg-slate-700/60 ${
+                } rounded-2xl bg-primary/10 border border-primary/20 ${
                   sidebarCollapsed &&
                   !mobileMenuOpen &&
                   isClient &&
@@ -862,18 +864,18 @@ export default function DashboardPage() {
                     : ""
                 }`}
               >
-                <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center">
-                  <User className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 bg-gradient-to-r from-primary to-accent rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <User className="w-5 h-5 text-primary-foreground" />
                 </div>
                 {(!sidebarCollapsed ||
                   mobileMenuOpen ||
                   (isClient && screenWidth < 1024)) && (
                   <>
-                    <div className="flex-1">
-                      <p className="text-slate-900 dark:text-white font-medium">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-foreground font-medium truncate">
                         {user?.name || "User"}
                       </p>
-                      <p className="text-xs text-slate-600 dark:text-slate-300">
+                      <p className="text-xs text-muted-foreground truncate">
                         {user?.role === "admin"
                           ? "Administrator"
                           : "Premium Member"}
@@ -881,7 +883,7 @@ export default function DashboardPage() {
                     </div>
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-1.5 text-red-500 hover:text-red-600 transition-colors px-2 py-1.5 rounded-lg hover:bg-red-50 border border-red-200"
+                      className="flex items-center gap-1.5 text-destructive hover:text-destructive/80 transition-colors px-2 py-1.5 rounded-lg hover:bg-destructive/10 border border-destructive/30 flex-shrink-0"
                       title="Logout"
                     >
                       <LogOut className="w-4 h-4" />
@@ -905,14 +907,14 @@ export default function DashboardPage() {
           }`}
         >
           {/* Top Header */}
-          <div className="border-b border-warm-400/20 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 sticky top-0 z-40" style={{ backgroundColor: '#F8F5F0' }}>
+          <div className="border-b border-border px-4 sm:px-6 lg:px-8 py-4 sm:py-6 sticky top-0 z-40 bg-card">
             <div className="flex items-center justify-between">
               {/* Mobile Menu Button & Sidebar Toggle */}
               <div className="flex items-center space-x-4">
                 {/* Mobile Menu Button (< 1024px) */}
                 <button
                   onClick={() => setMobileMenuOpen(true)}
-                  className="lg:hidden p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors rounded-xl hover:bg-warm-400/15"
+                  className="lg:hidden p-2 text-muted-foreground hover:text-foreground transition-colors rounded-xl hover:bg-primary/10 border border-transparent hover:border-border"
                 >
                   <Menu className="w-6 h-6" />
                 </button>
@@ -920,7 +922,7 @@ export default function DashboardPage() {
                 {/* Desktop Sidebar Toggle (>= 1024px) */}
                 <button
                   onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                  className="hidden lg:flex p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors rounded-xl hover:bg-warm-400/15"
+                  className="hidden lg:flex p-2 text-muted-foreground hover:text-foreground transition-colors rounded-xl hover:bg-primary/10 border border-transparent hover:border-border"
                   title={
                     sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"
                   }
@@ -930,13 +932,13 @@ export default function DashboardPage() {
 
                 <div>
                   <div className="flex items-center space-x-2 sm:space-x-4">
-                    <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-900 dark:text-white capitalize">
+                    <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground capitalize">
                       {activeTab === "overview"
                         ? "Account Overview"
                         : activeTab}
                     </h1>
                   </div>
-                  <p className="text-slate-600 dark:text-slate-300 mt-1 text-sm sm:text-base hidden sm:block">
+                  <p className="text-muted-foreground mt-1 text-sm sm:text-base hidden sm:block">
                     {activeTab === "overview" &&
                       "Manage your USDT staking portfolio"}
                     {activeTab === "deposit" &&
@@ -957,15 +959,15 @@ export default function DashboardPage() {
 
               <div className="flex items-center space-x-2 sm:space-x-4">
                 {/* Quick Stats */}
-                <div className="hidden xl:flex items-center space-x-4 lg:space-x-6 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl lg:rounded-2xl px-3 lg:px-6 py-2 lg:py-3">
+                <div className="hidden xl:flex items-center space-x-4 lg:space-x-6 bg-secondary border border-border rounded-xl lg:rounded-2xl px-3 lg:px-6 py-2 lg:py-3">
                   <div className="text-center">
-                    <p className="text-xs text-slate-600 dark:text-slate-300">Monthly Rate</p>
-                    <p className="text-lg font-bold text-emerald-400">5-12%</p>
+                    <p className="text-xs text-muted-foreground">Monthly Rate</p>
+                    <p className="text-lg font-bold text-primary">5-12%</p>
                   </div>
-                  <div className="w-px h-8 bg-warm-400/25"></div>
+                  <div className="w-px h-8 bg-border"></div>
                   <div className="text-center">
-                    <p className="text-xs text-slate-600 dark:text-slate-300">Total Earnings</p>
-                    <p className="text-lg font-bold text-cyan-400">
+                    <p className="text-xs text-muted-foreground">Total Earnings</p>
+                    <p className="text-lg font-bold text-primary">
                       ${earnings.toFixed(2)}
                     </p>
                   </div>
@@ -974,7 +976,7 @@ export default function DashboardPage() {
                 {/* Manual Refresh */}
                 <button
                   onClick={() => fetchWalletData()}
-                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg sm:rounded-xl transition-all duration-300 bg-warm-400/15 text-slate-600 dark:text-slate-300 hover:bg-warm-400/25"
+                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg sm:rounded-xl transition-all duration-300 bg-secondary border border-border text-muted-foreground hover:text-foreground hover:bg-primary/10 hover:border-primary/30"
                   title="Refresh data"
                 >
                   <RefreshCw className="w-4 h-4" />
@@ -987,12 +989,12 @@ export default function DashboardPage() {
                     onClick={() =>
                       setShowNotificationDropdown(!showNotificationDropdown)
                     }
-                    className="relative flex items-center justify-center p-2 bg-warm-400/15 text-slate-600 dark:text-slate-300 hover:bg-warm-400/25 hover:text-white rounded-lg sm:rounded-xl transition-all duration-300"
+                    className="relative flex items-center justify-center p-2 bg-secondary border border-border text-muted-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-foreground rounded-lg sm:rounded-xl transition-all duration-300"
                     title="Notifications"
                   >
                     <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
                     {unreadNotificationCount > 0 && (
-                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-primary-foreground text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
                         {unreadNotificationCount > 9
                           ? "9+"
                           : unreadNotificationCount}
@@ -1008,16 +1010,16 @@ export default function DashboardPage() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute right-0 top-12 w-80 sm:w-96 max-h-96 overflow-y-auto bg-cream-100 backdrop-blur-xl border border-warm-400/30 rounded-2xl shadow-2xl z-50"
+                        className="absolute right-0 top-12 w-80 sm:w-96 max-h-96 overflow-y-auto bg-card border border-border rounded-2xl shadow-2xl z-50"
                       >
-                        <div className="sticky top-0 bg-cream-100 backdrop-blur-xl p-4 border-b border-warm-400/20 flex items-center justify-between">
-                          <h3 className="text-slate-900 dark:text-white font-semibold">
+                        <div className="sticky top-0 bg-card p-4 border-b border-border flex items-center justify-between">
+                          <h3 className="text-foreground font-semibold">
                             Notifications
                           </h3>
                           {unreadNotificationCount > 0 && (
                             <button
                               onClick={markAllNotificationsAsRead}
-                              className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+                              className="text-xs text-primary hover:text-primary/80 transition-colors"
                             >
                               Mark all as read
                             </button>
@@ -1027,12 +1029,12 @@ export default function DashboardPage() {
                         <div className="p-2">
                           {loadingNotifications ? (
                             <div className="flex items-center justify-center py-8">
-                              <RefreshCw className="w-6 h-6 text-emerald-400 animate-spin" />
+                              <RefreshCw className="w-6 h-6 text-primary animate-spin" />
                             </div>
                           ) : pushNotifications.length === 0 ? (
                             <div className="text-center py-8">
-                              <Bell className="w-10 h-10 text-white/30 mx-auto mb-3" />
-                              <p className="text-slate-600 dark:text-slate-300 text-sm">
+                              <Bell className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
+                              <p className="text-muted-foreground text-sm">
                                 No notifications yet
                               </p>
                             </div>
@@ -1050,10 +1052,10 @@ export default function DashboardPage() {
                                   key={notification._id}
                                   initial={{ opacity: 0, x: -10 }}
                                   animate={{ opacity: 1, x: 0 }}
-                                  className={`p-3 rounded-xl mb-2 cursor-pointer transition-all duration-200 ${
+                                  className={`p-3 rounded-xl mb-2 cursor-pointer transition-all duration-200 border ${
                                     notification.read
-                                      ? "bg-slate-800/80 dark:bg-slate-700/60 hover:bg-warm-400/15"
-                                      : "bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/15"
+                                      ? "bg-secondary border-border hover:bg-primary/10 hover:border-primary/20"
+                                      : "bg-primary/10 border-primary/30 hover:bg-primary/15"
                                   }`}
                                   onClick={() => {
                                     if (!notification.read) {
@@ -1065,14 +1067,14 @@ export default function DashboardPage() {
                                     <div
                                       className={`p-2 rounded-lg ${
                                         notification.type === "success"
-                                          ? "bg-emerald-500/20 text-emerald-400"
+                                          ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
                                           : notification.type === "warning"
-                                          ? "bg-yellow-500/20 text-yellow-400"
+                                          ? "bg-yellow-500/15 text-yellow-600 dark:text-yellow-400"
                                           : notification.type === "error"
-                                          ? "bg-red-500/20 text-red-400"
+                                          ? "bg-destructive/15 text-destructive"
                                           : notification.type === "announcement"
-                                          ? "bg-purple-500/20 text-purple-400"
-                                          : "bg-cyan-500/20 text-cyan-400"
+                                          ? "bg-primary/15 text-primary"
+                                          : "bg-primary/15 text-primary"
                                       }`}
                                     >
                                       <Bell className="w-4 h-4" />
@@ -1082,15 +1084,15 @@ export default function DashboardPage() {
                                         <h4
                                           className={`font-medium text-sm ${
                                             notification.read
-                                              ? "text-slate-600 dark:text-slate-300"
-                                              : "text-slate-900 dark:text-white"
+                                              ? "text-muted-foreground"
+                                              : "text-foreground"
                                           }`}
                                         >
                                           {notification.title}
                                         </h4>
                                         <div className="flex items-center space-x-2">
                                           {!notification.read && (
-                                            <span className="w-2 h-2 bg-emerald-400 rounded-full flex-shrink-0"></span>
+                                            <span className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></span>
                                           )}
                                           <button
                                             onClick={(e) => {
@@ -1099,17 +1101,17 @@ export default function DashboardPage() {
                                                 notification._id
                                               );
                                             }}
-                                            className="p-1 hover:bg-red-500/20 rounded-lg transition-colors group"
+                                            className="p-1 hover:bg-destructive/15 rounded-lg transition-colors group"
                                             title="Delete notification"
                                           >
-                                            <Trash2 className="w-4 h-4 text-white/40 group-hover:text-red-400 transition-colors" />
+                                            <Trash2 className="w-4 h-4 text-muted-foreground/50 group-hover:text-destructive transition-colors" />
                                           </button>
                                         </div>
                                       </div>
-                                      <p className="text-slate-600 dark:text-slate-300 text-xs mt-1 line-clamp-2">
+                                      <p className="text-muted-foreground text-xs mt-1 line-clamp-2">
                                         {notification.message}
                                       </p>
-                                      <p className="text-white/40 text-xs mt-2">
+                                      <p className="text-muted-foreground/60 text-xs mt-2">
                                         {new Date(
                                           notification.createdAt
                                         ).toLocaleString()}
@@ -1129,7 +1131,7 @@ export default function DashboardPage() {
                 {/* Support Button */}
                 <a
                   href="/support"
-                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 bg-gradient-to-r from-cyan-500/20 to-blue-400/20 text-cyan-400 border border-cyan-500/30 rounded-lg sm:rounded-xl hover:from-cyan-500/30 hover:to-blue-400/30 transition-all duration-300 group"
+                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 bg-secondary text-muted-foreground border border-border rounded-lg sm:rounded-xl hover:bg-primary/10 hover:border-primary/30 hover:text-primary transition-all duration-300 group"
                   title="Help & Support"
                 >
                   <HelpCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
@@ -1151,12 +1153,12 @@ export default function DashboardPage() {
                 initial={{ opacity: 0, y: -50, x: 100 }}
                 animate={{ opacity: 1, y: 0, x: 0 }}
                 exit={{ opacity: 0, x: 100 }}
-                className={`fixed top-20 sm:top-24 right-4 sm:right-8 z-50 p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-xl backdrop-blur-xl border max-w-xs sm:max-w-sm ${
+                className={`fixed top-20 sm:top-24 right-4 sm:right-8 z-50 p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-xl border max-w-xs sm:max-w-sm ${
                   notification.type === "success"
-                    ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-400"
+                    ? "bg-card border-emerald-500/30 text-emerald-600 dark:text-emerald-400"
                     : notification.type === "error"
-                    ? "bg-red-500/20 border-red-500/30 text-red-400"
-                    : "bg-blue-500/20 border-blue-500/30 text-blue-400"
+                    ? "bg-card border-destructive/30 text-destructive"
+                    : "bg-card border-primary/30 text-primary"
                 }`}
               >
                 <div className="flex items-start space-x-3">
@@ -4373,15 +4375,15 @@ function WithdrawTab({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-gradient-to-r from-red-500/20 to-orange-400/20 backdrop-blur-xl border border-red-500/30 rounded-3xl p-8"
+        className="bg-primary/10 border border-primary/30 rounded-3xl p-8"
       >
         <div className="flex items-center space-x-4 mb-4">
-          <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-orange-400 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/20">
-            <ArrowDownLeft className="w-8 h-8 text-white font-bold" />
+          <div className="w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+            <ArrowDownLeft className="w-8 h-8 text-primary-foreground font-bold" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white">Withdraw Funds</h1>
-            <p className="text-slate-600 dark:text-slate-300">
+            <h1 className="text-3xl font-bold text-foreground">Withdraw Funds</h1>
+            <p className="text-muted-foreground">
               Transfer your earnings to external wallets or bank accounts
             </p>
           </div>
@@ -4389,18 +4391,18 @@ function WithdrawTab({
 
         {/* Key Info */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-          <div className="flex items-center space-x-3 bg-warm-400/15 rounded-2xl p-4">
-            <Shield className="w-6 h-6 text-red-400" />
+          <div className="flex items-center space-x-3 bg-card border border-border rounded-2xl p-4">
+            <Shield className="w-6 h-6 text-primary" />
             <div>
-              <p className="text-slate-900 dark:text-white font-medium">Secure</p>
-              <p className="text-slate-600 dark:text-slate-300 text-sm">2FA verification required</p>
+              <p className="text-foreground font-medium">Secure</p>
+              <p className="text-muted-foreground text-sm">2FA verification required</p>
             </div>
           </div>
-          <div className="flex items-center space-x-3 bg-warm-400/15 rounded-2xl p-4">
-            <Clock className="w-6 h-6 text-orange-400" />
+          <div className="flex items-center space-x-3 bg-card border border-border rounded-2xl p-4">
+            <Clock className="w-6 h-6 text-primary" />
             <div>
-              <p className="text-slate-900 dark:text-white font-medium">Fast Transfer</p>
-              <p className="text-slate-600 dark:text-slate-300 text-sm">5 min-4 hours to wallets</p>
+              <p className="text-foreground font-medium">Fast Transfer</p>
+              <p className="text-muted-foreground text-sm">5 min-4 hours to wallets</p>
             </div>
           </div>
         </div>
@@ -4411,36 +4413,36 @@ function WithdrawTab({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-warm-400/30 rounded-3xl p-8"
+        className="bg-card border border-border rounded-3xl p-8"
       >
         <form onSubmit={handleWithdraw} className="space-y-8">
           {/* Available Balance Display */}
-          <div className="bg-gradient-to-r from-emerald-500/10 to-green-400/10 border border-emerald-500/20 rounded-2xl p-6">
+          <div className="bg-primary/10 border border-primary/25 rounded-2xl p-6">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-lg">
+                <p className="text-foreground text-sm sm:text-lg font-medium">
                   Available Balance
                 </p>
-                <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
+                <p className="text-muted-foreground text-xs sm:text-sm">
                   Ready for withdrawal
                 </p>
               </div>
               <div className="text-right overflow-hidden">
-                <p className="text-xl sm:text-2xl md:text-4xl font-bold text-emerald-400 truncate max-w-[150px] sm:max-w-[200px] md:max-w-[300px]">
+                <p className="text-xl sm:text-2xl md:text-4xl font-bold text-primary truncate max-w-[150px] sm:max-w-[200px] md:max-w-[300px]">
                   {availableBalance >= 1000000
                     ? `${(availableBalance / 1000000).toFixed(2)}M`
                     : availableBalance >= 1000
                     ? `${(availableBalance / 1000).toFixed(2)}K`
                     : availableBalance.toLocaleString()}
                 </p>
-                <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-lg">USDT</p>
+                <p className="text-muted-foreground text-sm sm:text-lg">USDT</p>
               </div>
             </div>
           </div>
 
           {/* Token Selection */}
           <div>
-            <label className="block text-lg font-semibold text-white mb-4">
+            <label className="block text-lg font-semibold text-foreground mb-4">
               Select Token
             </label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -4453,8 +4455,8 @@ function WithdrawTab({
                   onClick={() => setSelectedToken(token.symbol)}
                   className={`p-6 rounded-2xl border-2 transition-all duration-300 ${
                     selectedToken === token.symbol
-                      ? "border-red-500 bg-red-500/10 shadow-lg shadow-red-500/20"
-                      : "border-warm-400/30 bg-slate-800/80 dark:bg-slate-700/60 hover:border-red-500/50 hover:bg-warm-400/15"
+                      ? "border-primary bg-primary/10 shadow-lg shadow-primary/15"
+                      : "border-border bg-secondary hover:border-primary/50 hover:bg-primary/5"
                   }`}
                 >
                   <div className="text-center">
@@ -4467,16 +4469,16 @@ function WithdrawTab({
                         className="w-full h-full object-contain"
                       />
                     </div>
-                    <div className="text-white font-bold text-lg">
+                    <div className="text-foreground font-bold text-lg">
                       {token.symbol}
                     </div>
-                    <div className="text-slate-600 dark:text-slate-300 text-sm mb-2">
+                    <div className="text-muted-foreground text-sm mb-2">
                       {token.name}
                     </div>
-                    <div className="text-xs text-white/50 mb-1">
+                    <div className="text-xs text-muted-foreground/70 mb-1">
                       {token.network}
                     </div>
-                    <div className="text-emerald-400 text-sm font-medium">
+                    <div className="text-primary text-sm font-medium">
                       Available: {token.balance.toLocaleString()}
                     </div>
                   </div>
@@ -4487,7 +4489,7 @@ function WithdrawTab({
 
           {/* Amount Input */}
           <div>
-            <label className="block text-lg font-semibold text-white mb-4">
+            <label className="block text-lg font-semibold text-foreground mb-4">
               Withdraw Amount
             </label>
             <div className="relative">
@@ -4495,7 +4497,7 @@ function WithdrawTab({
                 type="number"
                 value={withdrawAmount}
                 onChange={(e) => setWithdrawAmount(e.target.value)}
-                className="w-full px-6 py-4 text-xl bg-warm-400/15 border border-warm-400/30 rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all duration-300"
+                className="w-full px-6 py-4 text-xl bg-secondary border border-border rounded-2xl text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all duration-300"
                 placeholder="0.00"
                 step="0.01"
                 min={selectedTokenData.minWithdraw}
@@ -4505,7 +4507,7 @@ function WithdrawTab({
                 )}
               />
               <div className="absolute right-6 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                <span className="text-slate-600 dark:text-slate-300 text-lg">{selectedToken}</span>
+                <span className="text-muted-foreground text-lg">{selectedToken}</span>
                 <div className="w-8 h-8">
                   <Image
                     src={selectedTokenData.icon}
@@ -4520,53 +4522,26 @@ function WithdrawTab({
 
             {/* Quick Amount Buttons */}
             <div className="flex flex-wrap gap-3 mt-4">
-              <button
-                type="button"
-                onClick={() =>
-                  setWithdrawAmount(
-                    (selectedTokenData.balance * 0.25).toString()
-                  )
-                }
-                className="px-4 py-2 bg-warm-400/15 hover:bg-red-500/20 border border-warm-400/30 hover:border-red-500/30 rounded-xl text-white transition-all duration-300"
-              >
-                25%
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  setWithdrawAmount(
-                    (selectedTokenData.balance * 0.5).toString()
-                  )
-                }
-                className="px-4 py-2 bg-warm-400/15 hover:bg-red-500/20 border border-warm-400/30 hover:border-red-500/30 rounded-xl text-white transition-all duration-300"
-              >
-                50%
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  setWithdrawAmount(
-                    (selectedTokenData.balance * 0.75).toString()
-                  )
-                }
-                className="px-4 py-2 bg-warm-400/15 hover:bg-red-500/20 border border-warm-400/30 hover:border-red-500/30 rounded-xl text-white transition-all duration-300"
-              >
-                75%
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  setWithdrawAmount(
-                    (selectedTokenData.balance - feeAmount).toString()
-                  )
-                }
-                className="px-4 py-2 bg-warm-400/15 hover:bg-red-500/20 border border-warm-400/30 hover:border-red-500/30 rounded-xl text-white transition-all duration-300"
-              >
-                Max
-              </button>
+              {["25%", "50%", "75%", "Max"].map((label, i) => {
+                const multipliers = [0.25, 0.5, 0.75, null];
+                const m = multipliers[i];
+                const val = m !== null
+                  ? (selectedTokenData.balance * m).toString()
+                  : (selectedTokenData.balance - feeAmount).toString();
+                return (
+                  <button
+                    key={label}
+                    type="button"
+                    onClick={() => setWithdrawAmount(val)}
+                    className="px-4 py-2 bg-secondary hover:bg-primary/15 border border-border hover:border-primary/40 rounded-xl text-foreground transition-all duration-300"
+                  >
+                    {label}
+                  </button>
+                );
+              })}
             </div>
 
-            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300 mt-3">
+            <div className="flex justify-between text-sm text-muted-foreground mt-3">
               <span>
                 Minimum: {selectedTokenData.minWithdraw} {selectedToken}
               </span>
@@ -4583,7 +4558,7 @@ function WithdrawTab({
 
           {/* Withdraw Method */}
           <div>
-            <label className="block text-lg font-semibold text-white mb-4">
+            <label className="block text-lg font-semibold text-foreground mb-4">
               Withdraw Method
             </label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -4596,24 +4571,24 @@ function WithdrawTab({
                   onClick={() => setWithdrawMethod(method.id)}
                   className={`p-6 rounded-2xl border-2 transition-all duration-300 text-left ${
                     withdrawMethod === method.id
-                      ? "border-red-500 bg-red-500/10 shadow-lg shadow-red-500/20"
-                      : "border-warm-400/30 bg-slate-800/80 dark:bg-slate-700/60 hover:border-red-500/50 hover:bg-warm-400/15"
+                      ? "border-primary bg-primary/10 shadow-lg shadow-primary/15"
+                      : "border-border bg-secondary hover:border-primary/50 hover:bg-primary/5"
                   }`}
                 >
                   <div className="flex items-start space-x-4">
-                    <method.icon className="w-8 h-8 text-red-400 mt-1" />
+                    <method.icon className="w-8 h-8 text-primary mt-1" />
                     <div className="flex-1">
-                      <div className="text-white font-semibold text-lg">
+                      <div className="text-foreground font-semibold text-lg">
                         {method.label}
                       </div>
-                      <div className="text-slate-600 dark:text-slate-300 text-sm mb-2">
+                      <div className="text-muted-foreground text-sm mb-2">
                         {method.description}
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-red-400 font-medium">
+                        <span className="text-primary font-medium">
                           {method.fee} fee
                         </span>
-                        <span className="text-white/50 text-sm">
+                        <span className="text-muted-foreground/70 text-sm">
                           {method.time}
                         </span>
                       </div>
@@ -4626,7 +4601,7 @@ function WithdrawTab({
 
           {/* Destination Address */}
           <div>
-            <label className="block text-lg font-semibold text-white mb-4">
+            <label className="block text-lg font-semibold text-foreground mb-4">
               {withdrawMethod === "bank"
                 ? "Bank Account Details"
                 : "Destination Address"}
@@ -4636,11 +4611,11 @@ function WithdrawTab({
                 type="text"
                 value={withdrawAddress}
                 onChange={(e) => setWithdrawAddress(e.target.value)}
-                className={`w-full px-6 py-4 text-lg bg-warm-400/15 border ${
+                className={`w-full px-6 py-4 text-lg bg-secondary border ${
                   withdrawAddress && !isValidWalletAddress(withdrawAddress)
-                    ? "border-red-500/50"
-                    : "border-warm-400/30"
-                } rounded-2xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all duration-300`}
+                    ? "border-destructive/60 focus:ring-destructive/40 focus:border-destructive"
+                    : "border-border focus:ring-primary/40 focus:border-primary"
+                } rounded-2xl text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 transition-all duration-300`}
                 placeholder={
                   withdrawMethod === "bank"
                     ? "Enter your bank account details"
@@ -4648,10 +4623,10 @@ function WithdrawTab({
                 }
               />
               <div className="absolute right-6 top-1/2 transform -translate-y-1/2">
-                <QrCode className="w-6 h-6 text-white/40" />
+                <QrCode className="w-6 h-6 text-muted-foreground/50" />
               </div>
             </div>
-            <p className="text-white/50 text-sm mt-2">
+            <p className="text-muted-foreground text-sm mt-2">
               {withdrawMethod === "bank"
                 ? "Bank transfers require full verification and may take 1-3 business days"
                 : withdrawAddress && !isValidWalletAddress(withdrawAddress)
@@ -4659,7 +4634,7 @@ function WithdrawTab({
                 : "Double-check the address. Transactions cannot be reversed."}
             </p>
             {withdrawMethod !== "bank" && (
-              <p className="text-white/40 text-xs mt-1">
+              <p className="text-muted-foreground/60 text-xs mt-1">
                 Example: 0x742D35Cc6634C0532925a3b8D0b30E3e0000000A
               </p>
             )}
@@ -4670,48 +4645,48 @@ function WithdrawTab({
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
-              className="bg-gradient-to-r from-red-500/10 to-orange-400/10 border border-red-500/20 rounded-2xl p-6"
+              className="bg-secondary border border-border rounded-2xl p-6"
             >
-              <h3 className="text-lg font-semibold text-white mb-4">
+              <h3 className="text-lg font-semibold text-foreground mb-4">
                 Transaction Summary
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-300">Withdraw Amount:</span>
-                  <span className="text-slate-900 dark:text-white font-semibold">
+                  <span className="text-muted-foreground">Withdraw Amount:</span>
+                  <span className="text-foreground font-semibold">
                     {amount.toLocaleString()} {selectedToken}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-300">Network Fee:</span>
-                  <span className="text-red-400">
+                  <span className="text-muted-foreground">Network Fee:</span>
+                  <span className="text-destructive">
                     -{selectedMethodData.fee}
                   </span>
                 </div>
-                <div className="border-t border-warm-400/30 pt-3">
+                <div className="border-t border-border pt-3">
                   <div className="flex justify-between">
-                    <span className="text-slate-900 dark:text-white font-semibold">
+                    <span className="text-foreground font-semibold">
                       You will receive:
                     </span>
-                    <span className="text-red-400 font-bold text-lg">
+                    <span className="text-primary font-bold text-lg">
                       {finalAmount.toFixed(4)} {selectedToken}
                     </span>
                   </div>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-600 dark:text-slate-300">Processing Time:</span>
-                  <span className="text-slate-600 dark:text-slate-300">
+                  <span className="text-muted-foreground">Processing Time:</span>
+                  <span className="text-muted-foreground">
                     {selectedMethodData.time}
                   </span>
                 </div>
-                <div className="bg-yellow-500/20 rounded-xl p-4 mt-4">
+                <div className="bg-yellow-500/10 border border-yellow-500/25 rounded-xl p-4 mt-4">
                   <div className="flex items-start space-x-3">
-                    <AlertTriangle className="w-5 h-5 text-yellow-400 mt-0.5" />
+                    <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="text-yellow-400 font-medium text-sm">
+                      <p className="text-yellow-600 dark:text-yellow-400 font-medium text-sm">
                         Important Notice
                       </p>
-                      <p className="text-slate-600 dark:text-slate-300 text-sm">
+                      <p className="text-muted-foreground text-sm">
                         Withdrawals cannot be cancelled once processed. Please
                         verify all details before confirming.
                       </p>
@@ -4741,8 +4716,8 @@ function WithdrawTab({
                 !withdrawAddress ||
                 !isValidWalletAddress(withdrawAddress) ||
                 isProcessing
-                  ? "bg-warm-400/15 text-white/50 cursor-not-allowed"
-                  : "bg-gradient-to-r from-red-500 to-orange-400 text-white shadow-lg shadow-red-500/20 hover:shadow-red-500/30"
+                  ? "bg-muted text-muted-foreground cursor-not-allowed border border-border"
+                  : "bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-primary/30 border border-primary/20"
               }`}
             >
               {isProcessing ? (
@@ -4764,50 +4739,50 @@ function WithdrawTab({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50"
             >
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="bg-gradient-to-br from-gray-900 to-gray-800 border border-warm-400/30 rounded-3xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto"
+                className="bg-card border border-border rounded-3xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl"
               >
                 <div className="text-center mb-6">
-                  <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <AlertTriangle className="w-8 h-8 text-red-400" />
+                  <div className="w-16 h-16 bg-primary/15 border border-primary/25 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <AlertTriangle className="w-8 h-8 text-primary" />
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">
+                  <h3 className="text-2xl font-bold text-foreground mb-2">
                     Confirm Withdrawal
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-300">
+                  <p className="text-muted-foreground">
                     Verify with OTP sent to your email
                   </p>
                 </div>
 
-                <div className="space-y-4 mb-6">
-                  <div className="flex justify-between p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl">
-                    <span className="text-slate-600 dark:text-slate-300">Amount:</span>
-                    <span className="text-slate-900 dark:text-white font-semibold">
+                <div className="space-y-3 mb-6">
+                  <div className="flex justify-between p-4 bg-secondary border border-border rounded-xl">
+                    <span className="text-muted-foreground">Amount:</span>
+                    <span className="text-foreground font-semibold">
                       {amount} {selectedToken}
                     </span>
                   </div>
-                  <div className="flex justify-between p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl">
-                    <span className="text-slate-600 dark:text-slate-300">Fee:</span>
-                    <span className="text-red-400">
+                  <div className="flex justify-between p-4 bg-secondary border border-border rounded-xl">
+                    <span className="text-muted-foreground">Fee:</span>
+                    <span className="text-destructive">
                       {selectedMethodData.fee}
                     </span>
                   </div>
-                  <div className="flex justify-between p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl">
-                    <span className="text-slate-600 dark:text-slate-300">You will receive:</span>
-                    <span className="text-red-400 font-bold">
+                  <div className="flex justify-between p-4 bg-secondary border border-border rounded-xl">
+                    <span className="text-muted-foreground">You will receive:</span>
+                    <span className="text-primary font-bold">
                       {finalAmount.toFixed(4)} {selectedToken}
                     </span>
                   </div>
-                  <div className="p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl">
-                    <span className="text-slate-600 dark:text-slate-300 block mb-1">
+                  <div className="p-4 bg-secondary border border-border rounded-xl">
+                    <span className="text-muted-foreground block mb-1">
                       Destination:
                     </span>
-                    <span className="text-white font-mono text-sm break-all">
+                    <span className="text-foreground font-mono text-sm break-all">
                       {withdrawAddress}
                     </span>
                   </div>
@@ -4819,7 +4794,7 @@ function WithdrawTab({
                     <button
                       onClick={requestOTP}
                       disabled={otpLoading}
-                      className="w-full py-3 px-6 bg-gradient-to-r from-emerald-500 to-green-400 text-white rounded-xl hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-300 disabled:opacity-50 flex items-center justify-center space-x-2"
+                      className="w-full py-3 px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 disabled:opacity-50 flex items-center justify-center space-x-2 font-semibold"
                     >
                       {otpLoading ? (
                         <>
@@ -4835,13 +4810,13 @@ function WithdrawTab({
                     </button>
                   ) : (
                     <div className="space-y-4">
-                      <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl">
+                      <div className="p-4 bg-primary/10 border border-primary/30 rounded-xl">
                         <div className="flex items-center justify-between">
-                          <p className="text-emerald-400 text-sm">
+                          <p className="text-primary text-sm font-medium">
                             OTP sent to {emailHint || "your email"}
                           </p>
                           {otpTimer > 0 && (
-                            <p className="text-slate-600 dark:text-slate-300 text-sm">
+                            <p className="text-muted-foreground text-sm">
                               Expires in: {Math.floor(otpTimer / 60)}:
                               {(otpTimer % 60).toString().padStart(2, "0")}
                             </p>
@@ -4850,7 +4825,7 @@ function WithdrawTab({
                       </div>
 
                       <div>
-                        <label className="block text-sm text-slate-600 dark:text-slate-300 mb-2">
+                        <label className="block text-sm text-muted-foreground mb-2">
                           Enter 6-digit OTP
                         </label>
                         <input
@@ -4863,7 +4838,7 @@ function WithdrawTab({
                           }
                           placeholder="000000"
                           maxLength={6}
-                          className="w-full py-4 px-6 bg-slate-800/80 dark:bg-slate-700/60 border border-warm-400/30 rounded-xl text-white text-center text-2xl tracking-[0.5em] font-mono focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all placeholder:tracking-[0.5em] placeholder:text-white/30"
+                          className="w-full py-4 px-6 bg-secondary border border-border rounded-xl text-foreground text-center text-2xl tracking-[0.5em] font-mono focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all placeholder:tracking-[0.5em] placeholder:text-muted-foreground/40"
                         />
                       </div>
 
@@ -4871,7 +4846,7 @@ function WithdrawTab({
                         <button
                           onClick={requestOTP}
                           disabled={otpLoading}
-                          className="w-full py-2 text-emerald-400 hover:text-emerald-300 transition-colors text-sm"
+                          className="w-full py-2 text-primary hover:text-primary/80 transition-colors text-sm font-medium"
                         >
                           Resend OTP
                         </button>
@@ -4888,7 +4863,7 @@ function WithdrawTab({
                       setOtpSent(false);
                       setOtpTimer(0);
                     }}
-                    className="flex-1 py-3 px-6 border border-warm-400/30 text-white rounded-xl hover:bg-warm-400/15 transition-colors"
+                    className="flex-1 py-3 px-6 border border-border text-foreground rounded-xl hover:bg-secondary transition-colors"
                   >
                     Cancel
                   </button>
@@ -4896,7 +4871,7 @@ function WithdrawTab({
                     <button
                       onClick={confirmWithdraw}
                       disabled={isProcessing || otp.length !== 6}
-                      className="flex-1 py-3 px-6 bg-gradient-to-r from-red-500 to-orange-400 text-white rounded-xl hover:shadow-red-500/20 transition-all duration-300 disabled:opacity-50"
+                      className="flex-1 py-3 px-6 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl hover:shadow-primary/20 transition-all duration-300 disabled:opacity-50 font-semibold"
                     >
                       {isProcessing ? "Processing..." : "Confirm Withdrawal"}
                     </button>

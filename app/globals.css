@@ -123,33 +123,45 @@
 @layer base {
   * { @apply border-border outline-ring/50; }
 
-  html, body {
+  html:not(.dark), html:not(.dark) body {
     background-color: #FDFAF6 !important;
     color: #3D2B1F !important;
     font-family: var(--font-inter), 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  html.dark, html.dark body {
+    background-color: #1A1208 !important;
+    color: #F5EFE6 !important;
+    font-family: var(--font-inter), 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-  /* white text → dark on cream backgrounds */
-  .text-white { color: #3D2B1F !important; }
+  /* white text → dark brown on light cream backgrounds (light mode only) */
+  :not(.dark) .text-white { color: #3D2B1F !important; }
 
-  /* allow white back on colored elements */
-  [class*="bg-warm"] .text-white,
-  [class*="bg-amber"] .text-white,
-  [class*="bg-orange"] .text-white,
-  [class*="bg-red"] .text-white,
-  [class*="bg-green"] .text-white,
-  [class*="bg-emerald"] .text-white,
-  [class*="bg-blue"] .text-white,
-  [class*="bg-indigo"] .text-white,
-  [class*="bg-gray-7"] .text-white,
-  [class*="bg-gray-8"] .text-white,
-  [class*="bg-gray-9"] .text-white,
-  [class*="from-amber"] .text-white,
-  [class*="from-orange"] .text-white,
-  .btn-crypto, .btn-crypto *,
-  .gradient-green, .gradient-green * { color: #FDFAF6 !important; }
+  /* restore white text on any coloured/dark container — light mode */
+  :not(.dark) [class*="bg-slate-7"] .text-white,
+  :not(.dark) [class*="bg-slate-8"] .text-white,
+  :not(.dark) [class*="bg-slate-9"] .text-white,
+  :not(.dark) [class*="bg-warm"] .text-white,
+  :not(.dark) [class*="bg-amber"] .text-white,
+  :not(.dark) [class*="bg-orange"] .text-white,
+  :not(.dark) [class*="bg-red"] .text-white,
+  :not(.dark) [class*="bg-green"] .text-white,
+  :not(.dark) [class*="bg-emerald"] .text-white,
+  :not(.dark) [class*="bg-blue"] .text-white,
+  :not(.dark) [class*="bg-indigo"] .text-white,
+  :not(.dark) [class*="bg-gray-7"] .text-white,
+  :not(.dark) [class*="bg-gray-8"] .text-white,
+  :not(.dark) [class*="bg-gray-9"] .text-white,
+  :not(.dark) [class*="from-amber"] .text-white,
+  :not(.dark) [class*="from-orange"] .text-white,
+  :not(.dark) .btn-crypto,
+  :not(.dark) .btn-crypto *,
+  :not(.dark) .gradient-green,
+  :not(.dark) .gradient-green * { color: #FDFAF6 !important; }
 
   /* kill old dark hardcoded bgs */
   .bg-\[\#0b0f0e\],.bg-\[\#1a1f1d\],.bg-\[\#2a2f2d\] {
@@ -157,14 +169,15 @@
     color: #3D2B1F !important;
   }
 
-  /* gray shades → warm brown readable on cream */
-  .text-gray-100,.text-gray-200,.text-gray-300 { color: #7C5C3E !important; }
-  .text-gray-400,.text-gray-500               { color: #7C5C3E !important; }
-  .text-gray-600                               { color: #5C4030 !important; }
-  .text-slate-300,.text-slate-400              { color: #7C5C3E !important; }
-  .text-slate-500,.text-slate-600              { color: #5C4030 !important; }
+  /* gray shades → warm brown readable on cream (light mode only) */
+  :not(.dark) .text-gray-100,:not(.dark) .text-gray-200,:not(.dark) .text-gray-300 { color: #7C5C3E !important; }
+  :not(.dark) .text-gray-400,:not(.dark) .text-gray-500               { color: #7C5C3E !important; }
+  :not(.dark) .text-gray-600                               { color: #5C4030 !important; }
+  :not(.dark) .text-slate-300,:not(.dark) .text-slate-400              { color: #7C5C3E !important; }
+  :not(.dark) .text-slate-500,:not(.dark) .text-slate-600              { color: #5C4030 !important; }
 
-  h1,h2,h3,h4,h5,h6 { color: #3D2B1F !important; font-weight: 700; }
+  :not(.dark) h1,:not(.dark) h2,:not(.dark) h3,
+  :not(.dark) h4,:not(.dark) h5,:not(.dark) h6 { color: #3D2B1F !important; font-weight: 700; }
 
   input, textarea, select {
     background-color: #F8F5F0 !important;
@@ -378,200 +391,237 @@
 
 
 /* ════════════════════════════════════════════════════════════
-   DARK MODE — complete transformation
-   Based on original BitGains dark crypto palette
+   DARK MODE — warm-dark palette (same amber family as light)
    ════════════════════════════════════════════════════════════ */
 
 /* 1. CSS variables in dark mode */
 html.dark {
-  --background:           #0d1117;
-  --foreground:           #e6edf3;
-  --card:                 #161b22;
-  --card-foreground:      #e6edf3;
-  --popover:              #161b22;
-  --popover-foreground:   #e6edf3;
-  --primary:              #58a6ff;
-  --primary-foreground:   #0d1117;
-  --secondary:            #21262d;
-  --secondary-foreground: #e6edf3;
-  --muted:                #21262d;
-  --muted-foreground:     #8b949e;
-  --accent:               #58a6ff;
-  --accent-foreground:    #0d1117;
-  --destructive:          #f85149;
-  --border:               #30363d;
-  --input:                #21262d;
-  --ring:                 #58a6ff;
-  --chart-1: #58a6ff;
-  --chart-2: #3fb950;
-  --chart-3: #d29922;
-  --chart-4: #f78166;
-  --chart-5: #bc8cff;
-  --sidebar:              #161b22;
-  --sidebar-foreground:   #e6edf3;
-  --sidebar-primary:      #58a6ff;
-  --sidebar-primary-foreground: #0d1117;
-  --sidebar-accent:       #21262d;
-  --sidebar-accent-foreground: #e6edf3;
-  --sidebar-border:       #30363d;
-  --sidebar-ring:         #58a6ff;
+  --background:           #1A1208;
+  --foreground:           #F5EFE6;
+  --card:                 #241A0E;
+  --card-foreground:      #F5EFE6;
+  --popover:              #241A0E;
+  --popover-foreground:   #F5EFE6;
+  --primary:              #C4966A;
+  --primary-foreground:   #1A1208;
+  --secondary:            #2E2015;
+  --secondary-foreground: #F5EFE6;
+  --muted:                #2E2015;
+  --muted-foreground:     #A07850;
+  --accent:               #C4966A;
+  --accent-foreground:    #1A1208;
+  --destructive:          #E05252;
+  --border:               #3D2A18;
+  --input:                #2E2015;
+  --ring:                 #C4966A;
+  --chart-1: #C4966A;
+  --chart-2: #8B5E3C;
+  --chart-3: #B8700A;
+  --chart-4: #7C5C3E;
+  --chart-5: #D4A87A;
+  --sidebar:              #1E1509;
+  --sidebar-foreground:   #F5EFE6;
+  --sidebar-primary:      #C4966A;
+  --sidebar-primary-foreground: #1A1208;
+  --sidebar-accent:       #2E2015;
+  --sidebar-accent-foreground: #F5EFE6;
+  --sidebar-border:       #3D2A18;
+  --sidebar-ring:         #C4966A;
 }
 
 /* 2. Body background */
 html.dark body {
-  background: #0d1117 !important;
-  color: #e6edf3 !important;
+  background: #1A1208 !important;
+  color: #F5EFE6 !important;
 }
 
-/* 3. All text white/light in dark mode — override EVERYTHING */
+/* 3. Global border color & text */
 html.dark * {
-  border-color: #30363d;
+  border-color: #3D2A18;
 }
 
 /* Headings */
 html.dark h1, html.dark h2, html.dark h3,
 html.dark h4, html.dark h5, html.dark h6 {
-  color: #e6edf3 !important;
+  color: #F5EFE6 !important;
 }
 
 /* Paragraphs and spans */
 html.dark p, html.dark span, html.dark li,
 html.dark td, html.dark th, html.dark label,
-html.dark div { color: #e6edf3; }
+html.dark div { color: #F5EFE6; }
 
-/* 4. Backgrounds */
+/* 4. Cards */
 html.dark .glass-card,
 html.dark .glass-card-strong {
-  background: #161b22 !important;
-  border-color: #30363d !important;
-  color: #e6edf3 !important;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.4) !important;
+  background: #241A0E !important;
+  border-color: #3D2A18 !important;
+  color: #F5EFE6 !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
 }
 html.dark .glass-card *, html.dark .glass-card-strong * {
-  color: #e6edf3 !important;
+  color: #F5EFE6 !important;
 }
 
 html.dark .animated-bg,
 html.dark .gradient-crypto {
-  background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%) !important;
-  background-image: 
-    linear-gradient(rgba(88,166,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(88,166,255,0.04) 1px, transparent 1px) !important;
+  background: linear-gradient(135deg, #1A1208 0%, #241A0E 50%, #1A1208 100%) !important;
+  background-image:
+    linear-gradient(rgba(196,150,106,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(196,150,106,0.05) 1px, transparent 1px) !important;
   background-size: 60px 60px !important;
 }
 
-/* White backgrounds → dark */
-html.dark .bg-white { background: #161b22 !important; color: #e6edf3 !important; }
-html.dark [class*="bg-white\/"] { background: rgba(22,27,34,0.9) !important; }
-html.dark .bg-gray-50, html.dark .bg-gray-100 { background: #161b22 !important; color: #e6edf3 !important; }
-html.dark .bg-cream-50, html.dark .bg-cream-100, html.dark .bg-cream-200 { background: #161b22 !important; color: #e6edf3 !important; }
+/* White / cream backgrounds → warm dark */
+html.dark .bg-white { background: #241A0E !important; color: #F5EFE6 !important; }
+html.dark [class*="bg-white\/"] { background: rgba(36,26,14,0.9) !important; }
+html.dark .bg-gray-50, html.dark .bg-gray-100 { background: #241A0E !important; color: #F5EFE6 !important; }
+html.dark .bg-cream-50, html.dark .bg-cream-100, html.dark .bg-cream-200 { background: #241A0E !important; color: #F5EFE6 !important; }
 
 /* Inline style overrides */
 html.dark [style*="background-color: rgb(253, 250, 246)"],
-html.dark [style*="background-color: #FDFAF6"],
-html.dark [style*="backgroundColor: '#FDFAF6'"] {
-  background-color: #0d1117 !important;
+html.dark [style*="background-color: #FDFAF6"] {
+  background-color: #1A1208 !important;
+}
+html.dark [style*="backgroundColor: #F8F5F0"],
+html.dark [style*="background-color: rgb(248, 245, 240)"] {
+  background-color: #241A0E !important;
 }
 
 /* 5. Sidebar */
 html.dark .mobile-nav-sidebar,
 html.dark .mobile-sidebar,
-html.dark .desktop-sidebar,
-html.dark [class*="sidebar"] {
-  background: linear-gradient(180deg, #161b22 0%, #0d1117 100%) !important;
-  border-right-color: #30363d !important;
+html.dark .desktop-sidebar {
+  background: linear-gradient(180deg, #1E1509 0%, #150F05 100%) !important;
+  border-right-color: #3D2A18 !important;
 }
-html.dark .mobile-nav-sidebar *, html.dark .desktop-sidebar * {
-  color: #e6edf3 !important;
-}
+html.dark .mobile-nav-sidebar *,
+html.dark .desktop-sidebar * { color: #F5EFE6 !important; }
 
 /* 6. Navbar / top bar */
 html.dark nav, html.dark header {
-  background: rgba(13,17,23,0.95) !important;
-  border-bottom-color: #30363d !important;
+  background: rgba(26,18,8,0.97) !important;
+  border-bottom-color: #3D2A18 !important;
 }
-html.dark nav *, html.dark header * { color: #e6edf3 !important; }
+html.dark nav *, html.dark header * { color: #F5EFE6 !important; }
 
 /* 7. Inputs */
 html.dark input, html.dark textarea, html.dark select {
-  background: #21262d !important;
-  color: #e6edf3 !important;
-  border-color: #30363d !important;
+  background: #2E2015 !important;
+  color: #F5EFE6 !important;
+  border-color: #3D2A18 !important;
 }
-html.dark input::placeholder, html.dark textarea::placeholder { color: #8b949e !important; }
+html.dark input::placeholder, html.dark textarea::placeholder { color: #7A5A3A !important; }
 html.dark input:focus, html.dark textarea:focus, html.dark select:focus {
-  border-color: #58a6ff !important;
-  box-shadow: 0 0 0 3px rgba(88,166,255,0.2) !important;
+  border-color: #C4966A !important;
+  box-shadow: 0 0 0 3px rgba(196,150,106,0.20) !important;
 }
 html.dark .input-crypto {
-  background: #21262d !important;
-  color: #e6edf3 !important;
-  border-color: #30363d !important;
+  background: #2E2015 !important;
+  color: #F5EFE6 !important;
+  border-color: #3D2A18 !important;
 }
 
 /* 8. Buttons */
 html.dark .btn-crypto {
-  background: linear-gradient(135deg, #238636, #1a7f37) !important;
-  color: #fff !important;
+  background: linear-gradient(135deg, #C4966A, #8B5E3C) !important;
+  color: #F5EFE6 !important;
 }
 html.dark .btn-crypto:hover {
-  background: linear-gradient(135deg, #2ea043, #238636) !important;
-  box-shadow: 0 4px 16px rgba(35,134,54,0.4) !important;
+  background: linear-gradient(135deg, #D4A87A, #9A6A44) !important;
+  box-shadow: 0 4px 16px rgba(196,150,106,0.35) !important;
 }
 html.dark .btn-crypto-outline {
-  border-color: #238636 !important;
-  color: #3fb950 !important;
+  border-color: #C4966A !important;
+  color: #C4966A !important;
 }
 
 /* 9. Tables */
-html.dark table { background: #161b22 !important; }
-html.dark thead { background: #21262d !important; }
-html.dark th { color: #8b949e !important; border-color: #30363d !important; }
-html.dark td { color: #e6edf3 !important; border-color: #30363d !important; }
-html.dark tr:hover td { background: rgba(88,166,255,0.06) !important; }
+html.dark table { background: #241A0E !important; }
+html.dark thead { background: #2E2015 !important; }
+html.dark th { color: #A07850 !important; border-color: #3D2A18 !important; }
+html.dark td { color: #F5EFE6 !important; border-color: #3D2A18 !important; }
+html.dark tr:hover td { background: rgba(196,150,106,0.07) !important; }
 
-/* 10. Warm palette overrides */
-html.dark .text-warm-700, html.dark .text-warm-600, html.dark .text-warm-500 { color: #8b949e !important; }
-html.dark .text-dark-900 { color: #e6edf3 !important; }
-html.dark .text-white { color: #e6edf3 !important; }
-html.dark .text-black { color: #e6edf3 !important; }
-html.dark .text-gray-400, html.dark .text-gray-500, html.dark .text-gray-600 { color: #8b949e !important; }
-html.dark .text-gray-300, html.dark .text-gray-700, html.dark .text-gray-800, html.dark .text-gray-900 { color: #e6edf3 !important; }
-html.dark .text-slate-600, html.dark .text-slate-700 { color: #8b949e !important; }
-html.dark .text-stone-600, html.dark .text-stone-700, html.dark .text-stone-900 { color: #e6edf3 !important; }
+/* 10. Text color overrides for dark mode */
+html.dark .text-white    { color: #F5EFE6 !important; }
+html.dark .text-black    { color: #F5EFE6 !important; }
+html.dark .text-dark-900 { color: #F5EFE6 !important; }
 
-/* 11. Status colors — keep them */
-html.dark .text-green-500, html.dark .text-green-600, html.dark .text-emerald-500, html.dark .text-emerald-600 { color: #3fb950 !important; }
-html.dark .text-red-400, html.dark .text-red-500, html.dark .text-red-600 { color: #f85149 !important; }
-html.dark .text-yellow-400, html.dark .text-yellow-500, html.dark .text-amber-500 { color: #d29922 !important; }
-html.dark .text-blue-400, html.dark .text-blue-500, html.dark .text-cyan-400 { color: #58a6ff !important; }
+/* subtext / muted */
+html.dark .text-slate-300,
+html.dark .text-slate-400,
+html.dark .text-slate-500,
+html.dark .text-slate-600,
+html.dark .text-slate-700,
+html.dark .text-gray-300,
+html.dark .text-gray-400,
+html.dark .text-gray-500,
+html.dark .text-gray-600,
+html.dark .text-stone-600,
+html.dark .text-stone-700,
+html.dark .text-warm-500,
+html.dark .text-warm-600,
+html.dark .text-warm-700 { color: #A07850 !important; }
 
-html.dark .bg-green-50 { background: rgba(63,185,80,0.1) !important; }
-html.dark .bg-red-50 { background: rgba(248,81,73,0.1) !important; }
-html.dark .bg-yellow-50, html.dark .bg-amber-50 { background: rgba(210,153,34,0.1) !important; }
-html.dark .bg-blue-50 { background: rgba(88,166,255,0.1) !important; }
-html.dark .border-green-200, html.dark .border-green-300 { border-color: rgba(63,185,80,0.3) !important; }
-html.dark .border-red-200, html.dark .border-red-300 { border-color: rgba(248,81,73,0.3) !important; }
+/* body text */
+html.dark .text-slate-900,
+html.dark .text-gray-700,
+html.dark .text-gray-800,
+html.dark .text-gray-900,
+html.dark .text-stone-900 { color: #F5EFE6 !important; }
 
-/* 12. Warm bg overrides */
-html.dark [class*="bg-warm"] { background: rgba(88,166,255,0.1) !important; }
-html.dark [class*="border-warm"] { border-color: rgba(88,166,255,0.25) !important; }
+/* primary accent text */
+html.dark .text-primary,
+html.dark .neon-text     { color: #C4966A !important; }
 
-/* 13. Emerald overrides in dark */
-html.dark .text-emerald-400 { color: #3fb950 !important; }
-html.dark .text-emerald-300 { color: #56d364 !important; }
-html.dark [class*="bg-emerald"], html.dark [class*="from-emerald"] {
-  /* keep original color — just ensure text contrast */
-  color: #fff !important;
+/* 11. Status / semantic colors — keep them visible but use amber family for accent */
+html.dark .text-emerald-400,
+html.dark .text-emerald-500,
+html.dark .text-green-500,
+html.dark .text-green-600  { color: #6DBF7E !important; }  /* soft green, readable on dark amber bg */
+html.dark .text-emerald-300 { color: #89D49A !important; }
+html.dark .text-red-400,
+html.dark .text-red-500,
+html.dark .text-red-600    { color: #E07070 !important; }
+html.dark .text-yellow-400,
+html.dark .text-yellow-500,
+html.dark .text-amber-500  { color: #D4A04A !important; }
+html.dark .text-cyan-400   { color: #C4966A !important; }   /* cyan → primary amber in dark */
+
+/* status bg tints */
+html.dark .bg-green-50  { background: rgba(109,191,126,0.10) !important; }
+html.dark .bg-red-50    { background: rgba(224,112,112,0.10) !important; }
+html.dark .bg-yellow-50,
+html.dark .bg-amber-50  { background: rgba(212,160,74,0.10) !important; }
+html.dark .border-green-200,
+html.dark .border-green-300 { border-color: rgba(109,191,126,0.30) !important; }
+html.dark .border-red-200,
+html.dark .border-red-300   { border-color: rgba(224,112,112,0.30) !important; }
+
+/* 12. Warm / amber bg helpers in dark */
+html.dark [class*="bg-warm"]    { background: rgba(196,150,106,0.12) !important; }
+html.dark [class*="border-warm"] { border-color: rgba(196,150,106,0.25) !important; }
+
+/* 13. Emerald gradients in dark — keep accent amber */
+html.dark [class*="from-emerald"],
+html.dark [class*="bg-emerald"]  { color: #F5EFE6 !important; }
+
+/* 14. Hardcoded dark-slate cards (sidebar balance, header stats) → warm dark card */
+html.dark .bg-slate-800\/80,
+html.dark [class*="bg-slate-800"],
+html.dark [class*="bg-slate-700"] {
+  background: rgba(46,32,21,0.80) !important;
+  border: 1px solid #3D2A18;
 }
 
-/* 14. Scrollbar */
+/* 15. Scrollbar */
 html.dark ::-webkit-scrollbar { width: 7px; height: 7px; }
-html.dark ::-webkit-scrollbar-track { background: #161b22; }
-html.dark ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
-html.dark ::-webkit-scrollbar-thumb:hover { background: #484f58; }
+html.dark ::-webkit-scrollbar-track { background: #1A1208; }
+html.dark ::-webkit-scrollbar-thumb { background: #3D2A18; border-radius: 4px; }
+html.dark ::-webkit-scrollbar-thumb:hover { background: #5C3E24; }
 
-/* 15. Modal / popup scrolling fix */
+/* 16. Modal / popup scrolling fix */
 html.dark .fixed.inset-0 {
   overflow-y: auto !important;
 }
