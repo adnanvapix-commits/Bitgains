@@ -453,169 +453,453 @@ footer a:hover { color: #3D2B1F !important; }
 footer .border-warm-600\/20 { border-color: rgba(196,150,106,0.2) !important; }
 
 
+
 /* ══════════════════════════════════════════════════════════
-   DARK MODE — .dark class applied by next-themes
+   SCROLLING AND MODAL FIXES
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Fix modal/popup scrolling ───────────────────────────── */
+.dark .modal-container,
+.dark [class*="fixed"][class*="inset-0"]:not([class*="backdrop"]) {
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+}
+
+/* ── Ensure modal content is properly contained ──────────── */
+.dark .modal-content,
+.dark [class*="max-w"][class*="mx-auto"] {
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  margin: 2rem auto !important;
+}
+
+/* ── Better scrollbar for modals ─────────────────────────── */
+.dark .modal-content::-webkit-scrollbar,
+.dark [class*="overflow-y-auto"]::-webkit-scrollbar {
+  width: 6px;
+}
+.dark .modal-content::-webkit-scrollbar-thumb,
+.dark [class*="overflow-y-auto"]::-webkit-scrollbar-thumb {
+  background: rgba(0, 210, 255, 0.3);
+  border-radius: 3px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   COMPREHENSIVE OVERRIDES FOR ALL ELEMENTS
+   Catch any missed hardcoded styles
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Override ALL background variations ──────────────────── */
+.dark [class*="bg-white"],
+.dark [class*="bg-gray-50"],
+.dark [class*="bg-gray-100"],
+.dark [class*="bg-cream"],
+.dark [style*="background-color: #fff"],
+.dark [style*="background-color: white"],
+.dark [style*="background: white"],
+.dark [style*="backgroundColor: '#fff'"],
+.dark [style*="backgroundColor: 'white'"] {
+  background-color: #1a1f26 !important;
+  color: #ffffff !important;
+}
+
+/* ── Fix all semi-transparent whites ─────────────────────── */
+.dark [class*="bg-white/5"] { background-color: rgba(26, 31, 38, 0.8) !important; }
+.dark [class*="bg-white/10"] { background-color: rgba(26, 31, 38, 0.9) !important; }
+.dark [class*="bg-white/20"] { background-color: rgba(38, 44, 54, 0.8) !important; }
+
+/* ── Fix ALL text elements that could be invisible ──────── */
+.dark *:not([class*="text-green"]):not([class*="text-red"]):not([class*="text-blue"]):not([class*="text-yellow"]):not([class*="text-amber"]):not([class*="text-emerald"]):not([class*="text-cyan"]),
+.dark [class*="text-gray"],
+.dark [class*="text-slate"],
+.dark [class*="text-stone"],
+.dark [class*="text-neutral"],
+.dark [class*="text-black"] {
+  color: #ffffff !important;
+}
+
+/* ── Specific component fixes ────────────────────────────── */
+.dark .glass-card-strong {
+  background: linear-gradient(145deg, #1a1f26, #262c36) !important;
+  border: 1px solid #00d2ff !important;
+  box-shadow: 0 0 20px rgba(0, 210, 255, 0.3) !important;
+}
+
+.dark .glass-card-strong * {
+  color: #ffffff !important;
+}
+
+/* ── Modal/Popup specific fixes ──────────────────────────── */
+.dark [class*="fixed"][class*="inset-0"] > div,
+.dark .modal-content,
+.dark .popup-content {
+  background: linear-gradient(145deg, #0b0e11, #1a1f26) !important;
+  color: #ffffff !important;
+}
+
+/* ── Input styling for dark mode ─────────────────────────── */
+.dark .input-crypto,
+.dark input[class*="input"] {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+  border: 2px solid #334155 !important;
+}
+.dark .input-crypto:focus,
+.dark input[class*="input"]:focus {
+  border-color: #00d2ff !important;
+  box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.2) !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   COMPREHENSIVE DARK MODE THEME
+   Complete website transformation when .dark class is applied
    ══════════════════════════════════════════════════════════ */
 
 .dark {
-  --background:           #1a1612;
-  --foreground:           #f5f0e8;
-  --card:                 #241e18;
-  --card-foreground:      #f5f0e8;
-  --popover:              #241e18;
-  --popover-foreground:   #f5f0e8;
-  --primary:              #c4966a;
-  --primary-foreground:   #1a1612;
-  --secondary:            #2a2018;
-  --secondary-foreground: #f5f0e8;
-  --muted:                #2a2018;
-  --muted-foreground:     #c4966a;
-  --accent:               #c4966a;
-  --accent-foreground:    #1a1612;
-  --destructive:          #e05252;
-  --border:               #3d2b1f;
-  --input:                #241e18;
-  --ring:                 #c4966a;
-  --sidebar:              #1a1612;
-  --sidebar-foreground:   #f5f0e8;
-  --sidebar-border:       #3d2b1f;
-  --sidebar-accent:       #2a2018;
-  --sidebar-accent-foreground: #f5f0e8;
-  --sidebar-primary:      #c4966a;
-  --sidebar-primary-foreground: #1a1612;
+  /* Base colors inspired by crypto platforms */
+  --background:           #0b0e11;  /* Deep dark blue-black */
+  --foreground:           #ffffff;   /* Pure white text */
+  --card:                 #1a1f26;   /* Dark charcoal cards */
+  --card-foreground:      #ffffff;
+  --popover:              #1a1f26;
+  --popover-foreground:   #ffffff;
+  --primary:              #00d2ff;   /* Bright cyan primary */
+  --primary-foreground:   #000000;
+  --secondary:            #262c36;   /* Darker secondary */
+  --secondary-foreground: #ffffff;
+  --muted:                #262c36;
+  --muted-foreground:     #94a3b8;   /* Light gray muted */
+  --accent:               #00d2ff;
+  --accent-foreground:    #000000;
+  --destructive:          #ff4757;   /* Bright red */
+  --border:               #334155;   /* Visible borders */
+  --input:                #1e293b;   /* Dark input backgrounds */
+  --ring:                 #00d2ff;
+  
+  /* Sidebar colors */
+  --sidebar:              #0f172a;
+  --sidebar-foreground:   #ffffff;
+  --sidebar-border:       #334155;
+  --sidebar-accent:       #1e293b;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-primary:      #00d2ff;
+  --sidebar-primary-foreground: #000000;
 }
 
-/* ── Dark mode base overrides ─────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   BASE DARK THEME OVERRIDES
+   ══════════════════════════════════════════════════════════ */
 .dark html,
 .dark body {
-  background-color: #1a1612 !important;
-  color: #f5f0e8 !important;
+  background: linear-gradient(135deg, #0b0e11 0%, #1a1f26 100%) !important;
+  color: #ffffff !important;
+  min-height: 100vh;
 }
 
-/* All text defaults to cream in dark mode */
-.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
-  color: #f5f0e8 !important;
+/* ── All headings and text elements ─────────────────────── */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
+.dark p, .dark span, .dark div, .dark label, .dark a {
+  color: #ffffff !important;
 }
 
-/* Fix .text-white in dark mode — now it should actually be white/cream */
-.dark .text-white {
-  color: #f5f0e8 !important;
-}
+/* ── Specific text color classes ────────────────────────── */
+.dark .text-white { color: #ffffff !important; }
+.dark .text-black { color: #ffffff !important; }
+.dark .text-gray-100, .dark .text-gray-200 { color: #f1f5f9 !important; }
+.dark .text-gray-300, .dark .text-gray-400 { color: #cbd5e1 !important; }
+.dark .text-gray-500, .dark .text-gray-600 { color: #94a3b8 !important; }
+.dark .text-gray-700, .dark .text-gray-800 { color: #64748b !important; }
+.dark .text-gray-900 { color: #ffffff !important; }
+.dark .text-slate-300, .dark .text-slate-400 { color: #cbd5e1 !important; }
+.dark .text-slate-500, .dark .text-slate-600 { color: #94a3b8 !important; }
+.dark .text-slate-700, .dark .text-slate-800 { color: #64748b !important; }
+.dark .text-slate-900 { color: #ffffff !important; }
 
-/* Gray shades → readable on dark */
-.dark .text-gray-100, .dark .text-gray-200 { color: #d4c4b0 !important; }
-.dark .text-gray-300, .dark .text-gray-400 { color: #b8a090 !important; }
-.dark .text-gray-500, .dark .text-gray-600 { color: #9a8070 !important; }
-.dark .text-slate-300, .dark .text-slate-400 { color: #b8a090 !important; }
-.dark .text-warm-700 { color: #c4966a !important; }
-.dark .text-warm-600 { color: #d4a882 !important; }
-.dark .text-dark-900 { color: #f5f0e8 !important; }
+/* WebYatra warm colors → cool cyber colors */
+.dark .text-warm-700 { color: #64748b !important; }
+.dark .text-warm-600 { color: #94a3b8 !important; }
+.dark .text-warm-500 { color: #cbd5e1 !important; }
+.dark .text-dark-900 { color: #ffffff !important; }
 
-/* ── Dark cards ────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   CARDS AND CONTAINERS
+   ══════════════════════════════════════════════════════════ */
 .dark .glass-card {
-  background-color: #241e18 !important;
-  border-color: #3d2b1f !important;
-  color: #f5f0e8 !important;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
+  background: linear-gradient(145deg, #1a1f26, #262c36) !important;
+  border: 1px solid #334155 !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 20px rgba(0, 210, 255, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
 }
-.dark .glass-card * { color: #f5f0e8; }
-.dark .glass-card-strong {
-  background-color: #2a2018 !important;
-  border-color: #4d3b2f !important;
-  color: #f5f0e8 !important;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
-}
-.dark .glass-card-strong * { color: #f5f0e8; }
+.dark .glass-card * { color: #ffffff !important; }
 
-/* ── Dark sidebar ──────────────────────────────────────── */
+.dark .glass-card-strong {
+  background: linear-gradient(145deg, #262c36, #334155) !important;
+  border: 1px solid #475569 !important;
+  color: #ffffff !important;
+  box-shadow: 0 8px 32px rgba(0, 210, 255, 0.15) !important;
+}
+.dark .glass-card-strong * { color: #ffffff !important; }
+
+/* ── Background variants ─────────────────────────────────── */
+.dark .bg-white { background-color: #1a1f26 !important; }
+.dark .bg-gray-50 { background-color: #1e293b !important; }
+.dark .bg-gray-100 { background-color: #262c36 !important; }
+.dark .bg-cream-50 { background-color: #1e293b !important; }
+.dark .bg-cream-100 { background-color: #262c36 !important; }
+.dark .bg-cream-200 { background-color: #334155 !important; }
+
+/* ── Warm color backgrounds ──────────────────────────────── */
+.dark .bg-warm-400\/10 { background-color: rgba(0, 210, 255, 0.1) !important; }
+.dark .bg-warm-400\/15 { background-color: rgba(0, 210, 255, 0.15) !important; }
+.dark .bg-warm-400\/20 { background-color: rgba(0, 210, 255, 0.2) !important; }
+.dark .bg-warm-400\/25 { background-color: rgba(0, 210, 255, 0.25) !important; }
+
+/* ── Borders ─────────────────────────────────────────────── */
+.dark .border-warm-400\/20 { border-color: rgba(0, 210, 255, 0.3) !important; }
+.dark .border-warm-400\/30 { border-color: rgba(0, 210, 255, 0.4) !important; }
+.dark .border-gray-200, .dark .border-gray-300 { border-color: #334155 !important; }
+.dark .border-white\/10 { border-color: rgba(255, 255, 255, 0.1) !important; }
+.dark .border-white\/20 { border-color: rgba(255, 255, 255, 0.2) !important; }
+
+/* ══════════════════════════════════════════════════════════
+   BUTTONS AND INTERACTIVE ELEMENTS
+   ══════════════════════════════════════════════════════════ */
+.dark .btn-crypto {
+  background: linear-gradient(135deg, #00d2ff, #0099cc) !important;
+  color: #000000 !important;
+  border: none !important;
+}
+.dark .btn-crypto:hover {
+  background: linear-gradient(135deg, #00b8e6, #0088bb) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 8px 25px rgba(0, 210, 255, 0.4) !important;
+}
+
+.dark .btn-crypto-outline {
+  border: 2px solid #00d2ff !important;
+  color: #00d2ff !important;
+  background: transparent !important;
+}
+.dark .btn-crypto-outline:hover {
+  background: linear-gradient(135deg, #00d2ff, #0099cc) !important;
+  color: #000000 !important;
+}
+
+/* ── Generic button fixes ────────────────────────────────── */
+.dark button {
+  color: #ffffff !important;
+}
+.dark button:hover {
+  background-color: rgba(0, 210, 255, 0.1) !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   FORMS AND INPUTS
+   ══════════════════════════════════════════════════════════ */
+.dark input, .dark textarea, .dark select {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+  border: 1px solid #334155 !important;
+}
+.dark input::placeholder, .dark textarea::placeholder {
+  color: #64748b !important;
+}
+.dark input:focus, .dark textarea:focus, .dark select:focus {
+  border-color: #00d2ff !important;
+  box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.2) !important;
+  outline: none !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SIDEBAR AND NAVIGATION
+   ══════════════════════════════════════════════════════════ */
 .dark .mobile-nav-sidebar,
 .dark .mobile-sidebar,
 .dark .desktop-sidebar {
-  background: linear-gradient(180deg, #1a1612 0%, #141210 100%) !important;
-  border-right-color: #3d2b1f !important;
-  color: #f5f0e8 !important;
+  background: linear-gradient(180deg, #0f172a 0%, #1a1f26 100%) !important;
+  border-right: 1px solid #334155 !important;
+  color: #ffffff !important;
 }
 
-/* ── Dark inputs ───────────────────────────────────────── */
-.dark input, .dark textarea, .dark select {
-  background-color: #241e18 !important;
-  color: #f5f0e8 !important;
-  border-color: #3d2b1f !important;
-}
-.dark input::placeholder, .dark textarea::placeholder {
-  color: #7c5c3e !important;
-}
-.dark input:focus, .dark textarea:focus, .dark select:focus {
-  border-color: #c4966a !important;
-  box-shadow: 0 0 0 3px rgba(196,150,106,0.2) !important;
+.dark .sidebar-item:hover {
+  background: rgba(0, 210, 255, 0.1) !important;
 }
 
-/* ── Dark tables ───────────────────────────────────────── */
-.dark table  { background-color: #241e18 !important; color: #f5f0e8 !important; }
-.dark thead  { background-color: #2a2018 !important; }
-.dark th     { color: #f5f0e8 !important; border-color: #3d2b1f !important; }
-.dark td     { color: #f5f0e8 !important; border-color: #3d2b1f !important; }
-.dark tr:hover td { background-color: #2a2018 !important; }
+/* ══════════════════════════════════════════════════════════
+   POPUPS AND MODALS - THE MAIN FIX
+   ══════════════════════════════════════════════════════════ */
+.dark [class*="fixed"][class*="inset-0"],
+.dark [class*="absolute"][class*="inset-0"],
+.dark .modal, .dark .popup, .dark .dropdown {
+  background-color: rgba(11, 14, 17, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+}
 
-/* ── Dark backgrounds ──────────────────────────────────── */
+/* ── Popup content containers ───────────────────────────── */
+.dark .popup-content,
+.dark [class*="bg-white"][class*="rounded"],
+.dark [class*="bg-gray"][class*="rounded"],
+.dark [class*="p-6"][class*="rounded"],
+.dark [class*="max-w"][class*="mx-auto"] {
+  background: linear-gradient(145deg, #1a1f26, #262c36) !important;
+  border: 1px solid #334155 !important;
+  color: #ffffff !important;
+}
+
+/* ── Address text and codes (the invisible text fix) ──── */
+.dark code, 
+.dark .font-mono,
+.dark [class*="text-sm"][class*="text-gray"],
+.dark [class*="break-all"],
+.dark .address-text,
+.dark .wallet-address {
+  color: #ffffff !important;
+  background-color: #1e293b !important;
+  padding: 0.5rem !important;
+  border-radius: 0.5rem !important;
+  border: 1px solid #334155 !important;
+}
+
+/* ── Copy buttons and action buttons in popups ──────────── */
+.dark .copy-button,
+.dark [class*="bg-emerald"],
+.dark [class*="bg-green"] {
+  background: linear-gradient(135deg, #00d2ff, #0099cc) !important;
+  color: #000000 !important;
+  border: none !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TABLES AND DATA DISPLAY
+   ══════════════════════════════════════════════════════════ */
+.dark table { 
+  background-color: #1a1f26 !important; 
+  color: #ffffff !important; 
+  border: 1px solid #334155 !important;
+}
+.dark thead { background-color: #262c36 !important; }
+.dark th { 
+  color: #ffffff !important; 
+  border-color: #334155 !important; 
+  background-color: #262c36 !important;
+}
+.dark td { 
+  color: #ffffff !important; 
+  border-color: #334155 !important; 
+}
+.dark tr:hover td { 
+  background-color: rgba(0, 210, 255, 0.1) !important; 
+}
+
+/* ══════════════════════════════════════════════════════════
+   STATUS COLORS (KEEP VISIBLE)
+   ══════════════════════════════════════════════════════════ */
+/* Green/success states */
+.dark .text-green-600, .dark .text-green-700 { color: #10b981 !important; }
+.dark .text-emerald-500, .dark .text-emerald-600 { color: #10b981 !important; }
+.dark .bg-green-50 { background-color: rgba(16, 185, 129, 0.1) !important; }
+.dark .bg-emerald-50 { background-color: rgba(16, 185, 129, 0.1) !important; }
+.dark .border-green-200, .dark .border-green-300 { border-color: rgba(16, 185, 129, 0.3) !important; }
+
+/* Red/error states */
+.dark .text-red-500, .dark .text-red-600, .dark .text-red-700 { color: #ef4444 !important; }
+.dark .bg-red-50 { background-color: rgba(239, 68, 68, 0.1) !important; }
+.dark .border-red-200, .dark .border-red-300 { border-color: rgba(239, 68, 68, 0.3) !important; }
+
+/* Yellow/warning states */
+.dark .text-yellow-500, .dark .text-yellow-600 { color: #f59e0b !important; }
+.dark .bg-yellow-50 { background-color: rgba(245, 158, 11, 0.1) !important; }
+
+/* Amber/gold states */
+.dark .text-amber-500, .dark .text-amber-600 { color: #f59e0b !important; }
+.dark .bg-amber-50 { background-color: rgba(245, 158, 11, 0.1) !important; }
+
+/* ══════════════════════════════════════════════════════════
+   PAGE SPECIFIC FIXES
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Landing page ────────────────────────────────────────── */
 .dark .animated-bg,
 .dark .gradient-crypto {
-  background: linear-gradient(-45deg, #1a1612, #241e18, #1a1612, #2a2018) !important;
+  background: linear-gradient(-45deg, #0b0e11, #1a1f26, #262c36, #1a1f26) !important;
   background-size: 400% 400% !important;
+  animation: gradientShift 15s ease infinite;
 }
 
-/* ── Dark buttons ──────────────────────────────────────── */
-.dark .btn-crypto {
-  background: linear-gradient(135deg, #c4966a, #8b5e3c) !important;
-  color: #f5f0e8 !important;
-}
-.dark .btn-crypto-outline {
-  border-color: #c4966a !important;
-  color: #c4966a !important;
-}
-.dark .btn-crypto-outline:hover {
-  background: linear-gradient(135deg, #c4966a, #8b5e3c) !important;
-  color: #1a1612 !important;
-}
-
-/* ── Dark page backgrounds ─────────────────────────────── */
-.dark [style*="background-color: #FDFAF6"],
-.dark [style*="background-color: #F9F8F6"],
-.dark [style*="backgroundColor: '#FDFAF6'"],
-.dark [style*="backgroundColor: '#F9F8F6'"] {
-  background-color: #1a1612 !important;
-}
-
-/* ── Dashboard specific dark fixes ─────────────────────── */
+/* ── Dashboard specific ──────────────────────────────────── */
 .dark .main-content,
 .dark [class*="min-h-screen"] {
-  background-color: #1a1612;
-  color: #f5f0e8;
+  background: linear-gradient(135deg, #0b0e11 0%, #1a1f26 100%) !important;
+  color: #ffffff !important;
 }
 
-/* Warm color classes in dark mode */
-.dark .bg-warm-400\/10 { background-color: rgba(196,150,106,0.15) !important; }
-.dark .bg-warm-400\/15 { background-color: rgba(196,150,106,0.18) !important; }
-.dark .bg-warm-400\/20 { background-color: rgba(196,150,106,0.22) !important; }
-.dark .bg-warm-400\/25 { background-color: rgba(196,150,106,0.28) !important; }
-.dark .border-warm-400\/20 { border-color: rgba(196,150,106,0.3) !important; }
-.dark .border-warm-400\/30 { border-color: rgba(196,150,106,0.4) !important; }
-
-/* Green/positive states stay visible in dark */
-.dark .text-green-600, .dark .text-green-700 { color: #6ee7b7 !important; }
-.dark .bg-green-50 { background-color: rgba(52,211,153,0.1) !important; }
-.dark .border-green-200, .dark .border-green-300 { border-color: rgba(52,211,153,0.3) !important; }
-
-/* Red/danger stays visible */
-.dark .text-red-500, .dark .text-red-600 { color: #f87171 !important; }
-.dark .bg-red-50 { background-color: rgba(248,113,113,0.1) !important; }
-
-/* Admin panel dark mode */
+/* ── Admin panel ─────────────────────────────────────────── */
 .dark .container, .dark .container * {
-  color: #f5f0e8;
+  color: #ffffff !important;
 }
 
-/* ── Scrollbar dark ────────────────────────────────────── */
-.dark ::-webkit-scrollbar-track { background: #1a1612; }
-.dark ::-webkit-scrollbar-thumb { background: #3d2b1f; }
-.dark ::-webkit-scrollbar-thumb:hover { background: #5c4030; }
+/* ══════════════════════════════════════════════════════════
+   SCROLLBARS
+   ══════════════════════════════════════════════════════════ */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #1a1f26;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ANIMATIONS
+   ══════════════════════════════════════════════════════════ */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   UTILITY OVERRIDES
+   ══════════════════════════════════════════════════════════ */
+.dark .opacity-60 { opacity: 0.8 !important; }
+.dark .opacity-70 { opacity: 0.9 !important; }
+.dark .opacity-80 { opacity: 0.95 !important; }
+
+/* Force visibility for any remaining invisible elements */
+.dark .invisible-fix,
+.dark .text-gray-400,
+.dark .text-gray-500 {
+  color: #cbd5e1 !important;
+}
+
+/* ── Dropdown and select menus ───────────────────────────── */
+.dark select option {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+}
+
+.dark .dropdown-menu,
+.dark [role="menu"],
+.dark [role="listbox"] {
+  background-color: #1a1f26 !important;
+  border: 1px solid #334155 !important;
+  color: #ffffff !important;
+}
+
+/* ── Loading states ──────────────────────────────────────── */
+.dark .animate-spin {
+  color: #00d2ff !important;
+}
+
+.dark .loading-text {
+  color: #94a3b8 !important;
+}

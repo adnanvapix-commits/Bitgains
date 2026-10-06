@@ -688,7 +688,7 @@ export default function DashboardPage() {
               {/* Mobile Close Button (only on mobile) */}
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="absolute right-3 top-6 p-2 text-warm-700 hover:text-white transition-colors rounded-lg hover:bg-warm-400/15 lg:hidden"
+                className="absolute right-3 top-6 p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors rounded-lg hover:bg-warm-400/15 lg:hidden"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -705,14 +705,14 @@ export default function DashboardPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs text-warm-700">Total Balance</p>
+                      <p className="text-xs text-slate-600 dark:text-slate-300">Total Balance</p>
                       <p className="text-lg font-bold text-white">
                         {showBalance ? formatCurrency(balance) : "••••••"}
                       </p>
                     </div>
                     <button
                       onClick={() => setShowBalance(!showBalance)}
-                      className="p-2 text-warm-700 hover:text-white transition-colors rounded-lg hover:bg-warm-400/15"
+                      className="p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors rounded-lg hover:bg-warm-400/15"
                     >
                       {showBalance ? (
                         <Eye className="w-4 h-4" />
@@ -723,7 +723,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="bg-white/5 rounded-lg p-3">
+                    <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-lg p-3">
                       <p className="text-xs text-emerald-400">Staked</p>
                       <p className="text-sm font-semibold text-white">
                         {showBalance
@@ -731,7 +731,7 @@ export default function DashboardPage() {
                           : "••••"}
                       </p>
                     </div>
-                    <div className="bg-white/5 rounded-lg p-3">
+                    <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-lg p-3">
                       <p className="text-xs text-cyan-400">Available</p>
                       <p className="text-sm font-semibold text-white">
                         {showBalance
@@ -747,7 +747,7 @@ export default function DashboardPage() {
                         isLive ? "bg-emerald-500 animate-pulse" : "bg-gray-500"
                       }`}
                     ></div>
-                    <span className="text-warm-700">
+                    <span className="text-slate-600 dark:text-slate-300">
                       {isLive ? "Live" : "Paused"} •{" "}
                       {isClient ? lastUpdate.toLocaleTimeString() : "--:--:--"}
                     </span>
@@ -776,9 +776,9 @@ export default function DashboardPage() {
                         sidebarCollapsed && isClient && screenWidth >= 1024
                           ? "justify-center px-2 py-3"
                           : "space-x-3 px-4 py-3.5"
-                      } rounded-2xl transition-all duration-300 group text-warm-700 hover:text-white hover:bg-warm-400/15`}
+                      } rounded-2xl transition-all duration-300 group text-slate-600 dark:text-slate-300 hover:text-white hover:bg-warm-400/15`}
                     >
-                      <item.icon className="w-5 h-5 text-warm-700 group-hover:text-white" />
+                      <item.icon className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-white" />
                       {(!sidebarCollapsed ||
                         mobileMenuOpen ||
                         (isClient && screenWidth < 1024)) && (
@@ -811,14 +811,14 @@ export default function DashboardPage() {
                     } rounded-2xl transition-all duration-300 group ${
                       activeTab === item.id
                         ? "bg-gradient-to-r from-emerald-500/20 to-green-400/20 text-emerald-400 border border-emerald-500/30 shadow-lg shadow-emerald-500/10"
-                        : "text-warm-700 hover:text-white hover:bg-warm-400/15"
+                        : "text-slate-600 dark:text-slate-300 hover:text-white hover:bg-warm-400/15"
                     }`}
                   >
                     <item.icon
                       className={`w-5 h-5 ${
                         activeTab === item.id
                           ? "text-emerald-400"
-                          : "text-warm-700 group-hover:text-white"
+                          : "text-slate-600 dark:text-slate-300 group-hover:text-white"
                       }`}
                     />
                     {(!sidebarCollapsed ||
@@ -853,7 +853,7 @@ export default function DashboardPage() {
                   sidebarCollapsed && isClient && screenWidth >= 1024
                     ? "justify-center p-2"
                     : "space-x-3 p-3"
-                } rounded-2xl bg-white/5 ${
+                } rounded-2xl bg-slate-800/80 dark:bg-slate-700/60 ${
                   sidebarCollapsed &&
                   !mobileMenuOpen &&
                   isClient &&
@@ -870,10 +870,10 @@ export default function DashboardPage() {
                   (isClient && screenWidth < 1024)) && (
                   <>
                     <div className="flex-1">
-                      <p className="text-dark-900 font-medium">
+                      <p className="text-slate-900 dark:text-white font-medium">
                         {user?.name || "User"}
                       </p>
-                      <p className="text-xs text-warm-700">
+                      <p className="text-xs text-slate-600 dark:text-slate-300">
                         {user?.role === "admin"
                           ? "Administrator"
                           : "Premium Member"}
@@ -912,7 +912,7 @@ export default function DashboardPage() {
                 {/* Mobile Menu Button (< 1024px) */}
                 <button
                   onClick={() => setMobileMenuOpen(true)}
-                  className="lg:hidden p-2 text-warm-700 hover:text-white transition-colors rounded-xl hover:bg-warm-400/15"
+                  className="lg:hidden p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors rounded-xl hover:bg-warm-400/15"
                 >
                   <Menu className="w-6 h-6" />
                 </button>
@@ -920,7 +920,7 @@ export default function DashboardPage() {
                 {/* Desktop Sidebar Toggle (>= 1024px) */}
                 <button
                   onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                  className="hidden lg:flex p-2 text-warm-700 hover:text-white transition-colors rounded-xl hover:bg-warm-400/15"
+                  className="hidden lg:flex p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors rounded-xl hover:bg-warm-400/15"
                   title={
                     sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"
                   }
@@ -930,13 +930,13 @@ export default function DashboardPage() {
 
                 <div>
                   <div className="flex items-center space-x-2 sm:space-x-4">
-                    <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-dark-900 capitalize">
+                    <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-900 dark:text-white capitalize">
                       {activeTab === "overview"
                         ? "Account Overview"
                         : activeTab}
                     </h1>
                   </div>
-                  <p className="text-warm-700 mt-1 text-sm sm:text-base hidden sm:block">
+                  <p className="text-slate-600 dark:text-slate-300 mt-1 text-sm sm:text-base hidden sm:block">
                     {activeTab === "overview" &&
                       "Manage your USDT staking portfolio"}
                     {activeTab === "deposit" &&
@@ -957,14 +957,14 @@ export default function DashboardPage() {
 
               <div className="flex items-center space-x-2 sm:space-x-4">
                 {/* Quick Stats */}
-                <div className="hidden xl:flex items-center space-x-4 lg:space-x-6 bg-white/5 rounded-xl lg:rounded-2xl px-3 lg:px-6 py-2 lg:py-3">
+                <div className="hidden xl:flex items-center space-x-4 lg:space-x-6 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl lg:rounded-2xl px-3 lg:px-6 py-2 lg:py-3">
                   <div className="text-center">
-                    <p className="text-xs text-warm-700">Monthly Rate</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-300">Monthly Rate</p>
                     <p className="text-lg font-bold text-emerald-400">5-12%</p>
                   </div>
                   <div className="w-px h-8 bg-warm-400/25"></div>
                   <div className="text-center">
-                    <p className="text-xs text-warm-700">Total Earnings</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-300">Total Earnings</p>
                     <p className="text-lg font-bold text-cyan-400">
                       ${earnings.toFixed(2)}
                     </p>
@@ -974,7 +974,7 @@ export default function DashboardPage() {
                 {/* Manual Refresh */}
                 <button
                   onClick={() => fetchWalletData()}
-                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg sm:rounded-xl transition-all duration-300 bg-warm-400/15 text-warm-700 hover:bg-warm-400/25"
+                  className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg sm:rounded-xl transition-all duration-300 bg-warm-400/15 text-slate-600 dark:text-slate-300 hover:bg-warm-400/25"
                   title="Refresh data"
                 >
                   <RefreshCw className="w-4 h-4" />
@@ -987,7 +987,7 @@ export default function DashboardPage() {
                     onClick={() =>
                       setShowNotificationDropdown(!showNotificationDropdown)
                     }
-                    className="relative flex items-center justify-center p-2 bg-warm-400/15 text-warm-700 hover:bg-warm-400/25 hover:text-white rounded-lg sm:rounded-xl transition-all duration-300"
+                    className="relative flex items-center justify-center p-2 bg-warm-400/15 text-slate-600 dark:text-slate-300 hover:bg-warm-400/25 hover:text-white rounded-lg sm:rounded-xl transition-all duration-300"
                     title="Notifications"
                   >
                     <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -1011,7 +1011,7 @@ export default function DashboardPage() {
                         className="absolute right-0 top-12 w-80 sm:w-96 max-h-96 overflow-y-auto bg-cream-100 backdrop-blur-xl border border-warm-400/30 rounded-2xl shadow-2xl z-50"
                       >
                         <div className="sticky top-0 bg-cream-100 backdrop-blur-xl p-4 border-b border-warm-400/20 flex items-center justify-between">
-                          <h3 className="text-dark-900 font-semibold">
+                          <h3 className="text-slate-900 dark:text-white font-semibold">
                             Notifications
                           </h3>
                           {unreadNotificationCount > 0 && (
@@ -1032,7 +1032,7 @@ export default function DashboardPage() {
                           ) : pushNotifications.length === 0 ? (
                             <div className="text-center py-8">
                               <Bell className="w-10 h-10 text-white/30 mx-auto mb-3" />
-                              <p className="text-warm-700 text-sm">
+                              <p className="text-slate-600 dark:text-slate-300 text-sm">
                                 No notifications yet
                               </p>
                             </div>
@@ -1052,7 +1052,7 @@ export default function DashboardPage() {
                                   animate={{ opacity: 1, x: 0 }}
                                   className={`p-3 rounded-xl mb-2 cursor-pointer transition-all duration-200 ${
                                     notification.read
-                                      ? "bg-white/5 hover:bg-warm-400/15"
+                                      ? "bg-slate-800/80 dark:bg-slate-700/60 hover:bg-warm-400/15"
                                       : "bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/15"
                                   }`}
                                   onClick={() => {
@@ -1082,8 +1082,8 @@ export default function DashboardPage() {
                                         <h4
                                           className={`font-medium text-sm ${
                                             notification.read
-                                              ? "text-warm-700"
-                                              : "text-dark-900"
+                                              ? "text-slate-600 dark:text-slate-300"
+                                              : "text-slate-900 dark:text-white"
                                           }`}
                                         >
                                           {notification.title}
@@ -1106,7 +1106,7 @@ export default function DashboardPage() {
                                           </button>
                                         </div>
                                       </div>
-                                      <p className="text-warm-700 text-xs mt-1 line-clamp-2">
+                                      <p className="text-slate-600 dark:text-slate-300 text-xs mt-1 line-clamp-2">
                                         {notification.message}
                                       </p>
                                       <p className="text-white/40 text-xs mt-2">
@@ -1186,7 +1186,7 @@ export default function DashboardPage() {
               <div className="flex items-center justify-center min-h-[400px]">
                 <div className="text-center">
                   <div className="w-16 h-16 border-4 border-warm-400/30 border-t-warm-600 rounded-full animate-spin mx-auto mb-4"></div>
-                  <p className="text-warm-700 font-medium">Loading wallet data...</p>
+                  <p className="text-slate-600 dark:text-slate-300 font-medium">Loading wallet data...</p>
                 </div>
               </div>
             ) : walletError ? (
@@ -1198,7 +1198,7 @@ export default function DashboardPage() {
                   <p className="text-red-400 font-medium mb-2">
                     Failed to load wallet data
                   </p>
-                  <p className="text-warm-700 text-sm mb-4">{walletError}</p>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm mb-4">{walletError}</p>
                   <button
                     onClick={fetchWalletData}
                     className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors"
@@ -1509,7 +1509,7 @@ function OverviewTab({
             <h3 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">
               {showBalance ? data.totalBalance.toLocaleString() : "••••••"}
             </h3>
-            <p className="text-warm-700 text-xs sm:text-sm mb-1">
+            <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-1">
               Total Balance (USDT)
             </p>
             {walletData && walletData.totalDeposited > 0 && (
@@ -1548,7 +1548,7 @@ function OverviewTab({
             <h3 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">
               {showBalance ? data.stakedAmount.toLocaleString() : "••••••"}
             </h3>
-            <p className="text-warm-700 text-xs sm:text-sm mb-1">
+            <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-1">
               Staked Amount (USDT)
             </p>
             <div className="flex items-center space-x-2 text-xs">
@@ -1580,7 +1580,7 @@ function OverviewTab({
             <h3 className="text-3xl font-bold text-white mb-2">
               {showBalance ? data.availableAmount.toLocaleString() : "••••••"}
             </h3>
-            <p className="text-warm-700 text-sm mb-1">
+            <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">
               Available Balance (USDT)
             </p>
             <div className="flex items-center space-x-2 text-xs">
@@ -1612,7 +1612,7 @@ function OverviewTab({
             <h3 className="text-3xl font-bold text-white mb-2">
               {showBalance ? data.earnings.toLocaleString() : "••••••"}
             </h3>
-            <p className="text-warm-700 text-sm mb-1">Total Earnings (USDT)</p>
+            <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">Total Earnings (USDT)</p>
             <div className="flex items-center space-x-2 text-xs">
               <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
               <span className="text-purple-400">
@@ -1630,7 +1630,7 @@ function OverviewTab({
             <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
               Quick Actions
             </h2>
-            <p className="text-warm-700 text-sm sm:text-base">
+            <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base">
               Manage your funds efficiently with one-click actions
             </p>
           </div>
@@ -1720,13 +1720,13 @@ function OverviewTab({
             <h3 className="text-2xl font-bold text-white mb-2">
               Portfolio Growth
             </h3>
-            <p className="text-warm-700 text-sm">
+            <p className="text-slate-600 dark:text-slate-300 text-sm">
               Track your balance over time
             </p>
           </div>
 
           {/* Time Range Filter */}
-          <div className="flex items-center gap-2 bg-white/5 rounded-full p-1 border border-warm-400/20">
+          <div className="flex items-center gap-2 bg-slate-800/80 dark:bg-slate-700/60 rounded-full p-1 border border-warm-400/20">
             {[
               { label: "7D", value: "7d" as const },
               { label: "30D", value: "30d" as const },
@@ -1740,7 +1740,7 @@ function OverviewTab({
                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${
                   timeRange === range.value
                     ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/30"
-                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                    : "text-gray-400 hover:text-white hover:bg-slate-800/80 dark:bg-slate-700/60"
                 }`}
               >
                 {range.label}
@@ -1757,10 +1757,10 @@ function OverviewTab({
           ) : portfolioData.length === 0 ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
-                <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-white/5 flex items-center justify-center">
+                <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-slate-800/80 dark:bg-slate-700/60 flex items-center justify-center">
                   <TrendingUp className="w-12 h-12 text-white/40" />
                 </div>
-                <p className="text-warm-700 text-lg font-medium">
+                <p className="text-slate-600 dark:text-slate-300 text-lg font-medium">
                   No Portfolio Data Yet
                 </p>
                 <p className="text-white/40 text-sm">
@@ -1863,7 +1863,7 @@ function OverviewTab({
               <motion.div
                 key={transaction._id}
                 whileHover={{ scale: 1.02 }}
-                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-6 bg-white/5 rounded-xl sm:rounded-2xl hover:bg-warm-400/15 transition-all duration-300 cursor-pointer border border-warm-400/20 hover:border-warm-400/30 space-y-3 sm:space-y-0"
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-6 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl sm:rounded-2xl hover:bg-warm-400/15 transition-all duration-300 cursor-pointer border border-warm-400/20 hover:border-warm-400/30 space-y-3 sm:space-y-0"
               >
                 <div className="flex items-center space-x-3 sm:space-x-4">
                   <div
@@ -1924,7 +1924,7 @@ function OverviewTab({
                           .replace(/^Manual (add|deduct|bonus):\s*/i, "")}
                       </p>
                     )}
-                    <p className="text-warm-700 text-sm">
+                    <p className="text-slate-600 dark:text-slate-300 text-sm">
                       {new Date(transaction.createdAt).toLocaleDateString(
                         "en-US",
                         {
@@ -2005,10 +2005,10 @@ function OverviewTab({
             ))
           ) : (
             <div className="text-center py-12">
-              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-white/5 flex items-center justify-center">
+              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-slate-800/80 dark:bg-slate-700/60 flex items-center justify-center">
                 <History className="w-12 h-12 text-white/40" />
               </div>
-              <p className="text-warm-700 text-lg font-medium">
+              <p className="text-slate-600 dark:text-slate-300 text-lg font-medium">
                 No Transactions Yet
               </p>
               <p className="text-white/40 text-sm">
@@ -2360,7 +2360,7 @@ function DepositTab({
             <h1 className="text-2xl sm:text-3xl font-bold text-white">
               Deposit Funds
             </h1>
-            <p className="text-warm-700 text-sm sm:text-base">
+            <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base">
               Add funds to your staking wallet and start earning
             </p>
           </div>
@@ -2374,7 +2374,7 @@ function DepositTab({
               <p className="text-white font-medium text-sm sm:text-base">
                 Secure
               </p>
-              <p className="text-warm-700 text-xs sm:text-sm">
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
                 Bank-grade encryption
               </p>
             </div>
@@ -2385,7 +2385,7 @@ function DepositTab({
               <p className="text-white font-medium text-sm sm:text-base">
                 Instant
               </p>
-              <p className="text-warm-700 text-xs sm:text-sm">
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
                 Start earning immediately
               </p>
             </div>
@@ -2396,7 +2396,7 @@ function DepositTab({
               <p className="text-white font-medium text-sm sm:text-base">
                 6-10% Monthly
               </p>
-              <p className="text-warm-700 text-xs sm:text-sm">
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
                 Variable staking returns
               </p>
             </div>
@@ -2457,11 +2457,11 @@ function DepositTab({
                           Selected
                         </span>
                       </div>
-                      <p className="text-warm-700 text-sm sm:text-base mb-2">
+                      <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base mb-2">
                         {token.name}
                       </p>
                       <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
-                        <span className="px-2 py-1 bg-warm-400/15 rounded-lg text-warm-700">
+                        <span className="px-2 py-1 bg-warm-400/15 rounded-lg text-slate-600 dark:text-slate-300">
                           {token.network}
                         </span>
                         <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-lg">
@@ -2480,14 +2480,14 @@ function DepositTab({
                   <div className="mt-4 pt-3 border-t border-warm-400/20">
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div className="text-center sm:text-left">
-                        <p className="text-warm-700">Minimum Deposit</p>
+                        <p className="text-slate-600 dark:text-slate-300">Minimum Deposit</p>
                         <p className="text-emerald-400 font-semibold">
                           {formatCurrency(token.minDeposit)}
                         </p>
                       </div>
                       <div className="text-center sm:text-left">
-                        <p className="text-warm-700">Processing Time</p>
-                        <p className="text-dark-900 font-semibold">1-5 minutes</p>
+                        <p className="text-slate-600 dark:text-slate-300">Processing Time</p>
+                        <p className="text-slate-900 dark:text-white font-semibold">1-5 minutes</p>
                       </div>
                     </div>
                   </div>
@@ -2497,25 +2497,25 @@ function DepositTab({
 
             {/* Benefits Display */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="flex items-center space-x-2 bg-white/5 rounded-xl p-3">
+              <div className="flex items-center space-x-2 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-3">
                 <Shield className="w-5 h-5 text-emerald-400 flex-shrink-0" />
                 <div>
                   <p className="text-white font-medium text-sm">Secure</p>
-                  <p className="text-warm-700 text-xs">Multi-network support</p>
+                  <p className="text-slate-600 dark:text-slate-300 text-xs">Multi-network support</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2 bg-white/5 rounded-xl p-3">
+              <div className="flex items-center space-x-2 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-3">
                 <Zap className="w-5 h-5 text-yellow-400 flex-shrink-0" />
                 <div>
                   <p className="text-white font-medium text-sm">Fast</p>
-                  <p className="text-warm-700 text-xs">Instant verification</p>
+                  <p className="text-slate-600 dark:text-slate-300 text-xs">Instant verification</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2 bg-white/5 rounded-xl p-3">
+              <div className="flex items-center space-x-2 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-3">
                 <Award className="w-5 h-5 text-purple-400 flex-shrink-0" />
                 <div>
                   <p className="text-white font-medium text-sm">Earn 12.5%</p>
-                  <p className="text-warm-700 text-xs">Start immediately</p>
+                  <p className="text-slate-600 dark:text-slate-300 text-xs">Start immediately</p>
                 </div>
               </div>
             </div>
@@ -2543,7 +2543,7 @@ function DepositTab({
                 inputMode="decimal"
               />
               <div className="absolute right-4 sm:right-6 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                <span className="text-warm-700 text-lg sm:text-xl font-semibold">
+                <span className="text-slate-600 dark:text-slate-300 text-lg sm:text-xl font-semibold">
                   {selectedToken}
                 </span>
                 <div className="w-8 h-8 sm:w-10 sm:h-10">
@@ -2560,7 +2560,7 @@ function DepositTab({
 
             {/* Mobile-Friendly Quick Amount Grid */}
             <div className="space-y-3">
-              <p className="text-warm-700 text-sm text-center">
+              <p className="text-slate-600 dark:text-slate-300 text-sm text-center">
                 Quick Select Amount
               </p>
               <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-3">
@@ -2606,13 +2606,13 @@ function DepositTab({
             <div className="bg-gradient-to-r from-white/5 to-white/10 rounded-xl p-3 sm:p-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 text-sm">
                 <div className="text-center sm:text-left">
-                  <span className="text-warm-700">Minimum: </span>
+                  <span className="text-slate-600 dark:text-slate-300">Minimum: </span>
                   <span className="text-emerald-400 font-semibold">
                     {selectedTokenData.minDeposit} {selectedToken}
                   </span>
                 </div>
                 <div className="text-center sm:text-left">
-                  <span className="text-warm-700">Maximum: </span>
+                  <span className="text-slate-600 dark:text-slate-300">Maximum: </span>
                   <span className="text-emerald-400 font-semibold">
                     100,000 {selectedToken}
                   </span>
@@ -2659,7 +2659,7 @@ function DepositTab({
                   className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 text-left ${
                     depositMethod === method.id
                       ? "border-emerald-500 bg-emerald-500/10 shadow-lg shadow-emerald-500/20"
-                      : "border-warm-400/30 bg-white/5 hover:border-emerald-500/50 hover:bg-warm-400/15"
+                      : "border-warm-400/30 bg-slate-800/80 dark:bg-slate-700/60 hover:border-emerald-500/50 hover:bg-warm-400/15"
                   }`}
                 >
                   <div className="flex items-start space-x-4">
@@ -2668,7 +2668,7 @@ function DepositTab({
                       <div className="text-white font-semibold text-lg">
                         {method.label}
                       </div>
-                      <div className="text-warm-700 text-sm mb-2">
+                      <div className="text-slate-600 dark:text-slate-300 text-sm mb-2">
                         {method.description}
                       </div>
                       <div className="flex justify-between items-center">
@@ -2698,14 +2698,14 @@ function DepositTab({
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-warm-700">Deposit Amount:</span>
-                  <span className="text-dark-900 font-semibold">
+                  <span className="text-slate-600 dark:text-slate-300">Deposit Amount:</span>
+                  <span className="text-slate-900 dark:text-white font-semibold">
                     {amount.toLocaleString()} {selectedToken}
                   </span>
                 </div>
                 {fee > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-warm-700">
+                    <span className="text-slate-600 dark:text-slate-300">
                       Processing Fee ({selectedMethodData.fee}):
                     </span>
                     <span className="text-red-400">
@@ -2715,7 +2715,7 @@ function DepositTab({
                 )}
                 <div className="border-t border-warm-400/30 pt-3">
                   <div className="flex justify-between">
-                    <span className="text-dark-900 font-semibold">
+                    <span className="text-slate-900 dark:text-white font-semibold">
                       You will receive:
                     </span>
                     <span className="text-emerald-400 font-bold text-lg">
@@ -2724,16 +2724,16 @@ function DepositTab({
                   </div>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-warm-700">Processing Time:</span>
-                  <span className="text-warm-700">
+                  <span className="text-slate-600 dark:text-slate-300">Processing Time:</span>
+                  <span className="text-slate-600 dark:text-slate-300">
                     {selectedMethodData.time}
                   </span>
                 </div>
                 <div className="bg-emerald-500/20 rounded-xl p-4 mt-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-dark-900 font-medium">Monthly Returns</p>
-                      <p className="text-warm-700 text-sm">
+                      <p className="text-slate-900 dark:text-white font-medium">Monthly Returns</p>
+                      <p className="text-slate-600 dark:text-slate-300 text-sm">
                         Variable staking rates
                       </p>
                     </div>
@@ -2741,7 +2741,7 @@ function DepositTab({
                       <p className="text-2xl font-bold text-emerald-400">
                         6-10%
                       </p>
-                      <p className="text-warm-700 text-sm">Per month</p>
+                      <p className="text-slate-600 dark:text-slate-300 text-sm">Per month</p>
                     </div>
                   </div>
                 </div>
@@ -2807,7 +2807,7 @@ function DepositTab({
 
             {/* Mobile Helper Text */}
             <div className="text-center space-y-1">
-              <p className="text-warm-700 text-sm">
+              <p className="text-slate-600 dark:text-slate-300 text-sm">
                 {amount > 0
                   ? `Ready to deposit ${formatCurrency(
                       amount
@@ -2853,7 +2853,7 @@ function DepositTab({
                         <h3 className="text-base sm:text-xl lg:text-2xl font-bold text-white truncate">
                           Deposit {formatCurrency(amount)}
                         </h3>
-                        <p className="text-warm-700 text-xs sm:text-sm truncate">
+                        <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm truncate">
                           {selectedToken} • Select Network
                         </p>
                       </div>
@@ -3020,7 +3020,7 @@ function DepositTab({
 
                       <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-3 sm:mb-4">
                         <div className="text-center p-2 sm:p-3 bg-warm-400/15 rounded-lg">
-                          <p className="text-warm-700 text-xs sm:text-sm">
+                          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
                             Amount
                           </p>
                           <p className="text-white font-bold text-sm sm:text-base">
@@ -3028,7 +3028,7 @@ function DepositTab({
                           </p>
                         </div>
                         <div className="text-center p-2 sm:p-3 bg-warm-400/15 rounded-lg">
-                          <p className="text-warm-700 text-xs sm:text-sm">
+                          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
                             Token
                           </p>
                           <p className="text-white font-bold text-sm sm:text-base">
@@ -3037,7 +3037,7 @@ function DepositTab({
                         </div>
                       </div>
 
-                      <p className="text-warm-700 text-xs sm:text-sm text-center">
+                      <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm text-center">
                         Processing: 1-5 minutes
                       </p>
                     </div>
@@ -3056,7 +3056,7 @@ function DepositTab({
                         </span>
                       </div>
 
-                      <p className="text-warm-700 text-xs sm:text-sm mb-3">
+                      <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-3">
                         Enter your transaction hash or ID for faster
                         verification
                       </p>
@@ -3088,7 +3088,7 @@ function DepositTab({
                         </span>
                       </div>
 
-                      <p className="text-warm-700 text-xs sm:text-sm mb-3">
+                      <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-3">
                         Upload transaction screenshot
                       </p>
 
@@ -3109,7 +3109,7 @@ function DepositTab({
                                 <p className="text-white font-medium text-xs sm:text-sm">
                                   Tap to Upload
                                 </p>
-                                <p className="text-warm-700 text-xs">
+                                <p className="text-slate-600 dark:text-slate-300 text-xs">
                                   PNG, JPG up to 5MB
                                 </p>
                               </div>
@@ -3135,7 +3135,7 @@ function DepositTab({
                               <p className="text-white font-semibold text-xs sm:text-sm truncate">
                                 {uploadedScreenshot.name}
                               </p>
-                              <p className="text-warm-700 text-xs">
+                              <p className="text-slate-600 dark:text-slate-300 text-xs">
                                 {(
                                   uploadedScreenshot.size /
                                   1024 /
@@ -3173,7 +3173,7 @@ function DepositTab({
                               1
                             </span>
                           </div>
-                          <p className="text-dark-900">
+                          <p className="text-slate-900 dark:text-white">
                             Send{" "}
                             <span className="font-bold text-amber-400">
                               {formatCurrency(amount)} {selectedToken}
@@ -3186,7 +3186,7 @@ function DepositTab({
                               2
                             </span>
                           </div>
-                          <p className="text-dark-900">
+                          <p className="text-slate-900 dark:text-white">
                             Use TRC-20 (faster) or BEP-20
                           </p>
                         </div>
@@ -3196,7 +3196,7 @@ function DepositTab({
                               3
                             </span>
                           </div>
-                          <p className="text-dark-900">
+                          <p className="text-slate-900 dark:text-white">
                             Upload screenshot proof
                           </p>
                         </div>
@@ -3206,7 +3206,7 @@ function DepositTab({
                               4
                             </span>
                           </div>
-                          <p className="text-dark-900">Tap "Confirm Deposit"</p>
+                          <p className="text-slate-900 dark:text-white">Tap "Confirm Deposit"</p>
                         </div>
                       </div>
                     </div>
@@ -3287,7 +3287,7 @@ function DepositTab({
                       }`}
                     ></div>
                   </div>
-                  <p className="text-center text-warm-700 text-xs mt-2 pb-1">
+                  <p className="text-center text-slate-600 dark:text-slate-300 text-xs mt-2 pb-1">
                     {!userTransactionId.trim()
                       ? "Step 2 of 4: Enter transaction ID"
                       : !uploadedScreenshot
@@ -3489,7 +3489,7 @@ function StakingTab({
             <h1 className="text-2xl sm:text-3xl font-bold text-white">
               Stake Your Funds
             </h1>
-            <p className="text-warm-700 text-sm sm:text-base">
+            <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base">
               Earn passive income by staking your deposited funds
             </p>
           </div>
@@ -3500,7 +3500,7 @@ function StakingTab({
           <div className="flex items-center space-x-2 sm:space-x-3 bg-warm-400/15 rounded-xl sm:rounded-2xl p-3 sm:p-4">
             <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
             <div>
-              <p className="text-warm-700 text-xs sm:text-sm">
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
                 Available to Stake
               </p>
               <p className="text-white font-bold text-sm sm:text-base">
@@ -3518,7 +3518,7 @@ function StakingTab({
           <div className="flex items-center space-x-2 sm:space-x-3 bg-warm-400/15 rounded-xl sm:rounded-2xl p-3 sm:p-4">
             <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
             <div>
-              <p className="text-warm-700 text-xs sm:text-sm">
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
                 Currently Staked
               </p>
               <p className="text-white font-bold text-sm sm:text-base">
@@ -3542,7 +3542,7 @@ function StakingTab({
           </div>
           <div>
             <h3 className="text-xl font-bold text-white">Monthly Rate Schedule</h3>
-            <p className="text-warm-700 text-sm">Variable returns based on staking duration</p>
+            <p className="text-slate-600 dark:text-slate-300 text-sm">Variable returns based on staking duration</p>
           </div>
         </div>
         
@@ -3556,7 +3556,7 @@ function StakingTab({
                   : 'bg-warm-400/15 hover:bg-warm-400/25'
               }`}
             >
-              <p className={`text-xs font-medium ${currentMonth === index + 1 ? 'text-white' : 'text-warm-700'}`}>
+              <p className={`text-xs font-medium ${currentMonth === index + 1 ? 'text-white' : 'text-slate-600 dark:text-slate-300'}`}>
                 M{index + 1}
               </p>
               <p className={`text-lg sm:text-xl font-bold ${currentMonth === index + 1 ? 'text-white' : 'text-emerald-400'}`}>
@@ -3569,7 +3569,7 @@ function StakingTab({
           ))}
         </div>
         
-        <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-warm-700">
+        <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-slate-600 dark:text-slate-300">
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-gradient-to-r from-emerald-500 to-blue-500 rounded"></div>
             <span>Current Month</span>
@@ -3600,7 +3600,7 @@ function StakingTab({
               className={`relative p-6 rounded-2xl cursor-pointer transition-all duration-300 border-2 ${
                 selectedPackage === pkg.id
                   ? `border-${pkg.color}-500 bg-${pkg.color}-500/10`
-                  : "border-warm-400/30 bg-white/5 hover:border-white/30"
+                  : "border-warm-400/30 bg-slate-800/80 dark:bg-slate-700/60 hover:border-white/30"
               }`}
             >
               <div className="flex items-center space-x-3 mb-4">
@@ -3617,13 +3617,13 @@ function StakingTab({
                 </div>
                 <div>
                   <h4 className="text-white font-bold text-lg">{pkg.label}</h4>
-                  <p className="text-warm-700 text-sm">{pkg.description}</p>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm">{pkg.description}</p>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-warm-700 text-sm">Current Rate</span>
+                  <span className="text-slate-600 dark:text-slate-300 text-sm">Current Rate</span>
                   <span
                     className={`font-bold ${
                       pkg.color === "emerald"
@@ -3637,14 +3637,14 @@ function StakingTab({
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-warm-700 text-sm">Min. Stake</span>
-                  <span className="text-dark-900 font-medium">
+                  <span className="text-slate-600 dark:text-slate-300 text-sm">Min. Stake</span>
+                  <span className="text-slate-900 dark:text-white font-medium">
                     {formatCurrency(pkg.minStake)}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-warm-700 text-sm">Lock Period</span>
-                  <span className="text-dark-900 font-medium">
+                  <span className="text-slate-600 dark:text-slate-300 text-sm">Lock Period</span>
+                  <span className="text-slate-900 dark:text-white font-medium">
                     {pkg.lockPeriod}
                   </span>
                 </div>
@@ -3678,10 +3678,10 @@ function StakingTab({
               <div className="w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Wallet className="w-8 h-8 text-yellow-400" />
               </div>
-              <h4 className="text-warm-700 text-lg mb-2">
+              <h4 className="text-slate-600 dark:text-slate-300 text-lg mb-2">
                 No Funds Available for Staking
               </h4>
-              <p className="text-warm-700 text-sm mb-4">
+              <p className="text-slate-600 dark:text-slate-300 text-sm mb-4">
                 You need to deposit funds first before you can start staking.
               </p>
               <p className="text-white/40 text-xs">
@@ -3707,7 +3707,7 @@ function StakingTab({
                     disabled={availableBalance <= 0}
                   />
                   <div className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2">
-                    <span className="text-warm-700 text-sm sm:text-base font-medium">
+                    <span className="text-slate-600 dark:text-slate-300 text-sm sm:text-base font-medium">
                       USDT
                     </span>
                   </div>
@@ -3725,7 +3725,7 @@ function StakingTab({
                           setStakingAmount(percentAmount.toFixed(2))
                         }
                         disabled={availableBalance <= 0}
-                        className="px-3 sm:px-4 py-2 bg-warm-400/15 text-warm-700 rounded-lg hover:bg-warm-400/25 hover:text-white transition-all duration-300 text-xs sm:text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="px-3 sm:px-4 py-2 bg-warm-400/15 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-warm-400/25 hover:text-white transition-all duration-300 text-xs sm:text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {percent}%
                       </button>
@@ -3743,7 +3743,7 @@ function StakingTab({
                   </button>
                 </div>
 
-                <div className="flex justify-between text-sm text-warm-700 mt-3">
+                <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300 mt-3">
                   <span>Available: {formatCurrency(availableBalance)}</span>
                   <span>
                     Min: {formatCurrency(selectedPackageData.minStake)}
@@ -3752,7 +3752,7 @@ function StakingTab({
 
                 {/* Debug Information */}
                 {stakingAmount && (
-                  <div className="mt-2 p-2 bg-white/5 rounded text-xs text-warm-700">
+                  <div className="mt-2 p-2 bg-slate-800/80 dark:bg-slate-700/60 rounded text-xs text-slate-600 dark:text-slate-300">
                     Debug: Amount={amount}, Available={availableBalance}, Min=
                     {selectedPackageData.minStake}, Valid=
                     {amount > 0 &&
@@ -3819,13 +3819,13 @@ function StakingTab({
             <div className="p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-xl border border-blue-500/20 mb-6">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="text-warm-700 text-sm">Total Staked</p>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm">Total Staked</p>
                   <p className="text-2xl font-bold text-white">
                     {formatCurrency(stakedBalance)}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-warm-700 text-sm">Active Stakes</p>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm">Active Stakes</p>
                   <p className="text-2xl font-bold text-blue-400">
                     {
                       walletData.stakes.filter(
@@ -3868,7 +3868,7 @@ function StakingTab({
                         ? "bg-emerald-500/10 border-emerald-500/30"
                         : isCancelled
                         ? "bg-red-500/10 border-red-500/30"
-                        : "bg-white/5 border-warm-400/20"
+                        : "bg-slate-800/80 dark:bg-slate-700/60 border-warm-400/20"
                     }`}
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -3891,17 +3891,17 @@ function StakingTab({
                           )}
                         </div>
                         <div>
-                          <p className="text-dark-900 font-semibold">
+                          <p className="text-slate-900 dark:text-white font-semibold">
                             {formatCurrency(stake.amount)}
                           </p>
-                          <p className="text-warm-700 text-xs">
+                          <p className="text-slate-600 dark:text-slate-300 text-xs">
                             {stake.packageType} package
                           </p>
                         </div>
                       </div>
 
                       <div className="flex-1 px-4">
-                        <div className="flex justify-between text-xs text-warm-700 mb-1">
+                        <div className="flex justify-between text-xs text-slate-600 dark:text-slate-300 mb-1">
                           <span>{startDate.toLocaleDateString()}</span>
                           <span>{endDate.toLocaleDateString()}</span>
                         </div>
@@ -3949,7 +3949,7 @@ function StakingTab({
           </div>
         ) : stakedBalance > 0 ? (
           <div className="space-y-4">
-            <div className="p-6 bg-white/5 rounded-2xl border border-warm-400/20">
+            <div className="p-6 bg-slate-800/80 dark:bg-slate-700/60 rounded-2xl border border-warm-400/20">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-400 rounded-xl flex items-center justify-center">
@@ -3959,7 +3959,7 @@ function StakingTab({
                     <h4 className="text-white font-bold text-lg">
                       Active Staking
                     </h4>
-                    <p className="text-warm-700 text-sm">
+                    <p className="text-slate-600 dark:text-slate-300 text-sm">
                       Earning rewards on maturity
                     </p>
                   </div>
@@ -3978,7 +3978,7 @@ function StakingTab({
             <div className="w-16 h-16 bg-warm-400/15 rounded-full flex items-center justify-center mx-auto mb-4">
               <TrendingUp className="w-8 h-8 text-white/40" />
             </div>
-            <h4 className="text-warm-700 text-lg mb-2">No Active Stakes</h4>
+            <h4 className="text-slate-600 dark:text-slate-300 text-lg mb-2">No Active Stakes</h4>
             <p className="text-white/40 text-sm">
               Start staking to earn passive income
             </p>
@@ -4004,8 +4004,8 @@ function StakingTab({
                 <span className="text-white font-bold text-sm">1</span>
               </div>
               <div>
-                <h4 className="text-dark-900 font-semibold">Stake Your Funds</h4>
-                <p className="text-warm-700 text-sm">
+                <h4 className="text-slate-900 dark:text-white font-semibold">Stake Your Funds</h4>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">
                   Enter the amount you want to stake from your available deposit
                   balance.
                 </p>
@@ -4017,8 +4017,8 @@ function StakingTab({
                 <span className="text-white font-bold text-sm">2</span>
               </div>
               <div>
-                <h4 className="text-dark-900 font-semibold">Compound Growth</h4>
-                <p className="text-warm-700 text-sm">
+                <h4 className="text-slate-900 dark:text-white font-semibold">Compound Growth</h4>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">
                   Rewards are automatically added to your balance for compound
                   growth.
                 </p>
@@ -4032,8 +4032,8 @@ function StakingTab({
                 <span className="text-white font-bold text-sm">3</span>
               </div>
               <div>
-                <h4 className="text-dark-900 font-semibold">Earn Daily Rewards</h4>
-                <p className="text-warm-700 text-sm">
+                <h4 className="text-slate-900 dark:text-white font-semibold">Earn Daily Rewards</h4>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">
                   Your staked funds earn rewards daily based on the current
                   month&apos;s rate.
                 </p>
@@ -4045,8 +4045,8 @@ function StakingTab({
                 <span className="text-white font-bold text-sm">3</span>
               </div>
               <div>
-                <h4 className="text-dark-900 font-semibold"></h4>
-                <p className="text-warm-700 text-sm"></p>
+                <h4 className="text-slate-900 dark:text-white font-semibold"></h4>
+                <p className="text-slate-600 dark:text-slate-300 text-sm"></p>
               </div>
             </div> */}
           </div>
@@ -4379,7 +4379,7 @@ function WithdrawTab({
           </div>
           <div>
             <h1 className="text-3xl font-bold text-white">Withdraw Funds</h1>
-            <p className="text-warm-700">
+            <p className="text-slate-600 dark:text-slate-300">
               Transfer your earnings to external wallets or bank accounts
             </p>
           </div>
@@ -4390,15 +4390,15 @@ function WithdrawTab({
           <div className="flex items-center space-x-3 bg-warm-400/15 rounded-2xl p-4">
             <Shield className="w-6 h-6 text-red-400" />
             <div>
-              <p className="text-dark-900 font-medium">Secure</p>
-              <p className="text-warm-700 text-sm">2FA verification required</p>
+              <p className="text-slate-900 dark:text-white font-medium">Secure</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">2FA verification required</p>
             </div>
           </div>
           <div className="flex items-center space-x-3 bg-warm-400/15 rounded-2xl p-4">
             <Clock className="w-6 h-6 text-orange-400" />
             <div>
-              <p className="text-dark-900 font-medium">Fast Transfer</p>
-              <p className="text-warm-700 text-sm">5 min-4 hours to wallets</p>
+              <p className="text-slate-900 dark:text-white font-medium">Fast Transfer</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">5 min-4 hours to wallets</p>
             </div>
           </div>
         </div>
@@ -4416,10 +4416,10 @@ function WithdrawTab({
           <div className="bg-gradient-to-r from-emerald-500/10 to-green-400/10 border border-emerald-500/20 rounded-2xl p-6">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-warm-700 text-sm sm:text-lg">
+                <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-lg">
                   Available Balance
                 </p>
-                <p className="text-warm-700 text-xs sm:text-sm">
+                <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
                   Ready for withdrawal
                 </p>
               </div>
@@ -4431,7 +4431,7 @@ function WithdrawTab({
                     ? `${(availableBalance / 1000).toFixed(2)}K`
                     : availableBalance.toLocaleString()}
                 </p>
-                <p className="text-warm-700 text-sm sm:text-lg">USDT</p>
+                <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-lg">USDT</p>
               </div>
             </div>
           </div>
@@ -4452,7 +4452,7 @@ function WithdrawTab({
                   className={`p-6 rounded-2xl border-2 transition-all duration-300 ${
                     selectedToken === token.symbol
                       ? "border-red-500 bg-red-500/10 shadow-lg shadow-red-500/20"
-                      : "border-warm-400/30 bg-white/5 hover:border-red-500/50 hover:bg-warm-400/15"
+                      : "border-warm-400/30 bg-slate-800/80 dark:bg-slate-700/60 hover:border-red-500/50 hover:bg-warm-400/15"
                   }`}
                 >
                   <div className="text-center">
@@ -4468,7 +4468,7 @@ function WithdrawTab({
                     <div className="text-white font-bold text-lg">
                       {token.symbol}
                     </div>
-                    <div className="text-warm-700 text-sm mb-2">
+                    <div className="text-slate-600 dark:text-slate-300 text-sm mb-2">
                       {token.name}
                     </div>
                     <div className="text-xs text-white/50 mb-1">
@@ -4503,7 +4503,7 @@ function WithdrawTab({
                 )}
               />
               <div className="absolute right-6 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                <span className="text-warm-700 text-lg">{selectedToken}</span>
+                <span className="text-slate-600 dark:text-slate-300 text-lg">{selectedToken}</span>
                 <div className="w-8 h-8">
                   <Image
                     src={selectedTokenData.icon}
@@ -4564,7 +4564,7 @@ function WithdrawTab({
               </button>
             </div>
 
-            <div className="flex justify-between text-sm text-warm-700 mt-3">
+            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300 mt-3">
               <span>
                 Minimum: {selectedTokenData.minWithdraw} {selectedToken}
               </span>
@@ -4595,7 +4595,7 @@ function WithdrawTab({
                   className={`p-6 rounded-2xl border-2 transition-all duration-300 text-left ${
                     withdrawMethod === method.id
                       ? "border-red-500 bg-red-500/10 shadow-lg shadow-red-500/20"
-                      : "border-warm-400/30 bg-white/5 hover:border-red-500/50 hover:bg-warm-400/15"
+                      : "border-warm-400/30 bg-slate-800/80 dark:bg-slate-700/60 hover:border-red-500/50 hover:bg-warm-400/15"
                   }`}
                 >
                   <div className="flex items-start space-x-4">
@@ -4604,7 +4604,7 @@ function WithdrawTab({
                       <div className="text-white font-semibold text-lg">
                         {method.label}
                       </div>
-                      <div className="text-warm-700 text-sm mb-2">
+                      <div className="text-slate-600 dark:text-slate-300 text-sm mb-2">
                         {method.description}
                       </div>
                       <div className="flex justify-between items-center">
@@ -4675,20 +4675,20 @@ function WithdrawTab({
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-warm-700">Withdraw Amount:</span>
-                  <span className="text-dark-900 font-semibold">
+                  <span className="text-slate-600 dark:text-slate-300">Withdraw Amount:</span>
+                  <span className="text-slate-900 dark:text-white font-semibold">
                     {amount.toLocaleString()} {selectedToken}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-warm-700">Network Fee:</span>
+                  <span className="text-slate-600 dark:text-slate-300">Network Fee:</span>
                   <span className="text-red-400">
                     -{selectedMethodData.fee}
                   </span>
                 </div>
                 <div className="border-t border-warm-400/30 pt-3">
                   <div className="flex justify-between">
-                    <span className="text-dark-900 font-semibold">
+                    <span className="text-slate-900 dark:text-white font-semibold">
                       You will receive:
                     </span>
                     <span className="text-red-400 font-bold text-lg">
@@ -4697,8 +4697,8 @@ function WithdrawTab({
                   </div>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-warm-700">Processing Time:</span>
-                  <span className="text-warm-700">
+                  <span className="text-slate-600 dark:text-slate-300">Processing Time:</span>
+                  <span className="text-slate-600 dark:text-slate-300">
                     {selectedMethodData.time}
                   </span>
                 </div>
@@ -4709,7 +4709,7 @@ function WithdrawTab({
                       <p className="text-yellow-400 font-medium text-sm">
                         Important Notice
                       </p>
-                      <p className="text-warm-700 text-sm">
+                      <p className="text-slate-600 dark:text-slate-300 text-sm">
                         Withdrawals cannot be cancelled once processed. Please
                         verify all details before confirming.
                       </p>
@@ -4777,32 +4777,32 @@ function WithdrawTab({
                   <h3 className="text-2xl font-bold text-white mb-2">
                     Confirm Withdrawal
                   </h3>
-                  <p className="text-warm-700">
+                  <p className="text-slate-600 dark:text-slate-300">
                     Verify with OTP sent to your email
                   </p>
                 </div>
 
                 <div className="space-y-4 mb-6">
-                  <div className="flex justify-between p-4 bg-white/5 rounded-xl">
-                    <span className="text-warm-700">Amount:</span>
-                    <span className="text-dark-900 font-semibold">
+                  <div className="flex justify-between p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl">
+                    <span className="text-slate-600 dark:text-slate-300">Amount:</span>
+                    <span className="text-slate-900 dark:text-white font-semibold">
                       {amount} {selectedToken}
                     </span>
                   </div>
-                  <div className="flex justify-between p-4 bg-white/5 rounded-xl">
-                    <span className="text-warm-700">Fee:</span>
+                  <div className="flex justify-between p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl">
+                    <span className="text-slate-600 dark:text-slate-300">Fee:</span>
                     <span className="text-red-400">
                       {selectedMethodData.fee}
                     </span>
                   </div>
-                  <div className="flex justify-between p-4 bg-white/5 rounded-xl">
-                    <span className="text-warm-700">You will receive:</span>
+                  <div className="flex justify-between p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl">
+                    <span className="text-slate-600 dark:text-slate-300">You will receive:</span>
                     <span className="text-red-400 font-bold">
                       {finalAmount.toFixed(4)} {selectedToken}
                     </span>
                   </div>
-                  <div className="p-4 bg-white/5 rounded-xl">
-                    <span className="text-warm-700 block mb-1">
+                  <div className="p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl">
+                    <span className="text-slate-600 dark:text-slate-300 block mb-1">
                       Destination:
                     </span>
                     <span className="text-white font-mono text-sm break-all">
@@ -4839,7 +4839,7 @@ function WithdrawTab({
                             OTP sent to {emailHint || "your email"}
                           </p>
                           {otpTimer > 0 && (
-                            <p className="text-warm-700 text-sm">
+                            <p className="text-slate-600 dark:text-slate-300 text-sm">
                               Expires in: {Math.floor(otpTimer / 60)}:
                               {(otpTimer % 60).toString().padStart(2, "0")}
                             </p>
@@ -4848,7 +4848,7 @@ function WithdrawTab({
                       </div>
 
                       <div>
-                        <label className="block text-sm text-warm-700 mb-2">
+                        <label className="block text-sm text-slate-600 dark:text-slate-300 mb-2">
                           Enter 6-digit OTP
                         </label>
                         <input
@@ -4861,7 +4861,7 @@ function WithdrawTab({
                           }
                           placeholder="000000"
                           maxLength={6}
-                          className="w-full py-4 px-6 bg-white/5 border border-warm-400/30 rounded-xl text-white text-center text-2xl tracking-[0.5em] font-mono focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all placeholder:tracking-[0.5em] placeholder:text-white/30"
+                          className="w-full py-4 px-6 bg-slate-800/80 dark:bg-slate-700/60 border border-warm-400/30 rounded-xl text-white text-center text-2xl tracking-[0.5em] font-mono focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all placeholder:tracking-[0.5em] placeholder:text-white/30"
                         />
                       </div>
 
@@ -4949,7 +4949,7 @@ function WithdrawTab({
             <motion.div
               key={withdrawal.id}
               whileHover={{ scale: 1.01 }}
-              className="flex items-center justify-between p-6 bg-white/5 rounded-2xl hover:bg-warm-400/15 transition-all duration-300 border border-warm-400/20 hover:border-warm-400/30"
+              className="flex items-center justify-between p-6 bg-slate-800/80 dark:bg-slate-700/60 rounded-2xl hover:bg-warm-400/15 transition-all duration-300 border border-warm-400/20 hover:border-warm-400/30"
             >
               <div className="flex items-center space-x-4">
                 <div className="w-14 h-14 bg-red-500/20 rounded-2xl flex items-center justify-center">
@@ -4959,7 +4959,7 @@ function WithdrawTab({
                   <p className="text-white font-semibold text-lg">
                     Withdraw {withdrawal.token}
                   </p>
-                  <p className="text-warm-700 text-sm">
+                  <p className="text-slate-600 dark:text-slate-300 text-sm">
                     {withdrawal.method} • {withdrawal.date}
                   </p>
                   <p className="text-white/50 text-xs font-mono">
@@ -5143,7 +5143,7 @@ function HistoryTab({
       case "failed":
         return "text-red-400";
       default:
-        return "text-warm-700";
+        return "text-slate-600 dark:text-slate-300";
     }
   };
 
@@ -5196,7 +5196,7 @@ function HistoryTab({
               <button
                 onClick={() => fetchTransactions()}
                 disabled={loading}
-                className="flex items-center space-x-2 px-3 py-2 bg-warm-400/15 text-warm-700 rounded-lg hover:bg-warm-400/25 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center space-x-2 px-3 py-2 bg-warm-400/15 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-warm-400/25 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <RefreshCw
                   className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
@@ -5216,7 +5216,7 @@ function HistoryTab({
                   className="w-full sm:w-64 px-4 py-3 pr-10 bg-warm-400/15 border border-warm-400/30 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-300"
                   placeholder="Search transactions..."
                 />
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-warm-700">
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-600 dark:text-slate-300">
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -5254,7 +5254,7 @@ function HistoryTab({
 
           {/* Filter Buttons */}
           <div className="space-y-3">
-            <p className="text-warm-700 text-sm font-medium">
+            <p className="text-slate-600 dark:text-slate-300 text-sm font-medium">
               Filter by transaction type:
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3">
@@ -5265,7 +5265,7 @@ function HistoryTab({
                   className={`px-3 sm:px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 min-h-[48px] flex items-center justify-center ${
                     filter === filterOption.id
                       ? "bg-emerald-500 text-black shadow-lg shadow-emerald-500/20 scale-105"
-                      : "bg-warm-400/15 text-warm-700 hover:bg-warm-400/25 hover:text-white hover:scale-105"
+                      : "bg-warm-400/15 text-slate-600 dark:text-slate-300 hover:bg-warm-400/25 hover:text-white hover:scale-105"
                   }`}
                 >
                   {filterOption.label}
@@ -5277,7 +5277,7 @@ function HistoryTab({
           {/* Results Summary */}
           {!loading && (
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-3 border-t border-warm-400/20">
-              <p className="text-warm-700 text-sm mb-2 sm:mb-0">
+              <p className="text-slate-600 dark:text-slate-300 text-sm mb-2 sm:mb-0">
                 Showing {filteredTransactions.length} of {transactions.length}{" "}
                 transactions
                 {filter !== "all" && (
@@ -5311,7 +5311,7 @@ function HistoryTab({
           <div className="glass-card p-6 text-center">
             <div className="flex items-center justify-center space-x-2">
               <RefreshCw className="w-5 h-5 animate-spin text-emerald-400" />
-              <span className="text-warm-700">Loading transactions...</span>
+              <span className="text-slate-600 dark:text-slate-300">Loading transactions...</span>
             </div>
           </div>
         ) : error ? (
@@ -5329,7 +5329,7 @@ function HistoryTab({
           </div>
         ) : filteredTransactions.length === 0 ? (
           <div className="glass-card p-6 text-center">
-            <div className="text-warm-700">
+            <div className="text-slate-600 dark:text-slate-300">
               <History className="w-8 h-8 mx-auto mb-2" />
               <p>No transactions found</p>
             </div>
@@ -5343,7 +5343,7 @@ function HistoryTab({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="glass-card p-4 hover:bg-white/5 transition-all duration-300"
+                className="glass-card p-4 hover:bg-slate-800/80 dark:bg-slate-700/60 transition-all duration-300"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-3 flex-1">
@@ -5388,7 +5388,7 @@ function HistoryTab({
 
                       <div className="space-y-1 text-sm">
                         <div className="flex justify-between items-center">
-                          <span className="text-warm-700">Status:</span>
+                          <span className="text-slate-600 dark:text-slate-300">Status:</span>
                           <span
                             className={`font-medium ${getStatusColor(
                               transaction.status
@@ -5399,8 +5399,8 @@ function HistoryTab({
                         </div>
 
                         <div className="flex justify-between items-center">
-                          <span className="text-warm-700">Date:</span>
-                          <span className="text-warm-700">
+                          <span className="text-slate-600 dark:text-slate-300">Date:</span>
+                          <span className="text-slate-600 dark:text-slate-300">
                             {new Date(transaction.createdAt).toLocaleDateString(
                               "en-US",
                               {
@@ -5414,8 +5414,8 @@ function HistoryTab({
 
                         {transaction.network && (
                           <div className="flex justify-between items-center">
-                            <span className="text-warm-700">Network:</span>
-                            <span className="text-warm-700">
+                            <span className="text-slate-600 dark:text-slate-300">Network:</span>
+                            <span className="text-slate-600 dark:text-slate-300">
                               {transaction.network}
                             </span>
                           </div>
@@ -5423,8 +5423,8 @@ function HistoryTab({
 
                         {transaction.fee && transaction.fee.amount > 0 && (
                           <div className="flex justify-between items-center">
-                            <span className="text-warm-700">Fee:</span>
-                            <span className="text-warm-700">
+                            <span className="text-slate-600 dark:text-slate-300">Fee:</span>
+                            <span className="text-slate-600 dark:text-slate-300">
                               {transaction.fee.amount} {transaction.currency}
                             </span>
                           </div>
@@ -5441,7 +5441,7 @@ function HistoryTab({
                         {transaction.txHash && (
                           <div className="mt-2 pt-2 border-t border-warm-400/20">
                             <div className="flex items-center justify-between">
-                              <span className="text-warm-700 text-xs">
+                              <span className="text-slate-600 dark:text-slate-300 text-xs">
                                 Transaction:
                               </span>
                               <button
@@ -5482,25 +5482,25 @@ function HistoryTab({
           <table className="w-full">
             <thead>
               <tr className="border-b border-warm-400/20">
-                <th className="text-left py-4 px-4 text-warm-700 font-semibold">
+                <th className="text-left py-4 px-4 text-slate-600 dark:text-slate-300 font-semibold">
                   Type
                 </th>
-                <th className="text-left py-4 px-4 text-warm-700 font-semibold">
+                <th className="text-left py-4 px-4 text-slate-600 dark:text-slate-300 font-semibold">
                   Amount
                 </th>
-                <th className="text-left py-4 px-4 text-warm-700 font-semibold">
+                <th className="text-left py-4 px-4 text-slate-600 dark:text-slate-300 font-semibold">
                   Description
                 </th>
-                <th className="text-left py-4 px-4 text-warm-700 font-semibold">
+                <th className="text-left py-4 px-4 text-slate-600 dark:text-slate-300 font-semibold">
                   Network
                 </th>
-                <th className="text-left py-4 px-4 text-warm-700 font-semibold">
+                <th className="text-left py-4 px-4 text-slate-600 dark:text-slate-300 font-semibold">
                   Date
                 </th>
-                <th className="text-left py-4 px-4 text-warm-700 font-semibold">
+                <th className="text-left py-4 px-4 text-slate-600 dark:text-slate-300 font-semibold">
                   Status
                 </th>
-                <th className="text-left py-4 px-4 text-warm-700 font-semibold">
+                <th className="text-left py-4 px-4 text-slate-600 dark:text-slate-300 font-semibold">
                   Transaction Hash
                 </th>
               </tr>
@@ -5511,7 +5511,7 @@ function HistoryTab({
                   <td colSpan={7} className="text-center py-12">
                     <div className="flex items-center justify-center space-x-2">
                       <RefreshCw className="w-6 h-6 animate-spin text-emerald-400" />
-                      <span className="text-warm-700">
+                      <span className="text-slate-600 dark:text-slate-300">
                         Loading transactions...
                       </span>
                     </div>
@@ -5535,7 +5535,7 @@ function HistoryTab({
               ) : filteredTransactions.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="text-center py-12">
-                    <div className="text-warm-700">
+                    <div className="text-slate-600 dark:text-slate-300">
                       <History className="w-10 h-10 mx-auto mb-3" />
                       <p className="text-lg">No transactions found</p>
                     </div>
@@ -5550,7 +5550,7 @@ function HistoryTab({
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
-                      className="border-b border-white/5 hover:bg-white/5 transition-colors group"
+                      className="border-b border-white/5 hover:bg-slate-800/80 dark:bg-slate-700/60 transition-colors group"
                     >
                       <td className="py-4 px-4">
                         <div className="flex items-center space-x-4">
@@ -5581,7 +5581,7 @@ function HistoryTab({
                             <p className="text-white font-semibold capitalize text-lg">
                               {transaction.type}
                             </p>
-                            <p className="text-warm-700 text-sm">
+                            <p className="text-slate-600 dark:text-slate-300 text-sm">
                               {transaction.currency}
                             </p>
                           </div>
@@ -5607,7 +5607,7 @@ function HistoryTab({
                                 ? transaction.fee
                                 : 0;
                             return feeAmount > 0 ? (
-                              <p className="text-warm-700 text-sm">
+                              <p className="text-slate-600 dark:text-slate-300 text-sm">
                                 Fee: {feeAmount.toFixed(4)}{" "}
                                 {transaction.currency}
                               </p>
@@ -5634,13 +5634,13 @@ function HistoryTab({
                         )}
                       </td>
                       <td className="py-4 px-4">
-                        <span className="text-warm-700 bg-warm-400/15 px-3 py-1 rounded-lg text-sm">
+                        <span className="text-slate-600 dark:text-slate-300 bg-warm-400/15 px-3 py-1 rounded-lg text-sm">
                           {transaction.network || "N/A"}
                         </span>
                       </td>
                       <td className="py-4 px-4">
                         <div>
-                          <span className="text-warm-700 text-base">
+                          <span className="text-slate-600 dark:text-slate-300 text-base">
                             {new Date(transaction.createdAt).toLocaleDateString(
                               "en-US",
                               {
@@ -5650,7 +5650,7 @@ function HistoryTab({
                               }
                             )}
                           </span>
-                          <p className="text-warm-700 text-sm">
+                          <p className="text-slate-600 dark:text-slate-300 text-sm">
                             {new Date(transaction.createdAt).toLocaleTimeString(
                               "en-US",
                               {
@@ -5682,7 +5682,7 @@ function HistoryTab({
                                 transaction.txHash || ""
                               )
                             }
-                            className="text-emerald-400 hover:text-emerald-300 font-mono transition-colors flex items-center space-x-2 bg-white/5 hover:bg-warm-400/15 px-3 py-2 rounded-lg"
+                            className="text-emerald-400 hover:text-emerald-300 font-mono transition-colors flex items-center space-x-2 bg-slate-800/80 dark:bg-slate-700/60 hover:bg-warm-400/15 px-3 py-2 rounded-lg"
                           >
                             <span>
                               {transaction.txHash.slice(0, 8)}...
@@ -5716,7 +5716,7 @@ function HistoryTab({
               <ArrowUpRight className="w-6 h-6 text-emerald-400" />
             </div>
           </div>
-          <p className="text-warm-700 text-sm sm:text-base mb-2 font-medium">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base mb-2 font-medium">
             Total Deposits
           </p>
           <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-emerald-400">
@@ -5738,7 +5738,7 @@ function HistoryTab({
               <ArrowDownLeft className="w-6 h-6 text-red-400" />
             </div>
           </div>
-          <p className="text-warm-700 text-sm sm:text-base mb-2 font-medium">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base mb-2 font-medium">
             Total Withdrawals
           </p>
           <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-red-400">
@@ -5760,7 +5760,7 @@ function HistoryTab({
               <DollarSign className="w-6 h-6 text-green-400" />
             </div>
           </div>
-          <p className="text-warm-700 text-sm sm:text-base mb-2 font-medium">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base mb-2 font-medium">
             Total Rewards
           </p>
           <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-green-400">
@@ -5802,7 +5802,7 @@ function HistoryTab({
               <CreditCard className="w-6 h-6 text-yellow-400" />
             </div>
           </div>
-          <p className="text-warm-700 text-sm sm:text-base mb-2 font-medium">
+          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base mb-2 font-medium">
             Total Fees
           </p>
           <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-yellow-400">
@@ -5836,7 +5836,7 @@ function HistoryTab({
           <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between">
             {/* Page Info */}
             <div className="text-center sm:text-left">
-              <p className="text-warm-700 text-sm sm:text-base">
+              <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base">
                 Showing page{" "}
                 <span className="font-bold text-emerald-400">
                   {pagination.page}
@@ -5846,7 +5846,7 @@ function HistoryTab({
                   {pagination.totalPages}
                 </span>
               </p>
-              <p className="text-warm-700 text-xs sm:text-sm mt-1">
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mt-1">
                 {pagination.totalCount} total transactions
               </p>
             </div>
@@ -5857,7 +5857,7 @@ function HistoryTab({
               <button
                 onClick={() => setPagination((prev) => ({ ...prev, page: 1 }))}
                 disabled={pagination.page <= 1 || loading}
-                className="px-3 py-2 sm:px-4 sm:py-3 bg-warm-400/15 text-warm-700 rounded-lg hover:bg-warm-400/25 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-h-[44px] flex items-center justify-center"
+                className="px-3 py-2 sm:px-4 sm:py-3 bg-warm-400/15 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-warm-400/25 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-h-[44px] flex items-center justify-center"
               >
                 <svg
                   className="w-4 h-4"
@@ -5883,7 +5883,7 @@ function HistoryTab({
                   }))
                 }
                 disabled={pagination.page <= 1 || loading}
-                className="px-4 py-2 sm:px-6 sm:py-3 bg-warm-400/15 text-warm-700 rounded-lg hover:bg-warm-400/25 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-h-[44px] flex items-center space-x-2"
+                className="px-4 py-2 sm:px-6 sm:py-3 bg-warm-400/15 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-warm-400/25 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-h-[44px] flex items-center space-x-2"
               >
                 <svg
                   className="w-4 h-4"
@@ -5929,7 +5929,7 @@ function HistoryTab({
                         className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg text-sm sm:text-base font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                           pagination.page === pageNumber
                             ? "bg-emerald-500 text-black shadow-lg shadow-emerald-500/20"
-                            : "bg-warm-400/15 text-warm-700 hover:bg-warm-400/25 hover:text-white"
+                            : "bg-warm-400/15 text-slate-600 dark:text-slate-300 hover:bg-warm-400/25 hover:text-white"
                         }`}
                       >
                         {pageNumber}
@@ -5948,7 +5948,7 @@ function HistoryTab({
                   }))
                 }
                 disabled={pagination.page >= pagination.totalPages || loading}
-                className="px-4 py-2 sm:px-6 sm:py-3 bg-warm-400/15 text-warm-700 rounded-lg hover:bg-warm-400/25 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-h-[44px] flex items-center space-x-2"
+                className="px-4 py-2 sm:px-6 sm:py-3 bg-warm-400/15 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-warm-400/25 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-h-[44px] flex items-center space-x-2"
               >
                 <span className="hidden sm:inline">Next</span>
                 <svg
@@ -5972,7 +5972,7 @@ function HistoryTab({
                   setPagination((prev) => ({ ...prev, page: prev.totalPages }))
                 }
                 disabled={pagination.page >= pagination.totalPages || loading}
-                className="px-3 py-2 sm:px-4 sm:py-3 bg-warm-400/15 text-warm-700 rounded-lg hover:bg-warm-400/25 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-h-[44px] flex items-center justify-center"
+                className="px-3 py-2 sm:px-4 sm:py-3 bg-warm-400/15 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-warm-400/25 hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base min-h-[44px] flex items-center justify-center"
               >
                 <svg
                   className="w-4 h-4"
@@ -5994,7 +5994,7 @@ function HistoryTab({
           {/* Mobile-only Quick Jump */}
           <div className="block sm:hidden mt-4 pt-4 border-t border-warm-400/20">
             <div className="flex items-center justify-center space-x-3">
-              <label className="text-warm-700 text-sm">Go to page:</label>
+              <label className="text-slate-600 dark:text-slate-300 text-sm">Go to page:</label>
               <input
                 type="number"
                 min="1"
@@ -6008,7 +6008,7 @@ function HistoryTab({
                 }}
                 className="w-16 px-2 py-1 bg-warm-400/15 border border-warm-400/30 rounded-lg text-white text-center text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
               />
-              <span className="text-warm-700 text-sm">
+              <span className="text-slate-600 dark:text-slate-300 text-sm">
                 of {pagination.totalPages}
               </span>
             </div>
@@ -6246,7 +6246,7 @@ function AnalyticsTab() {
                 className={`px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   timeRange === range.id
                     ? "bg-emerald-500 text-black"
-                    : "bg-warm-400/15 text-warm-700 hover:bg-warm-400/25 hover:text-white"
+                    : "bg-warm-400/15 text-slate-600 dark:text-slate-300 hover:bg-warm-400/25 hover:text-white"
                 }`}
               >
                 {range.label}
@@ -6263,7 +6263,7 @@ function AnalyticsTab() {
         ) : (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
             <div className="text-center">
-              <p className="text-warm-700 text-sm mb-1">Total Value</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">Total Value</p>
               <p className="text-2xl font-bold text-white">
                 ${analyticsData?.totalValue.toLocaleString() || "0.00"}
               </p>
@@ -6272,7 +6272,7 @@ function AnalyticsTab() {
               </p>
             </div>
             <div className="text-center">
-              <p className="text-warm-700 text-sm mb-1">Total Earnings</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">Total Earnings</p>
               <p className="text-2xl font-bold text-white">
                 ${analyticsData?.totalEarnings.toLocaleString() || "0.00"}
               </p>
@@ -6281,16 +6281,16 @@ function AnalyticsTab() {
               </p>
             </div>
             <div className="text-center">
-              <p className="text-warm-700 text-sm mb-1">Monthly Rate</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">Monthly Rate</p>
               <p className="text-2xl font-bold text-emerald-400">5-12%</p>
-              <p className="text-warm-700 text-sm">Variable</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">Variable</p>
             </div>
             <div className="text-center">
-              <p className="text-warm-700 text-sm mb-1">Staking Days</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">Staking Days</p>
               <p className="text-2xl font-bold text-white">
                 {analyticsData?.stakingDays || 0}
               </p>
-              <p className="text-warm-700 text-sm">Days Active</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">Days Active</p>
             </div>
           </div>
         )}
@@ -6371,7 +6371,7 @@ function AnalyticsTab() {
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
                 <BarChart3 className="w-16 h-16 text-white/40 mx-auto mb-4" />
-                <p className="text-warm-700">No portfolio data yet</p>
+                <p className="text-slate-600 dark:text-slate-300">No portfolio data yet</p>
               </div>
             </div>
           )}
@@ -6405,13 +6405,13 @@ function AnalyticsTab() {
                       className="w-4 h-4 rounded-full"
                       style={{ backgroundColor: item.color }}
                     />
-                    <span className="text-dark-900 font-medium">{item.name}</span>
+                    <span className="text-slate-900 dark:text-white font-medium">{item.name}</span>
                   </div>
                   <div className="text-right">
-                    <p className="text-dark-900 font-semibold">
+                    <p className="text-slate-900 dark:text-white font-semibold">
                       ${item.value.toLocaleString()}
                     </p>
-                    <p className="text-warm-700 text-sm">
+                    <p className="text-slate-600 dark:text-slate-300 text-sm">
                       {analyticsData?.earningsBreakdown.reduce(
                         (sum: number, i: any) => sum + i.value,
                         0
@@ -6459,7 +6459,7 @@ function AnalyticsTab() {
                     key={day.day}
                     className="flex items-center justify-between"
                   >
-                    <span className="text-warm-700 font-medium w-12">
+                    <span className="text-slate-600 dark:text-slate-300 font-medium w-12">
                       {day.day}
                     </span>
                     <div className="flex items-center space-x-3 flex-1">
@@ -6559,7 +6559,7 @@ function AnalyticsTab() {
           <div className="h-64 flex items-center justify-center">
             <div className="text-center">
               <BarChart3 className="w-16 h-16 text-white/40 mx-auto mb-4" />
-              <p className="text-warm-700">No transaction data available</p>
+              <p className="text-slate-600 dark:text-slate-300">No transaction data available</p>
             </div>
           </div>
         )}
@@ -6581,30 +6581,30 @@ function AnalyticsTab() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center p-4 bg-white/5 rounded-xl">
-              <p className="text-warm-700 text-sm mb-2">Best Day</p>
+            <div className="text-center p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl">
+              <p className="text-slate-600 dark:text-slate-300 text-sm mb-2">Best Day</p>
               <p className="text-2xl font-bold text-emerald-400">
                 ${analyticsData?.bestDay.toFixed(2) || "0.00"}
               </p>
-              <p className="text-warm-700 text-xs">
+              <p className="text-slate-600 dark:text-slate-300 text-xs">
                 {analyticsData?.bestDay > 0
                   ? "Highest daily reward"
                   : "No rewards yet"}
               </p>
             </div>
-            <div className="text-center p-4 bg-white/5 rounded-xl">
-              <p className="text-warm-700 text-sm mb-2">Average Daily</p>
+            <div className="text-center p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl">
+              <p className="text-slate-600 dark:text-slate-300 text-sm mb-2">Average Daily</p>
               <p className="text-2xl font-bold text-white">
                 ${analyticsData?.avgDaily.toFixed(2) || "0.00"}
               </p>
-              <p className="text-warm-700 text-xs">Last 7 days</p>
+              <p className="text-slate-600 dark:text-slate-300 text-xs">Last 7 days</p>
             </div>
-            <div className="text-center p-4 bg-white/5 rounded-xl">
-              <p className="text-warm-700 text-sm mb-2">Total Staked</p>
+            <div className="text-center p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl">
+              <p className="text-slate-600 dark:text-slate-300 text-sm mb-2">Total Staked</p>
               <p className="text-2xl font-bold text-cyan-400">
                 ${analyticsData?.stakedAmount.toLocaleString() || "0.00"}
               </p>
-              <p className="text-warm-700 text-xs">Principal amount</p>
+              <p className="text-slate-600 dark:text-slate-300 text-xs">Principal amount</p>
             </div>
           </div>
         )}
@@ -6965,7 +6965,7 @@ function AffiliateTab({
       <div className="flex items-center justify-center py-20">
         <div className="flex items-center space-x-3">
           <Loader className="w-6 h-6 animate-spin text-emerald-400" />
-          <span className="text-warm-700">Loading affiliate data...</span>
+          <span className="text-slate-600 dark:text-slate-300">Loading affiliate data...</span>
         </div>
       </div>
     );
@@ -6988,7 +6988,7 @@ function AffiliateTab({
             <h1 className="text-2xl sm:text-3xl font-bold text-white">
               Affiliate Program
             </h1>
-            <p className="text-warm-700 text-sm sm:text-base">
+            <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base">
               Earn rewards by inviting friends to join our platform
             </p>
           </div>
@@ -7002,7 +7002,7 @@ function AffiliateTab({
               <p className="text-white font-semibold text-sm sm:text-base">
                 {totalReferrals} Referrals
               </p>
-              <p className="text-warm-700 text-xs sm:text-sm">
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
                 Total friends joined
               </p>
             </div>
@@ -7013,7 +7013,7 @@ function AffiliateTab({
               <p className="text-white font-semibold text-sm sm:text-base">
                 ${totalEarnings.toFixed(2)}
               </p>
-              <p className="text-warm-700 text-xs sm:text-sm">Total earnings</p>
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">Total earnings</p>
               {earningsByLevel.firstDeposit > 0 && (
                 <p className="text-emerald-400 text-[11px] sm:text-xs mt-1">
                   +${earningsByLevel.firstDeposit.toFixed(2)} first deposit
@@ -7029,7 +7029,7 @@ function AffiliateTab({
                 <p className="text-white font-semibold text-sm sm:text-base">
                   Multi-level rewards
                 </p>
-                <p className="text-warm-700 text-xs sm:text-sm">
+                <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
                   Level 1 · 8% &nbsp;|&nbsp; Level 2 · 4% &nbsp;|&nbsp; Level 3
                   · 3%
                 </p>
@@ -7037,9 +7037,9 @@ function AffiliateTab({
             </div>
             <div className="grid grid-cols-3 gap-2 mt-3">
               {[1, 2, 3].map((level) => (
-                <div key={level} className="bg-white/5 rounded-lg p-2">
+                <div key={level} className="bg-slate-800/80 dark:bg-slate-700/60 rounded-lg p-2">
                   <p className="text-white text-xs font-semibold">L{level}</p>
-                  <p className="text-warm-700 text-[11px]">
+                  <p className="text-slate-600 dark:text-slate-300 text-[11px]">
                     {level === 1
                       ? `${level1Count} refs`
                       : level === 2
@@ -7064,30 +7064,30 @@ function AffiliateTab({
               <p className="text-white font-semibold text-sm sm:text-base font-mono">
                 {actualReferralCode}
               </p>
-              <p className="text-warm-700 text-xs sm:text-sm">Your code</p>
+              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">Your code</p>
             </div>
           </div>
         </div>
         {referrer && (
-          <div className="mt-6 bg-white/5 border border-white/15 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="mt-6 bg-slate-800/80 dark:bg-slate-700/60 border border-white/15 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500/30 to-blue-400/30 flex items-center justify-center border border-warm-400/20">
                 <Users className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="text-warm-700 text-xs uppercase tracking-wide">
+                <p className="text-slate-600 dark:text-slate-300 text-xs uppercase tracking-wide">
                   You were invited by
                 </p>
                 <p className="text-white text-lg font-bold leading-tight">
                   {referrer.name || "Referral Partner"}
                 </p>
                 {referrer.email && (
-                  <p className="text-warm-700 text-sm">{referrer.email}</p>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm">{referrer.email}</p>
                 )}
               </div>
             </div>
             <div className="bg-warm-400/15 rounded-xl px-4 py-3">
-              <p className="text-warm-700 text-[11px] uppercase tracking-wide">
+              <p className="text-slate-600 dark:text-slate-300 text-[11px] uppercase tracking-wide">
                 Their referral code
               </p>
               <p className="text-white font-mono text-base">
@@ -7110,7 +7110,7 @@ function AffiliateTab({
         <div className="space-y-6">
           {/* Prominent Referral Code Display */}
           <div className="bg-gradient-to-r from-purple-500/20 to-blue-400/20 rounded-2xl p-6 border border-purple-500/30 text-center">
-            <h4 className="text-warm-700 text-sm font-medium mb-3 uppercase tracking-wide">
+            <h4 className="text-slate-600 dark:text-slate-300 text-sm font-medium mb-3 uppercase tracking-wide">
               Your Referral Code
             </h4>
             <div className="bg-warm-400/15 rounded-xl p-4 mb-4">
@@ -7157,7 +7157,7 @@ function AffiliateTab({
         {referredUsersList.length > 0 ? (
           <div className="space-y-4">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-warm-700 text-sm">
+              <p className="text-slate-600 dark:text-slate-300 text-sm">
                 You have referred {referredUsersList.length} user
                 {referredUsersList.length !== 1 ? "s" : ""}
               </p>
@@ -7171,19 +7171,19 @@ function AffiliateTab({
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-warm-400/20 hover:bg-warm-400/15 transition-all duration-300"
+                className="flex items-center justify-between p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-2xl border border-warm-400/20 hover:bg-warm-400/15 transition-all duration-300"
               >
                 <div className="flex items-center space-x-4">
                   <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-400 rounded-full flex items-center justify-center">
                     <User className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <p className="text-dark-900 font-semibold">
+                    <p className="text-slate-900 dark:text-white font-semibold">
                       {referredUser.name ||
                         referredUser.fullName ||
                         "Referred User"}
                     </p>
-                    <p className="text-warm-700 text-sm">
+                    <p className="text-slate-600 dark:text-slate-300 text-sm">
                       Joined{" "}
                       {referredUser.createdAt
                         ? new Date(referredUser.createdAt).toLocaleDateString(
@@ -7213,7 +7213,7 @@ function AffiliateTab({
                       0
                     ).toFixed(2)}
                   </p>
-                  <p className="text-warm-700 text-sm">
+                  <p className="text-slate-600 dark:text-slate-300 text-sm">
                     Level {referredUser.level || 1} ·{" "}
                     {referredUser.commissionRate
                       ? `${referredUser.commissionRate}%`
@@ -7234,7 +7234,7 @@ function AffiliateTab({
                   <p className="text-emerald-400 font-semibold">
                     Keep sharing your referral code!
                   </p>
-                  <p className="text-warm-700 text-sm">
+                  <p className="text-slate-600 dark:text-slate-300 text-sm">
                     Earn 10% commission on every successful referral
                   </p>
                 </div>
@@ -7252,7 +7252,7 @@ function AffiliateTab({
             <div className="w-16 h-16 bg-warm-400/15 rounded-full flex items-center justify-center mx-auto mb-4">
               <Users className="w-8 h-8 text-white/40" />
             </div>
-            <h4 className="text-warm-700 text-lg mb-2">No referrals yet</h4>
+            <h4 className="text-slate-600 dark:text-slate-300 text-lg mb-2">No referrals yet</h4>
             <p className="text-white/40 text-sm mb-6">
               Start sharing your referral link to earn rewards!
             </p>
@@ -7283,7 +7283,7 @@ function AffiliateTab({
             <h4 className="text-white font-semibold text-lg mb-2">
               1. Share Your Link
             </h4>
-            <p className="text-warm-700 text-sm">
+            <p className="text-slate-600 dark:text-slate-300 text-sm">
               Copy your unique referral link and share it with friends via
               social media, email, or messaging apps.
             </p>
@@ -7296,7 +7296,7 @@ function AffiliateTab({
             <h4 className="text-white font-semibold text-lg mb-2">
               2. Friends Sign Up
             </h4>
-            <p className="text-warm-700 text-sm">
+            <p className="text-slate-600 dark:text-slate-300 text-sm">
               When someone uses your link to register, they automatically become
               your referral and you both get benefits.
             </p>
@@ -7309,7 +7309,7 @@ function AffiliateTab({
             <h4 className="text-white font-semibold text-lg mb-2">
               3. Earn Rewards
             </h4>
-            <p className="text-warm-700 text-sm">
+            <p className="text-slate-600 dark:text-slate-300 text-sm">
               Get 10% commission on your referrals' staking rewards and track
               your earnings in real-time.
             </p>
@@ -7378,8 +7378,8 @@ function SettingsTab() {
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div className="glass-card p-4 sm:p-6">
-        <h2 className="text-xl sm:text-2xl font-bold text-dark-900">Account Settings</h2>
-        <p className="text-warm-700 text-sm mt-1">Manage your profile and security</p>
+        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">Account Settings</h2>
+        <p className="text-slate-600 dark:text-slate-300 text-sm mt-1">Manage your profile and security</p>
         {msg && (
           <div className={`mt-3 p-3 rounded-xl text-sm font-medium ${msg.type === "success" ? "bg-green-50 border border-green-300 text-green-700" : "bg-red-50 border border-red-300 text-red-700"}`}>
             {msg.type === "success" ? "✅ " : "❌ "}{msg.text}
@@ -7394,7 +7394,7 @@ function SettingsTab() {
             <div className="w-9 h-9 rounded-xl bg-warm-400/20 flex items-center justify-center flex-shrink-0">
               <User className="w-4 h-4 text-warm-600" />
             </div>
-            <div><div className="font-bold text-dark-900 text-sm">Profile</div><div className="text-xs text-warm-600">Update your display name</div></div>
+            <div><div className="font-bold text-slate-900 dark:text-white text-sm">Profile</div><div className="text-xs text-warm-600">Update your display name</div></div>
           </div>
           {/* Avatar row */}
           <div className="flex items-center gap-3">
@@ -7402,7 +7402,7 @@ function SettingsTab() {
               {user?.name?.charAt(0)?.toUpperCase() || "U"}
             </div>
             <div className="min-w-0">
-              <div className="font-bold text-dark-900 truncate">{user?.name || "—"}</div>
+              <div className="font-bold text-slate-900 dark:text-white truncate">{user?.name || "—"}</div>
               <div className="text-xs text-warm-600 truncate">{user?.email}</div>
             </div>
           </div>
@@ -7412,16 +7412,16 @@ function SettingsTab() {
             {editingName ? (
               <div className="space-y-2">
                 <input value={nameValue} onChange={e => setNameValue(e.target.value)}
-                  className="w-full px-3 py-2.5 rounded-xl border-2 border-amber-500 bg-amber-50 text-dark-900 outline-none text-sm" />
+                  className="w-full px-3 py-2.5 rounded-xl border-2 border-amber-500 bg-amber-50 text-slate-900 dark:text-white outline-none text-sm" />
                 <div className="flex gap-2">
                   <button onClick={saveName} disabled={isUpdating} className="flex-1 py-2 bg-amber-600 text-white rounded-xl text-xs font-semibold disabled:opacity-60">{isUpdating ? "Saving..." : "Save"}</button>
-                  <button onClick={() => { setEditingName(false); setNameValue(user?.name || ""); }} className="flex-1 py-2 border border-warm-400/30 text-warm-700 rounded-xl text-xs">Cancel</button>
+                  <button onClick={() => { setEditingName(false); setNameValue(user?.name || ""); }} className="flex-1 py-2 border border-warm-400/30 text-slate-600 dark:text-slate-300 rounded-xl text-xs">Cancel</button>
                 </div>
               </div>
             ) : (
               <div className="flex gap-2">
-                <div className="flex-1 px-3 py-2.5 rounded-xl bg-warm-400/10 border border-warm-400/20 text-dark-900 text-sm truncate">{user?.name || "Not set"}</div>
-                <button onClick={() => setEditingName(true)} className="px-3 py-2.5 bg-warm-400/15 hover:bg-warm-400/25 text-warm-700 rounded-xl text-xs font-semibold border border-warm-400/20 flex-shrink-0">Edit</button>
+                <div className="flex-1 px-3 py-2.5 rounded-xl bg-warm-400/10 border border-warm-400/20 text-slate-900 dark:text-white text-sm truncate">{user?.name || "Not set"}</div>
+                <button onClick={() => setEditingName(true)} className="px-3 py-2.5 bg-warm-400/15 hover:bg-warm-400/25 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-semibold border border-warm-400/20 flex-shrink-0">Edit</button>
               </div>
             )}
           </div>
@@ -7429,7 +7429,7 @@ function SettingsTab() {
           <div>
             <label className="block text-xs font-semibold text-warm-600 mb-1.5 uppercase tracking-wide">Email Address</label>
             <div className="flex gap-2 items-center">
-              <div className="flex-1 px-3 py-2.5 rounded-xl bg-warm-400/10 border border-warm-400/20 text-dark-900 text-sm truncate">{user?.email || "—"}</div>
+              <div className="flex-1 px-3 py-2.5 rounded-xl bg-warm-400/10 border border-warm-400/20 text-slate-900 dark:text-white text-sm truncate">{user?.email || "—"}</div>
               <span className="px-2 py-1 text-xs text-warm-600 bg-warm-400/10 rounded-lg border border-warm-400/20 flex-shrink-0">🔒 Fixed</span>
             </div>
             <p className="text-xs text-warm-500 mt-1">Contact support to change email.</p>
@@ -7442,13 +7442,13 @@ function SettingsTab() {
             <div className="w-9 h-9 rounded-xl bg-warm-400/20 flex items-center justify-center flex-shrink-0">
               <Shield className="w-4 h-4 text-warm-600" />
             </div>
-            <div><div className="font-bold text-dark-900 text-sm">Account Information</div><div className="text-xs text-warm-600">Your account details</div></div>
+            <div><div className="font-bold text-slate-900 dark:text-white text-sm">Account Information</div><div className="text-xs text-warm-600">Your account details</div></div>
           </div>
           <div className="space-y-2">
             {info.map(item => (
               <div key={item.label} className="flex justify-between items-center py-2 border-b border-warm-400/10 last:border-0 gap-2">
                 <span className="text-xs text-warm-600 font-medium flex-shrink-0">{item.label}</span>
-                <span className="text-xs text-dark-900 font-semibold text-right truncate">{item.value}</span>
+                <span className="text-xs text-slate-900 dark:text-white font-semibold text-right truncate">{item.value}</span>
               </div>
             ))}
           </div>
@@ -7460,12 +7460,12 @@ function SettingsTab() {
             <div className="w-9 h-9 rounded-xl bg-warm-400/20 flex items-center justify-center flex-shrink-0">
               <Lock className="w-4 h-4 text-warm-600" />
             </div>
-            <div><div className="font-bold text-dark-900 text-sm">Security</div><div className="text-xs text-warm-600">Change your password</div></div>
+            <div><div className="font-bold text-slate-900 dark:text-white text-sm">Security</div><div className="text-xs text-warm-600">Change your password</div></div>
           </div>
           {!showPw ? (
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 rounded-xl bg-warm-400/10">
-                <div><div className="text-sm font-semibold text-dark-900">Password</div><div className="text-xs text-warm-600">••••••••••</div></div>
+                <div><div className="text-sm font-semibold text-slate-900 dark:text-white">Password</div><div className="text-xs text-warm-600">••••••••••</div></div>
                 <button onClick={() => setShowPw(true)} className="px-3 py-1.5 bg-amber-600 text-white rounded-xl text-xs font-semibold hover:bg-amber-700 flex-shrink-0">Change</button>
               </div>
               <div className="p-3 rounded-xl bg-green-50 border border-green-200 text-xs text-green-700">🔐 Auth secured via Supabase JWT.</div>
@@ -7475,15 +7475,15 @@ function SettingsTab() {
               {pwMsg && <div className={`p-3 rounded-xl text-xs font-medium ${pwMsg.type === "success" ? "bg-green-50 border border-green-300 text-green-700" : "bg-red-50 border border-red-300 text-red-700"}`}>{pwMsg.text}</div>}
               <div>
                 <label className="block text-xs font-semibold text-warm-600 mb-1">New Password</label>
-                <input type="password" value={pw.newPass} onChange={e => setPw(p => ({ ...p, newPass: e.target.value }))} className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-50 text-dark-900 outline-none text-sm focus:ring-2 focus:ring-amber-500" />
+                <input type="password" value={pw.newPass} onChange={e => setPw(p => ({ ...p, newPass: e.target.value }))} className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-50 text-slate-900 dark:text-white outline-none text-sm focus:ring-2 focus:ring-amber-500" />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-warm-600 mb-1">Confirm Password</label>
-                <input type="password" value={pw.confirm} onChange={e => setPw(p => ({ ...p, confirm: e.target.value }))} className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-50 text-dark-900 outline-none text-sm focus:ring-2 focus:ring-amber-500" />
+                <input type="password" value={pw.confirm} onChange={e => setPw(p => ({ ...p, confirm: e.target.value }))} className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-50 text-slate-900 dark:text-white outline-none text-sm focus:ring-2 focus:ring-amber-500" />
               </div>
               <div className="flex gap-2">
                 <button onClick={changePw} disabled={pwLoading} className="flex-1 py-2.5 bg-amber-600 text-white rounded-xl text-sm font-semibold disabled:opacity-60">{pwLoading ? "Updating..." : "Update Password"}</button>
-                <button onClick={() => { setShowPw(false); setPw({ newPass: "", confirm: "" }); setPwMsg(null); }} className="flex-1 py-2.5 border border-warm-400/30 text-warm-700 rounded-xl text-sm">Cancel</button>
+                <button onClick={() => { setShowPw(false); setPw({ newPass: "", confirm: "" }); setPwMsg(null); }} className="flex-1 py-2.5 border border-warm-400/30 text-slate-600 dark:text-slate-300 rounded-xl text-sm">Cancel</button>
               </div>
             </div>
           )}
@@ -7495,10 +7495,10 @@ function SettingsTab() {
             <div className="w-9 h-9 rounded-xl bg-red-100 flex items-center justify-center flex-shrink-0">
               <AlertTriangle className="w-4 h-4 text-red-500" />
             </div>
-            <div><div className="font-bold text-dark-900 text-sm">Danger Zone</div><div className="text-xs text-warm-600">Irreversible actions</div></div>
+            <div><div className="font-bold text-slate-900 dark:text-white text-sm">Danger Zone</div><div className="text-xs text-warm-600">Irreversible actions</div></div>
           </div>
           <div className="flex items-center justify-between p-3 rounded-xl bg-white border border-red-200 gap-3">
-            <div className="min-w-0"><div className="text-sm font-semibold text-dark-900">Delete Account</div><div className="text-xs text-warm-600 truncate">Permanently delete all data</div></div>
+            <div className="min-w-0"><div className="text-sm font-semibold text-slate-900 dark:text-white">Delete Account</div><div className="text-xs text-warm-600 truncate">Permanently delete all data</div></div>
             <button className="px-3 py-1.5 bg-red-500 text-white rounded-xl text-xs font-semibold opacity-60 cursor-not-allowed flex-shrink-0">Contact Support</button>
           </div>
         </div>
@@ -7536,21 +7536,22 @@ function DepositPopup({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 overflow-y-auto"
       onClick={onClose}
     >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        className="glass-card-strong w-full max-w-md p-6"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="min-h-screen flex items-start justify-center p-4 py-8">
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.9, opacity: 0, y: 20 }}
+          className="w-full max-w-md p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-600"
+          onClick={(e) => e.stopPropagation()}
+        >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white">Deposit Funds</h2>
           <button
             onClick={onClose}
-            className="p-2 text-warm-700 hover:text-white transition-colors"
+            className="p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -7571,14 +7572,14 @@ function DepositPopup({
                   className={`p-3 rounded-xl border-2 transition-all duration-300 ${
                     selectedToken === token
                       ? "border-emerald-500 bg-emerald-500/10"
-                      : "border-warm-400/30 bg-white/5 hover:border-emerald-500/50"
+                      : "border-warm-400/30 bg-slate-800/80 dark:bg-slate-700/60 hover:border-emerald-500/50"
                   }`}
                 >
                   <div className="text-center">
                     <div className="text-2xl mb-1">
                       {token === "USDT" ? "💎" : "🪙"}
                     </div>
-                    <div className="text-dark-900 font-medium">{token}</div>
+                    <div className="text-slate-900 dark:text-white font-medium">{token}</div>
                   </div>
                 </button>
               ))}
@@ -7600,7 +7601,7 @@ function DepositPopup({
                 step="0.01"
                 min="0"
               />
-              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-warm-700">
+              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-600 dark:text-slate-300">
                 {selectedToken}
               </span>
             </div>
@@ -7624,26 +7625,26 @@ function DepositPopup({
                   className={`w-full flex items-center space-x-3 p-3 rounded-xl border-2 transition-all duration-300 ${
                     depositMethod === method.id
                       ? "border-emerald-500 bg-emerald-500/10"
-                      : "border-warm-400/30 bg-white/5 hover:border-emerald-500/50"
+                      : "border-warm-400/30 bg-slate-800/80 dark:bg-slate-700/60 hover:border-emerald-500/50"
                   }`}
                 >
                   <method.icon className="w-5 h-5 text-emerald-400" />
-                  <span className="text-dark-900 font-medium">{method.label}</span>
+                  <span className="text-slate-900 dark:text-white font-medium">{method.label}</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Monthly Returns */}
-          <div className="bg-white/5 rounded-xl p-4">
+          <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-4">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-dark-900 font-medium">Monthly Returns</p>
-                <p className="text-warm-700 text-sm">Variable staking rates</p>
+                <p className="text-slate-900 dark:text-white font-medium">Monthly Returns</p>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Variable staking rates</p>
               </div>
               <div className="text-right">
                 <p className="text-2xl font-bold text-emerald-400">6-10%</p>
-                <p className="text-warm-700 text-sm">Per month</p>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Per month</p>
               </div>
             </div>
           </div>
@@ -7680,7 +7681,8 @@ function DepositPopup({
           </div>
         </form>
       </motion.div>
-    </motion.div>
+        </div>
+</motion.div>
   );
 }
 
@@ -7760,7 +7762,7 @@ function WithdrawPopup({
           <h2 className="text-2xl font-bold text-white">Withdraw Funds</h2>
           <button
             onClick={onClose}
-            className="p-2 text-warm-700 hover:text-white transition-colors"
+            className="p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -7768,11 +7770,11 @@ function WithdrawPopup({
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Available Balance */}
-          <div className="bg-white/5 rounded-xl p-4">
+          <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-4">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-dark-900 font-medium">Available Balance</p>
-                <p className="text-warm-700 text-sm">Ready to withdraw</p>
+                <p className="text-slate-900 dark:text-white font-medium">Available Balance</p>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Ready to withdraw</p>
               </div>
               <div className="text-right">
                 <p className="text-xl font-bold text-emerald-400">
@@ -7798,11 +7800,11 @@ function WithdrawPopup({
                 min="0"
                 max={balance}
               />
-              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-warm-700">
+              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-600 dark:text-slate-300">
                 USDT
               </span>
             </div>
-            <div className="flex justify-between text-sm text-warm-700 mt-1">
+            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300 mt-1">
               <span>Max: {balance.toLocaleString()} USDT</span>
               <button
                 type="button"
@@ -7826,7 +7828,7 @@ function WithdrawPopup({
               placeholder="0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6"
               className="input-crypto w-full"
             />
-            <p className="text-warm-700 text-sm mt-1">
+            <p className="text-slate-600 dark:text-slate-300 text-sm mt-1">
               Make sure this is the correct address. Transactions cannot be
               reversed.
             </p>
@@ -7846,16 +7848,16 @@ function WithdrawPopup({
                   className={`w-full flex items-center justify-between p-3 rounded-xl border-2 transition-all duration-300 ${
                     withdrawMethod === method.id
                       ? "border-emerald-500 bg-emerald-500/10"
-                      : "border-warm-400/30 bg-white/5 hover:border-emerald-500/50"
+                      : "border-warm-400/30 bg-slate-800/80 dark:bg-slate-700/60 hover:border-emerald-500/50"
                   }`}
                 >
                   <div className="flex items-center space-x-3">
                     <method.icon className="w-5 h-5 text-emerald-400" />
                     <div className="text-left">
-                      <div className="text-dark-900 font-medium">
+                      <div className="text-slate-900 dark:text-white font-medium">
                         {method.label}
                       </div>
-                      <div className="text-warm-700 text-sm">{method.time}</div>
+                      <div className="text-slate-600 dark:text-slate-300 text-sm">{method.time}</div>
                     </div>
                   </div>
                   <div className="text-right">
@@ -7870,17 +7872,17 @@ function WithdrawPopup({
 
           {/* Fee Breakdown */}
           {amount && (
-            <div className="bg-white/5 rounded-xl p-4">
+            <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-4">
               <h4 className="text-white font-medium mb-3">Fee Breakdown</h4>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-warm-700">Withdrawal Amount:</span>
+                  <span className="text-slate-600 dark:text-slate-300">Withdrawal Amount:</span>
                   <span className="text-white">
                     {amountNum.toLocaleString()} USDT
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-warm-700">
+                  <span className="text-slate-600 dark:text-slate-300">
                     Network Fee ({selectedMethod?.fee}):
                   </span>
                   <span className="text-red-400">-{fee.toFixed(4)} USDT</span>
@@ -7977,7 +7979,7 @@ function TransactionPopup({
       case "failed":
         return <XCircle className="w-6 h-6 text-red-400" />;
       default:
-        return <AlertCircle className="w-6 h-6 text-warm-700" />;
+        return <AlertCircle className="w-6 h-6 text-slate-600 dark:text-slate-300" />;
     }
   };
 
@@ -7990,7 +7992,7 @@ function TransactionPopup({
       case "failed":
         return "text-red-400";
       default:
-        return "text-warm-700";
+        return "text-slate-600 dark:text-slate-300";
     }
   };
 
@@ -8013,7 +8015,7 @@ function TransactionPopup({
           <h2 className="text-2xl font-bold text-white">Transaction Details</h2>
           <button
             onClick={onClose}
-            className="p-2 text-warm-700 hover:text-white transition-colors"
+            className="p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -8044,7 +8046,7 @@ function TransactionPopup({
                 <h3 className="text-xl font-semibold text-white capitalize">
                   {transaction.type}
                 </h3>
-                <p className="text-warm-700">{transaction.date}</p>
+                <p className="text-slate-600 dark:text-slate-300">{transaction.date}</p>
               </div>
             </div>
             <div className="flex items-center space-x-2">
@@ -8058,9 +8060,9 @@ function TransactionPopup({
           </div>
 
           {/* Amount */}
-          <div className="bg-white/5 rounded-xl p-4">
+          <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-4">
             <div className="text-center">
-              <p className="text-warm-700 text-sm mb-2">Amount</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm mb-2">Amount</p>
               <p
                 className={`text-3xl font-bold ${
                   transaction.type === "deposit"
@@ -8074,7 +8076,7 @@ function TransactionPopup({
                 {transaction.amount.toLocaleString()} USDT
               </p>
               {transaction.fee && transaction.fee > 0 && (
-                <p className="text-warm-700 text-sm mt-2">
+                <p className="text-slate-600 dark:text-slate-300 text-sm mt-2">
                   Fee: {transaction.fee} USDT
                 </p>
               )}
@@ -8095,7 +8097,7 @@ function TransactionPopup({
               />
               <button
                 onClick={copyTxHash}
-                className="p-2 text-warm-700 hover:text-white transition-colors"
+                className="p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors"
               >
                 {copied ? (
                   <Check className="w-4 h-4 text-emerald-400" />
@@ -8104,22 +8106,22 @@ function TransactionPopup({
                 )}
               </button>
             </div>
-            <p className="text-warm-700 text-sm mt-1">
+            <p className="text-slate-600 dark:text-slate-300 text-sm mt-1">
               Click to copy transaction hash
             </p>
           </div>
 
           {/* Additional Info */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white/5 rounded-xl p-4">
-              <p className="text-warm-700 text-sm mb-1">Type</p>
+            <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-4">
+              <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">Type</p>
               <p className="text-white font-medium capitalize">
                 {transaction.type}
               </p>
             </div>
-            <div className="bg-white/5 rounded-xl p-4">
-              <p className="text-warm-700 text-sm mb-1">Date</p>
-              <p className="text-dark-900 font-medium">{transaction.date}</p>
+            <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-4">
+              <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">Date</p>
+              <p className="text-slate-900 dark:text-white font-medium">{transaction.date}</p>
             </div>
           </div>
 
@@ -8169,35 +8171,35 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
     <div className="space-y-6">
       {/* Header */}
       <div className="glass-card p-6">
-        <h2 className="text-2xl font-bold text-dark-900 mb-1">Staking Calculator</h2>
-        <p className="text-warm-700">Simulate your potential returns before you stake</p>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Staking Calculator</h2>
+        <p className="text-slate-600 dark:text-slate-300">Simulate your potential returns before you stake</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Input Panel */}
         <div className="glass-card p-6 space-y-6">
-          <h3 className="text-lg font-semibold text-dark-900 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
             <span className="w-8 h-8 bg-warm-400/20 rounded-lg flex items-center justify-center text-warm-600">⚙</span>
             Configure Your Stake
           </h3>
 
           {/* Amount */}
           <div>
-            <label className="block text-sm font-medium text-warm-700 mb-2">Stake Amount (USDT)</label>
+            <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">Stake Amount (USDT)</label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-warm-600 font-semibold">$</span>
               <input
                 type="number"
                 value={amount}
                 onChange={e => setAmount(e.target.value)}
-                className="w-full pl-8 pr-4 py-3 rounded-xl border border-warm-400/30 bg-cream-100 text-dark-900 focus:ring-2 focus:ring-warm-400 focus:border-transparent outline-none text-lg font-semibold"
+                className="w-full pl-8 pr-4 py-3 rounded-xl border border-warm-400/30 bg-cream-100 text-slate-900 dark:text-white focus:ring-2 focus:ring-warm-400 focus:border-transparent outline-none text-lg font-semibold"
                 placeholder="1000"
               />
             </div>
             <div className="flex gap-2 mt-2">
               {[100, 500, 1000, 5000, 25000].map(v => (
                 <button key={v} onClick={() => setAmount(String(v))}
-                  className="px-2 py-1 text-xs rounded-lg bg-warm-400/15 text-warm-700 hover:bg-warm-400/30 transition-all font-medium">
+                  className="px-2 py-1 text-xs rounded-lg bg-warm-400/15 text-slate-600 dark:text-slate-300 hover:bg-warm-400/30 transition-all font-medium">
                   ${v >= 1000 ? `${v/1000}K` : v}
                 </button>
               ))}
@@ -8206,7 +8208,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
 
           {/* Duration */}
           <div>
-            <label className="block text-sm font-medium text-warm-700 mb-2">Lock Duration</label>
+            <label className="block text-sm font-medium text-slate-600 dark:text-slate-300 mb-2">Lock Duration</label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               {[
                 { days: "30", label: "1 Month", rate: "5% APM" },
@@ -8218,7 +8220,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
                   className={`p-3 rounded-xl border-2 text-center transition-all duration-200 ${
                     duration === opt.days
                       ? "border-amber-600 bg-amber-600 text-white shadow-md shadow-amber-600/30 scale-[1.03]"
-                      : "border-warm-400/30 bg-white text-warm-700 hover:border-amber-500/60 hover:bg-amber-50"
+                      : "border-warm-400/30 bg-white text-slate-600 dark:text-slate-300 hover:border-amber-500/60 hover:bg-amber-50"
                   }`}>
                   <div className="font-bold text-sm">{opt.label}</div>
                   <div className="text-xs text-warm-600">{opt.rate}</div>
@@ -8230,8 +8232,8 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
           {/* Compound Toggle */}
           <div className="flex items-center justify-between p-4 rounded-xl bg-warm-400/10 border border-warm-400/20">
             <div>
-              <div className="font-semibold text-dark-900 text-sm">Auto-Compound Rewards</div>
-              <div className="text-xs text-warm-700 mt-0.5">Reinvest earnings for exponential growth</div>
+              <div className="font-semibold text-slate-900 dark:text-white text-sm">Auto-Compound Rewards</div>
+              <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">Reinvest earnings for exponential growth</div>
             </div>
             <button onClick={() => setCompoundEnabled(!compoundEnabled)}
               className={`relative w-12 h-6 rounded-full transition-all duration-300 ring-2 ${
@@ -8268,18 +8270,18 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
             ].map(item => (
               <div key={item.label} className="glass-card p-4 text-center">
                 <div className="text-xs text-warm-600 mb-1">{item.label}</div>
-                <div className="text-xl font-bold text-dark-900">{item.value}</div>
-                <div className="text-xs text-warm-700">{item.sub}</div>
+                <div className="text-xl font-bold text-slate-900 dark:text-white">{item.value}</div>
+                <div className="text-xs text-slate-600 dark:text-slate-300">{item.sub}</div>
               </div>
             ))}
           </div>
 
           {/* Projection Bar */}
           <div className="glass-card p-5">
-            <div className="text-sm font-semibold text-dark-900 mb-3">Earnings Breakdown</div>
+            <div className="text-sm font-semibold text-slate-900 dark:text-white mb-3">Earnings Breakdown</div>
             <div className="space-y-3">
               <div>
-                <div className="flex justify-between text-xs text-warm-700 mb-1">
+                <div className="flex justify-between text-xs text-slate-600 dark:text-slate-300 mb-1">
                   <span>Principal</span><span>${num.toLocaleString()}</span>
                 </div>
                 <div className="h-2 bg-warm-400/20 rounded-full overflow-hidden">
@@ -8287,7 +8289,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
                 </div>
               </div>
               <div>
-                <div className="flex justify-between text-xs text-warm-700 mb-1">
+                <div className="flex justify-between text-xs text-slate-600 dark:text-slate-300 mb-1">
                   <span>Earnings</span><span>${earning.toFixed(2)}</span>
                 </div>
                 <div className="h-2 bg-green-500/20 rounded-full overflow-hidden">
@@ -8300,7 +8302,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
           <div className="glass-card p-4 border border-amber-400/30 bg-amber-50/50">
             <div className="flex gap-2 items-start">
               <span className="text-amber-500 text-lg mt-0.5">⚠</span>
-              <p className="text-xs text-warm-700">This is a projection based on current rates. Actual returns may vary. Rates are locked at time of staking.</p>
+              <p className="text-xs text-slate-600 dark:text-slate-300">This is a projection based on current rates. Actual returns may vary. Rates are locked at time of staking.</p>
             </div>
           </div>
         </div>
@@ -8308,7 +8310,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
 
       {/* Monthly Projection Table */}
       <div className="glass-card p-6">
-        <h3 className="text-lg font-semibold text-dark-900 mb-4">Month-by-Month Projection</h3>
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Month-by-Month Projection</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -8327,10 +8329,10 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
                 const earn = bal - num;
                 return (
                   <tr key={m} className="border-t border-warm-400/10">
-                    <td className="py-3 text-dark-900 font-medium">Month {m}</td>
-                    <td className="py-3 text-dark-900">${bal.toFixed(2)}</td>
+                    <td className="py-3 text-slate-900 dark:text-white font-medium">Month {m}</td>
+                    <td className="py-3 text-slate-900 dark:text-white">${bal.toFixed(2)}</td>
                     <td className="py-3 text-green-600 font-medium">+${earn.toFixed(2)}</td>
-                    <td className="py-3 text-dark-900">${(num + earn).toFixed(2)}</td>
+                    <td className="py-3 text-slate-900 dark:text-white">${(num + earn).toFixed(2)}</td>
                     <td className="py-3 text-warm-600">{num > 0 ? ((earn / num) * 100).toFixed(2) : "0"}%</td>
                   </tr>
                 );
@@ -8442,8 +8444,8 @@ function StakingPlansTab() {
   return (
     <div className="space-y-6">
       <div className="glass-card p-6">
-        <h2 className="text-2xl font-bold text-dark-900 mb-1">Staking Plans & Tiers</h2>
-        <p className="text-warm-700">Higher stakes unlock better rates and exclusive benefits</p>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Staking Plans & Tiers</h2>
+        <p className="text-slate-600 dark:text-slate-300">Higher stakes unlock better rates and exclusive benefits</p>
       </div>
 
       {/* Tier Comparison Grid */}
@@ -8465,7 +8467,7 @@ function StakingPlansTab() {
                 {plan.icon}
               </div>
               <div>
-                <div className="text-xl font-bold text-dark-900">{plan.name}</div>
+                <div className="text-xl font-bold text-slate-900 dark:text-white">{plan.name}</div>
                 <div className="text-xs text-warm-600">${plan.min.toLocaleString()}–{plan.max === Infinity ? "∞" : `$${plan.max.toLocaleString()}`}</div>
               </div>
             </div>
@@ -8477,14 +8479,14 @@ function StakingPlansTab() {
             </div>
 
             {/* Duration */}
-            <div className="text-center text-sm text-warm-700 mb-4">
+            <div className="text-center text-sm text-slate-600 dark:text-slate-300 mb-4">
               🔒 {plan.duration} lock period
             </div>
 
             {/* Features */}
             <ul className="space-y-2">
               {plan.features.map(f => (
-                <li key={f} className="flex items-center gap-2 text-sm text-dark-900">
+                <li key={f} className="flex items-center gap-2 text-sm text-slate-900 dark:text-white">
                   <span className="w-4 h-4 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs flex-shrink-0">✓</span>
                   {f}
                 </li>
@@ -8501,7 +8503,7 @@ function StakingPlansTab() {
 
       {/* Rate Comparison Table */}
       <div className="glass-card p-6">
-        <h3 className="text-lg font-semibold text-dark-900 mb-4">Rate Comparison</h3>
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Rate Comparison</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -8526,9 +8528,9 @@ function StakingPlansTab() {
                 ["Referral Bonus", "Standard", "Enhanced", "Enhanced+", "Maximum"],
               ].map(([feat, ...vals]) => (
                 <tr key={feat} className="border-t border-warm-400/10">
-                  <td className="py-3 font-medium text-dark-900">{feat}</td>
+                  <td className="py-3 font-medium text-slate-900 dark:text-white">{feat}</td>
                   {vals.map((v, i) => (
-                    <td key={i} className="py-3 text-center text-warm-700">{v}</td>
+                    <td key={i} className="py-3 text-center text-slate-600 dark:text-slate-300">{v}</td>
                   ))}
                 </tr>
               ))}
@@ -8560,8 +8562,8 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
   return (
     <div className="space-y-6">
       <div className="glass-card p-6">
-        <h2 className="text-2xl font-bold text-dark-900 mb-1">Auto-Compound Settings</h2>
-        <p className="text-warm-700">Automatically reinvest your rewards to maximize exponential growth</p>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Auto-Compound Settings</h2>
+        <p className="text-slate-600 dark:text-slate-300">Automatically reinvest your rewards to maximize exponential growth</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -8575,8 +8577,8 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
                   <RefreshCw className="w-5 h-5 text-warm-600" />
                 </div>
                 <div>
-                  <div className="font-bold text-dark-900">Auto-Compound</div>
-                  <div className="text-sm text-warm-700">Reinvest rewards automatically</div>
+                  <div className="font-bold text-slate-900 dark:text-white">Auto-Compound</div>
+                  <div className="text-sm text-slate-600 dark:text-slate-300">Reinvest rewards automatically</div>
                 </div>
               </div>
               <button onClick={() => setGlobalEnabled(!globalEnabled)}
@@ -8588,7 +8590,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
                 <span className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow-md transition-all duration-300 ${globalEnabled ? "left-7" : "left-0.5"}`} />
               </button>
             </div>
-            <div className={`p-3 rounded-xl text-sm ${globalEnabled ? "bg-green-50 border border-green-200 text-green-700" : "bg-warm-400/10 border border-warm-400/20 text-warm-700"}`}>
+            <div className={`p-3 rounded-xl text-sm ${globalEnabled ? "bg-green-50 border border-green-200 text-green-700" : "bg-warm-400/10 border border-warm-400/20 text-slate-600 dark:text-slate-300"}`}>
               {globalEnabled ? "✓ Auto-compound is ACTIVE. Your rewards will be reinvested automatically." : "○ Auto-compound is OFF. Enable to start growing faster."}
             </div>
           </div>
@@ -8597,7 +8599,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Reinvest % */}
             <div className="glass-card p-5">
-              <div className="font-semibold text-dark-900 mb-3">Reinvestment Rate</div>
+              <div className="font-semibold text-slate-900 dark:text-white mb-3">Reinvestment Rate</div>
               <div className="text-3xl font-black text-warm-600 mb-2">{reinvestPercent}%</div>
               <input type="range" min="10" max="100" step="10" value={reinvestPercent}
                 onChange={e => setReinvestPercent(Number(e.target.value))}
@@ -8605,17 +8607,17 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
               <div className="flex justify-between text-xs text-warm-600 mt-1">
                 <span>10%</span><span>50%</span><span>100%</span>
               </div>
-              <p className="text-xs text-warm-700 mt-2">{100 - reinvestPercent}% will be sent to your available balance.</p>
+              <p className="text-xs text-slate-600 dark:text-slate-300 mt-2">{100 - reinvestPercent}% will be sent to your available balance.</p>
             </div>
 
             {/* Frequency */}
             <div className="glass-card p-5">
-              <div className="font-semibold text-dark-900 mb-3">Compound Frequency</div>
+              <div className="font-semibold text-slate-900 dark:text-white mb-3">Compound Frequency</div>
               <div className="space-y-2">
                 {["daily", "weekly", "monthly"].map(f => (
                   <button key={f} onClick={() => setFrequency(f)}
                     className={`w-full py-2.5 px-4 rounded-xl text-sm font-medium text-left transition-all ${
-                      frequency === f ? "bg-warm-400/25 border border-warm-500 text-dark-900" : "bg-warm-400/10 border border-warm-400/10 text-warm-700 hover:bg-warm-400/20"
+                      frequency === f ? "bg-warm-400/25 border border-warm-500 text-slate-900 dark:text-white" : "bg-warm-400/10 border border-warm-400/10 text-slate-600 dark:text-slate-300 hover:bg-warm-400/20"
                     }`}>
                     <span className="capitalize">{f}</span>
                     {f === "monthly" && <span className="ml-2 text-xs text-warm-600">(default)</span>}
@@ -8627,21 +8629,21 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
 
             {/* Minimum Threshold */}
             <div className="glass-card p-5">
-              <div className="font-semibold text-dark-900 mb-1">Minimum Threshold</div>
-              <p className="text-xs text-warm-700 mb-3">Only compound when rewards exceed this amount</p>
+              <div className="font-semibold text-slate-900 dark:text-white mb-1">Minimum Threshold</div>
+              <p className="text-xs text-slate-600 dark:text-slate-300 mb-3">Only compound when rewards exceed this amount</p>
               <div className="relative">
                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-warm-600 font-semibold">$</span>
                 <input type="number" value={threshold} onChange={e => setThreshold(e.target.value)}
-                  className="w-full pl-8 pr-4 py-3 rounded-xl border border-warm-400/30 bg-cream-100 text-dark-900 outline-none focus:ring-2 focus:ring-warm-400" />
+                  className="w-full pl-8 pr-4 py-3 rounded-xl border border-warm-400/30 bg-cream-100 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-warm-400" />
               </div>
             </div>
 
             {/* Next Compound */}
             <div className="glass-card p-5">
-              <div className="font-semibold text-dark-900 mb-3">Next Compound Event</div>
+              <div className="font-semibold text-slate-900 dark:text-white mb-3">Next Compound Event</div>
               <div className="text-2xl font-bold text-warm-600">—</div>
-              <div className="text-sm text-warm-700 mt-1">No active stakes</div>
-              <div className="mt-3 p-2 rounded-lg bg-warm-400/10 text-xs text-warm-700">
+              <div className="text-sm text-slate-600 dark:text-slate-300 mt-1">No active stakes</div>
+              <div className="mt-3 p-2 rounded-lg bg-warm-400/10 text-xs text-slate-600 dark:text-slate-300">
                 Stake funds to activate compounding schedule
               </div>
             </div>
@@ -8650,15 +8652,15 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
 
         {/* Compound vs Simple Projection */}
         <div className="glass-card p-6">
-          <h3 className="font-semibold text-dark-900 mb-4">📈 Compound vs Simple</h3>
-          <p className="text-xs text-warm-700 mb-4">Based on $1,000 principal at 5%/month</p>
+          <h3 className="font-semibold text-slate-900 dark:text-white mb-4">📈 Compound vs Simple</h3>
+          <p className="text-xs text-slate-600 dark:text-slate-300 mb-4">Based on $1,000 principal at 5%/month</p>
           <div className="space-y-3">
             {projections.map(p => (
               <div key={p.months} className="p-3 rounded-xl bg-warm-400/10">
                 <div className="text-xs font-semibold text-warm-600 mb-2">{p.months} Month{p.months > 1 ? "s" : ""}</div>
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-dark-900">Simple</span>
-                  <span className="font-medium text-dark-900">+${p.simple.toFixed(1)}</span>
+                  <span className="text-slate-900 dark:text-white">Simple</span>
+                  <span className="font-medium text-slate-900 dark:text-white">+${p.simple.toFixed(1)}</span>
                 </div>
                 <div className="h-1.5 bg-warm-400/20 rounded-full mb-2">
                   <div className="h-full bg-warm-400 rounded-full" style={{ width: `${Math.min(p.simple / 2.2, 100)}%` }} />
@@ -8681,7 +8683,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
 
       {/* Save Button (placeholder) */}
       <div className="glass-card p-4 flex items-center justify-between">
-        <div className="text-sm text-warm-700">Settings will apply to your next staking cycle</div>
+        <div className="text-sm text-slate-600 dark:text-slate-300">Settings will apply to your next staking cycle</div>
         <button className="px-6 py-2.5 bg-gradient-to-r from-warm-500 to-warm-600 text-white rounded-xl font-semibold text-sm opacity-70 cursor-not-allowed">
           Save Settings (Coming Soon)
         </button>
@@ -8711,8 +8713,8 @@ function AddressBookTab() {
     <div className="space-y-6">
       <div className="glass-card p-6 flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-dark-900 mb-1">Address Book</h2>
-          <p className="text-warm-700">Save and manage trusted withdrawal addresses</p>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Address Book</h2>
+          <p className="text-slate-600 dark:text-slate-300">Save and manage trusted withdrawal addresses</p>
         </div>
         <button onClick={() => setShowAddForm(!showAddForm)}
           className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-warm-500 to-warm-600 text-white rounded-xl font-semibold text-sm hover:opacity-90 transition-all">
@@ -8724,18 +8726,18 @@ function AddressBookTab() {
       {/* Add Form */}
       {showAddForm && (
         <div className="glass-card p-6 border-2 border-warm-400/40">
-          <h3 className="font-semibold text-dark-900 mb-4">Add New Address</h3>
+          <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Add New Address</h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
             <div>
               <label className="block text-xs text-warm-600 mb-1.5 font-medium">Label</label>
               <input value={newLabel} onChange={e => setNewLabel(e.target.value)}
                 placeholder="e.g. My Binance Wallet"
-                className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-100 text-dark-900 outline-none focus:ring-2 focus:ring-warm-400 text-sm" />
+                className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-100 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-warm-400 text-sm" />
             </div>
             <div>
               <label className="block text-xs text-warm-600 mb-1.5 font-medium">Network</label>
               <select value={newNetwork} onChange={e => setNewNetwork(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-100 text-dark-900 outline-none text-sm">
+                className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-100 text-slate-900 dark:text-white outline-none text-sm">
                 {networks.map(n => <option key={n}>{n}</option>)}
               </select>
             </div>
@@ -8743,7 +8745,7 @@ function AddressBookTab() {
               <label className="block text-xs text-warm-600 mb-1.5 font-medium">Wallet Address</label>
               <input value={newAddress} onChange={e => setNewAddress(e.target.value)}
                 placeholder="0x..."
-                className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-100 text-dark-900 outline-none focus:ring-2 focus:ring-warm-400 text-sm" />
+                className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-100 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-warm-400 text-sm" />
             </div>
           </div>
           <div className="flex gap-3">
@@ -8755,7 +8757,7 @@ function AddressBookTab() {
             }} className="px-5 py-2 bg-gradient-to-r from-warm-500 to-warm-600 text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-all">
               Save Address
             </button>
-            <button onClick={() => setShowAddForm(false)} className="px-5 py-2 border border-warm-400/30 text-warm-700 rounded-xl text-sm hover:bg-warm-400/10 transition-all">
+            <button onClick={() => setShowAddForm(false)} className="px-5 py-2 border border-warm-400/30 text-slate-600 dark:text-slate-300 rounded-xl text-sm hover:bg-warm-400/10 transition-all">
               Cancel
             </button>
           </div>
@@ -8766,8 +8768,8 @@ function AddressBookTab() {
       <div className="glass-card p-4 border border-amber-300/50 bg-amber-50/50 flex gap-3">
         <Shield className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
         <div className="text-sm">
-          <strong className="text-dark-900">Security Tip:</strong>
-          <span className="text-warm-700"> Only save addresses you fully trust. Always verify the first 4 and last 4 characters before withdrawing.</span>
+          <strong className="text-slate-900 dark:text-white">Security Tip:</strong>
+          <span className="text-slate-600 dark:text-slate-300"> Only save addresses you fully trust. Always verify the first 4 and last 4 characters before withdrawing.</span>
         </div>
       </div>
 
@@ -8776,8 +8778,8 @@ function AddressBookTab() {
         {addresses.length === 0 ? (
           <div className="glass-card p-12 text-center">
             <div className="text-4xl mb-3">📋</div>
-            <div className="text-lg font-semibold text-dark-900 mb-1">No addresses saved</div>
-            <div className="text-warm-700 text-sm">Add trusted wallets for faster withdrawals</div>
+            <div className="text-lg font-semibold text-slate-900 dark:text-white mb-1">No addresses saved</div>
+            <div className="text-slate-600 dark:text-slate-300 text-sm">Add trusted wallets for faster withdrawals</div>
           </div>
         ) : (
           addresses.map(addr => (
@@ -8788,9 +8790,9 @@ function AddressBookTab() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-dark-900">{addr.label}</span>
+                    <span className="font-semibold text-slate-900 dark:text-white">{addr.label}</span>
                     {addr.verified && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">✓ Verified</span>}
-                    <span className="text-xs bg-warm-400/15 text-warm-700 px-2 py-0.5 rounded-full">{addr.network}</span>
+                    <span className="text-xs bg-warm-400/15 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-full">{addr.network}</span>
                   </div>
                   <div className="text-sm text-warm-600 font-mono mt-0.5">{maskAddress(addr.address)}</div>
                   <div className="text-xs text-warm-500 mt-0.5">Last used: {addr.lastUsed}</div>
@@ -8818,7 +8820,7 @@ function AddressBookTab() {
           { label: "Networks", value: [...new Set(addresses.map(a => a.network))].length },
         ].map(s => (
           <div key={s.label} className="glass-card p-4 text-center">
-            <div className="text-2xl font-bold text-dark-900">{s.value}</div>
+            <div className="text-2xl font-bold text-slate-900 dark:text-white">{s.value}</div>
             <div className="text-xs text-warm-600">{s.label}</div>
           </div>
         ))}
@@ -8862,8 +8864,8 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
       {/* Header */}
       <div className="glass-card p-6 flex items-start justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-dark-900 mb-1">Portfolio Analytics</h2>
-          <p className="text-warm-700">Deep insights into your investment performance</p>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Portfolio Analytics</h2>
+          <p className="text-slate-600 dark:text-slate-300">Deep insights into your investment performance</p>
         </div>
         <div className="flex gap-2">
           {["7d", "30d", "90d", "1y", "All"].map(p => (
@@ -8871,7 +8873,7 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
                 period === p
                   ? "bg-amber-600 text-white shadow-sm shadow-amber-600/30 scale-105"
-                  : "bg-white border border-warm-400/30 text-warm-700 hover:border-amber-500/50 hover:bg-amber-50"
+                  : "bg-white border border-warm-400/30 text-slate-600 dark:text-slate-300 hover:border-amber-500/50 hover:bg-amber-50"
               }`}>
               {p}
             </button>
@@ -8884,7 +8886,7 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
         {performanceMetrics.map(m => (
           <div key={m.label} className="glass-card p-4">
             <div className="text-xl mb-2">{m.icon}</div>
-            <div className="text-lg font-bold text-dark-900">{m.value}</div>
+            <div className="text-lg font-bold text-slate-900 dark:text-white">{m.value}</div>
             <div className="text-xs text-warm-600 mt-0.5">{m.label}</div>
             {m.change && (
               <div className={`text-xs font-medium mt-1 ${m.positive ? "text-green-600" : "text-red-500"}`}>
@@ -8898,19 +8900,19 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Allocation Chart */}
         <div className="glass-card p-6">
-          <h3 className="font-semibold text-dark-900 mb-4">Portfolio Allocation</h3>
+          <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Portfolio Allocation</h3>
           {allocationData.every(d => d.value === 0) ? (
             <div className="text-center py-8">
               <div className="text-4xl mb-2">📊</div>
-              <div className="text-sm text-warm-700">No funds yet</div>
+              <div className="text-sm text-slate-600 dark:text-slate-300">No funds yet</div>
             </div>
           ) : (
             <div className="space-y-3">
               {allocationData.map(d => (
                 <div key={d.name}>
                   <div className="flex justify-between text-sm mb-1">
-                    <span className="font-medium text-dark-900">{d.name}</span>
-                    <span className="text-warm-700">${d.value.toFixed(2)} ({((d.value / totalAlloc) * 100).toFixed(1)}%)</span>
+                    <span className="font-medium text-slate-900 dark:text-white">{d.name}</span>
+                    <span className="text-slate-600 dark:text-slate-300">${d.value.toFixed(2)} ({((d.value / totalAlloc) * 100).toFixed(1)}%)</span>
                   </div>
                   <div className="h-3 bg-warm-400/20 rounded-full overflow-hidden">
                     <div className="h-full rounded-full transition-all duration-500"
@@ -8924,7 +8926,7 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
 
         {/* Performance Scores */}
         <div className="glass-card p-6">
-          <h3 className="font-semibold text-dark-900 mb-4">Performance Score</h3>
+          <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Performance Score</h3>
           <div className="space-y-4">
             {[
               { label: "Portfolio Health", score: deposited > 0 ? Math.min(95, Math.round(70 + (earned / Math.max(deposited, 1)) * 100)) : 0, color: "#C4966A" },
@@ -8934,7 +8936,7 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
             ].map(item => (
               <div key={item.label}>
                 <div className="flex justify-between text-sm mb-1.5">
-                  <span className="text-dark-900 font-medium">{item.label}</span>
+                  <span className="text-slate-900 dark:text-white font-medium">{item.label}</span>
                   <span className="font-bold" style={{ color: item.color }}>{item.score}/100</span>
                 </div>
                 <div className="h-2 bg-warm-400/20 rounded-full overflow-hidden">
@@ -8948,7 +8950,7 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
 
         {/* Activity Heatmap */}
         <div className="glass-card p-6">
-          <h3 className="font-semibold text-dark-900 mb-4">Monthly Summary</h3>
+          <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Monthly Summary</h3>
           <div className="space-y-3">
             {[
               { label: "Stake Events", value: walletData?.wallet?.stakes?.length ?? 0 },
@@ -8957,8 +8959,8 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
               { label: "Avg. Stake Size", value: staked > 0 ? `$${staked.toFixed(0)}` : "$0" },
             ].map(s => (
               <div key={s.label} className="flex justify-between items-center p-3 rounded-xl bg-warm-400/10">
-                <span className="text-sm text-warm-700">{s.label}</span>
-                <span className="font-bold text-dark-900">{s.value}</span>
+                <span className="text-sm text-slate-600 dark:text-slate-300">{s.label}</span>
+                <span className="font-bold text-slate-900 dark:text-white">{s.value}</span>
               </div>
             ))}
           </div>
@@ -8967,7 +8969,7 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
 
       {/* Insights */}
       <div className="glass-card p-6">
-        <h3 className="font-semibold text-dark-900 mb-4">📊 Portfolio Insights</h3>
+        <h3 className="font-semibold text-slate-900 dark:text-white mb-4">📊 Portfolio Insights</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
             { icon: "🎯", title: "Optimization Tip", desc: bal < 1000 ? `Add $${(1000 - bal).toFixed(2)} to reach Silver tier (8%/month).` : bal < 5000 ? `Add $${(5000 - bal).toFixed(2)} to reach Gold tier (12%/month).` : "You're at a great tier! Keep compounding.", color: "bg-blue-50 border-blue-200" },
@@ -8979,8 +8981,8 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
           ].map(ins => (
             <div key={ins.title} className={`p-4 rounded-xl border ${ins.color}`}>
               <div className="text-xl mb-2">{ins.icon}</div>
-              <div className="font-semibold text-dark-900 text-sm mb-1">{ins.title}</div>
-              <div className="text-xs text-warm-700 leading-relaxed">{ins.desc}</div>
+              <div className="font-semibold text-slate-900 dark:text-white text-sm mb-1">{ins.title}</div>
+              <div className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">{ins.desc}</div>
             </div>
           ))}
         </div>
@@ -8988,6 +8990,9 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
     </div>
   );
 }
+
+
+
 
 
 
