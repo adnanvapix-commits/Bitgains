@@ -119,39 +119,6 @@
   --sidebar-ring:               #C4966A;
 }
 
-.dark {
-  --background:           #FDFAF6;
-  --foreground:           #3D2B1F;
-  --card:                 #F8F5F0;
-  --card-foreground:      #3D2B1F;
-  --popover:              #F8F5F0;
-  --popover-foreground:   #3D2B1F;
-  --primary:              #C4966A;
-  --primary-foreground:   #FDFAF6;
-  --secondary:            #F0EBE3;
-  --secondary-foreground: #3D2B1F;
-  --muted:                #EDE5D8;
-  --muted-foreground:     #7C5C3E;
-  --accent:               #C4966A;
-  --accent-foreground:    #FDFAF6;
-  --destructive:          #B94A48;
-  --border:               #E2D9CE;
-  --input:                #F8F5F0;
-  --ring:                 #C4966A;
-  --chart-1: #C4966A;
-  --chart-2: #8B5E3C;
-  --chart-3: #B8700A;
-  --chart-4: #7C5C3E;
-  --chart-5: #5C4030;
-  --sidebar:                    #F0EBE3;
-  --sidebar-foreground:         #3D2B1F;
-  --sidebar-primary:            #C4966A;
-  --sidebar-primary-foreground: #FDFAF6;
-  --sidebar-accent:             #EDE5D8;
-  --sidebar-accent-foreground:  #3D2B1F;
-  --sidebar-border:             #E2D9CE;
-  --sidebar-ring:               #C4966A;
-}
 
 @layer base {
   * { @apply border-border outline-ring/50; }
@@ -410,496 +377,259 @@
 }
 
 
-/* ─── Dashboard & all page text overrides ───────────────────────────────── */
+/* ════════════════════════════════════════════════════════════
+   DARK MODE — complete transformation
+   Based on original BitGains dark crypto palette
+   ════════════════════════════════════════════════════════════ */
 
-/* Any element with text-white inside the dashboard/cream bg → dark */
-.text-white\/70, .text-white\/80, .text-white\/90,
-[class*="text-white/"] { color: #7C5C3E !important; }
-
-/* Hard text-white on light surface → near-black */
-p.text-white, h1.text-white, h2.text-white, h3.text-white,
-h4.text-white, h5.text-white, h6.text-white,
-span.text-white, div.text-white, li.text-white { color: #3D2B1F !important; }
-
-/* Dashboard sidebar nav items */
-nav .text-white, aside .text-white { color: #3D2B1F !important; }
-
-/* Frosted glass / backdrop cards — always white bg, dark text */
-[class*="backdrop-blur"] {
-  background-color: rgba(248,245,240,0.95) !important;
-  color: #3D2B1F !important;
+/* 1. CSS variables in dark mode */
+html.dark {
+  --background:           #0d1117;
+  --foreground:           #e6edf3;
+  --card:                 #161b22;
+  --card-foreground:      #e6edf3;
+  --popover:              #161b22;
+  --popover-foreground:   #e6edf3;
+  --primary:              #58a6ff;
+  --primary-foreground:   #0d1117;
+  --secondary:            #21262d;
+  --secondary-foreground: #e6edf3;
+  --muted:                #21262d;
+  --muted-foreground:     #8b949e;
+  --accent:               #58a6ff;
+  --accent-foreground:    #0d1117;
+  --destructive:          #f85149;
+  --border:               #30363d;
+  --input:                #21262d;
+  --ring:                 #58a6ff;
+  --chart-1: #58a6ff;
+  --chart-2: #3fb950;
+  --chart-3: #d29922;
+  --chart-4: #f78166;
+  --chart-5: #bc8cff;
+  --sidebar:              #161b22;
+  --sidebar-foreground:   #e6edf3;
+  --sidebar-primary:      #58a6ff;
+  --sidebar-primary-foreground: #0d1117;
+  --sidebar-accent:       #21262d;
+  --sidebar-accent-foreground: #e6edf3;
+  --sidebar-border:       #30363d;
+  --sidebar-ring:         #58a6ff;
 }
 
-/* Remove any remaining dark backgrounds */
-[class*="bg-crypto-black"], [class*="bg-crypto-charcoal"],
-[class*="bg-dark-"] {
-  background-color: #F8F5F0 !important;
-  color: #3D2B1F !important;
+/* 2. Body background */
+html.dark body {
+  background: #0d1117 !important;
+  color: #e6edf3 !important;
 }
 
-/* Emerald text colors → warm brown brand */
-.text-emerald-400 { color: #C4966A !important; }
-.text-emerald-500 { color: #B8845A !important; }
-.text-emerald-300 { color: #D4A882 !important; }
-.text-green-400   { color: #C4966A !important; }
-.text-cyan-400    { color: #8B5E3C !important; }
+/* 3. All text white/light in dark mode — override EVERYTHING */
+html.dark * {
+  border-color: #30363d;
+}
 
-/* Keep emerald on icon backgrounds (those use bg-gradient, not text) */
-.text-black { color: #3D2B1F !important; }
+/* Headings */
+html.dark h1, html.dark h2, html.dark h3,
+html.dark h4, html.dark h5, html.dark h6 {
+  color: #e6edf3 !important;
+}
 
-/* Footer links */
-footer a, footer p, footer h3, footer li { color: #7C5C3E !important; }
-footer a:hover { color: #3D2B1F !important; }
-footer .border-warm-600\/20 { border-color: rgba(196,150,106,0.2) !important; }
+/* Paragraphs and spans */
+html.dark p, html.dark span, html.dark li,
+html.dark td, html.dark th, html.dark label,
+html.dark div { color: #e6edf3; }
 
+/* 4. Backgrounds */
+html.dark .glass-card,
+html.dark .glass-card-strong {
+  background: #161b22 !important;
+  border-color: #30363d !important;
+  color: #e6edf3 !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4) !important;
+}
+html.dark .glass-card *, html.dark .glass-card-strong * {
+  color: #e6edf3 !important;
+}
 
+html.dark .animated-bg,
+html.dark .gradient-crypto {
+  background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%) !important;
+  background-image: 
+    linear-gradient(rgba(88,166,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(88,166,255,0.04) 1px, transparent 1px) !important;
+  background-size: 60px 60px !important;
+}
 
-/* ══════════════════════════════════════════════════════════
-   SCROLLING AND MODAL FIXES
-   ══════════════════════════════════════════════════════════ */
+/* White backgrounds → dark */
+html.dark .bg-white { background: #161b22 !important; color: #e6edf3 !important; }
+html.dark [class*="bg-white\/"] { background: rgba(22,27,34,0.9) !important; }
+html.dark .bg-gray-50, html.dark .bg-gray-100 { background: #161b22 !important; color: #e6edf3 !important; }
+html.dark .bg-cream-50, html.dark .bg-cream-100, html.dark .bg-cream-200 { background: #161b22 !important; color: #e6edf3 !important; }
 
-/* ── Fix modal/popup scrolling ───────────────────────────── */
-.dark .modal-container,
-.dark [class*="fixed"][class*="inset-0"]:not([class*="backdrop"]) {
+/* Inline style overrides */
+html.dark [style*="background-color: rgb(253, 250, 246)"],
+html.dark [style*="background-color: #FDFAF6"],
+html.dark [style*="backgroundColor: '#FDFAF6'"] {
+  background-color: #0d1117 !important;
+}
+
+/* 5. Sidebar */
+html.dark .mobile-nav-sidebar,
+html.dark .mobile-sidebar,
+html.dark .desktop-sidebar,
+html.dark [class*="sidebar"] {
+  background: linear-gradient(180deg, #161b22 0%, #0d1117 100%) !important;
+  border-right-color: #30363d !important;
+}
+html.dark .mobile-nav-sidebar *, html.dark .desktop-sidebar * {
+  color: #e6edf3 !important;
+}
+
+/* 6. Navbar / top bar */
+html.dark nav, html.dark header {
+  background: rgba(13,17,23,0.95) !important;
+  border-bottom-color: #30363d !important;
+}
+html.dark nav *, html.dark header * { color: #e6edf3 !important; }
+
+/* 7. Inputs */
+html.dark input, html.dark textarea, html.dark select {
+  background: #21262d !important;
+  color: #e6edf3 !important;
+  border-color: #30363d !important;
+}
+html.dark input::placeholder, html.dark textarea::placeholder { color: #8b949e !important; }
+html.dark input:focus, html.dark textarea:focus, html.dark select:focus {
+  border-color: #58a6ff !important;
+  box-shadow: 0 0 0 3px rgba(88,166,255,0.2) !important;
+}
+html.dark .input-crypto {
+  background: #21262d !important;
+  color: #e6edf3 !important;
+  border-color: #30363d !important;
+}
+
+/* 8. Buttons */
+html.dark .btn-crypto {
+  background: linear-gradient(135deg, #238636, #1a7f37) !important;
+  color: #fff !important;
+}
+html.dark .btn-crypto:hover {
+  background: linear-gradient(135deg, #2ea043, #238636) !important;
+  box-shadow: 0 4px 16px rgba(35,134,54,0.4) !important;
+}
+html.dark .btn-crypto-outline {
+  border-color: #238636 !important;
+  color: #3fb950 !important;
+}
+
+/* 9. Tables */
+html.dark table { background: #161b22 !important; }
+html.dark thead { background: #21262d !important; }
+html.dark th { color: #8b949e !important; border-color: #30363d !important; }
+html.dark td { color: #e6edf3 !important; border-color: #30363d !important; }
+html.dark tr:hover td { background: rgba(88,166,255,0.06) !important; }
+
+/* 10. Warm palette overrides */
+html.dark .text-warm-700, html.dark .text-warm-600, html.dark .text-warm-500 { color: #8b949e !important; }
+html.dark .text-dark-900 { color: #e6edf3 !important; }
+html.dark .text-white { color: #e6edf3 !important; }
+html.dark .text-black { color: #e6edf3 !important; }
+html.dark .text-gray-400, html.dark .text-gray-500, html.dark .text-gray-600 { color: #8b949e !important; }
+html.dark .text-gray-300, html.dark .text-gray-700, html.dark .text-gray-800, html.dark .text-gray-900 { color: #e6edf3 !important; }
+html.dark .text-slate-600, html.dark .text-slate-700 { color: #8b949e !important; }
+html.dark .text-stone-600, html.dark .text-stone-700, html.dark .text-stone-900 { color: #e6edf3 !important; }
+
+/* 11. Status colors — keep them */
+html.dark .text-green-500, html.dark .text-green-600, html.dark .text-emerald-500, html.dark .text-emerald-600 { color: #3fb950 !important; }
+html.dark .text-red-400, html.dark .text-red-500, html.dark .text-red-600 { color: #f85149 !important; }
+html.dark .text-yellow-400, html.dark .text-yellow-500, html.dark .text-amber-500 { color: #d29922 !important; }
+html.dark .text-blue-400, html.dark .text-blue-500, html.dark .text-cyan-400 { color: #58a6ff !important; }
+
+html.dark .bg-green-50 { background: rgba(63,185,80,0.1) !important; }
+html.dark .bg-red-50 { background: rgba(248,81,73,0.1) !important; }
+html.dark .bg-yellow-50, html.dark .bg-amber-50 { background: rgba(210,153,34,0.1) !important; }
+html.dark .bg-blue-50 { background: rgba(88,166,255,0.1) !important; }
+html.dark .border-green-200, html.dark .border-green-300 { border-color: rgba(63,185,80,0.3) !important; }
+html.dark .border-red-200, html.dark .border-red-300 { border-color: rgba(248,81,73,0.3) !important; }
+
+/* 12. Warm bg overrides */
+html.dark [class*="bg-warm"] { background: rgba(88,166,255,0.1) !important; }
+html.dark [class*="border-warm"] { border-color: rgba(88,166,255,0.25) !important; }
+
+/* 13. Emerald overrides in dark */
+html.dark .text-emerald-400 { color: #3fb950 !important; }
+html.dark .text-emerald-300 { color: #56d364 !important; }
+html.dark [class*="bg-emerald"], html.dark [class*="from-emerald"] {
+  /* keep original color — just ensure text contrast */
+  color: #fff !important;
+}
+
+/* 14. Scrollbar */
+html.dark ::-webkit-scrollbar { width: 7px; height: 7px; }
+html.dark ::-webkit-scrollbar-track { background: #161b22; }
+html.dark ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+html.dark ::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+/* 15. Modal / popup scrolling fix */
+html.dark .fixed.inset-0 {
   overflow-y: auto !important;
-  overscroll-behavior: contain !important;
 }
 
-/* ── Ensure modal content is properly contained ──────────── */
-.dark .modal-content,
-.dark [class*="max-w"][class*="mx-auto"] {
-  max-height: 90vh !important;
-  overflow-y: auto !important;
-  margin: 2rem auto !important;
+/* ════════════════════════════════════════════════════════════
+   DEPOSIT POPUP — scrolling + visibility fixes (both modes)
+   ════════════════════════════════════════════════════════════ */
+
+/* Deposit/Withdraw popup wrapper - always scrollable */
+.popup-scrollable {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow-y: auto;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem 1rem;
 }
 
-/* ── Better scrollbar for modals ─────────────────────────── */
-.dark .modal-content::-webkit-scrollbar,
-.dark [class*="overflow-y-auto"]::-webkit-scrollbar {
-  width: 6px;
-}
-.dark .modal-content::-webkit-scrollbar-thumb,
-.dark [class*="overflow-y-auto"]::-webkit-scrollbar-thumb {
-  background: rgba(0, 210, 255, 0.3);
-  border-radius: 3px;
-}
-
-/* ══════════════════════════════════════════════════════════
-   COMPREHENSIVE OVERRIDES FOR ALL ELEMENTS
-   Catch any missed hardcoded styles
-   ══════════════════════════════════════════════════════════ */
-
-/* ── Override ALL background variations ──────────────────── */
-.dark [class*="bg-white"],
-.dark [class*="bg-gray-50"],
-.dark [class*="bg-gray-100"],
-.dark [class*="bg-cream"],
-.dark [style*="background-color: #fff"],
-.dark [style*="background-color: white"],
-.dark [style*="background: white"],
-.dark [style*="backgroundColor: '#fff'"],
-.dark [style*="backgroundColor: 'white'"] {
-  background-color: #1a1f26 !important;
-  color: #ffffff !important;
+/* QR code popup - scrollable */
+.qr-popup-scrollable {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow-y: auto;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1rem;
 }
 
-/* ── Fix all semi-transparent whites ─────────────────────── */
-.dark [class*="bg-white/5"] { background-color: rgba(26, 31, 38, 0.8) !important; }
-.dark [class*="bg-white/10"] { background-color: rgba(26, 31, 38, 0.9) !important; }
-.dark [class*="bg-white/20"] { background-color: rgba(38, 44, 54, 0.8) !important; }
-
-/* ── Fix ALL text elements that could be invisible ──────── */
-.dark *:not([class*="text-green"]):not([class*="text-red"]):not([class*="text-blue"]):not([class*="text-yellow"]):not([class*="text-amber"]):not([class*="text-emerald"]):not([class*="text-cyan"]),
-.dark [class*="text-gray"],
-.dark [class*="text-slate"],
-.dark [class*="text-stone"],
-.dark [class*="text-neutral"],
-.dark [class*="text-black"] {
-  color: #ffffff !important;
-}
-
-/* ── Specific component fixes ────────────────────────────── */
-.dark .glass-card-strong {
-  background: linear-gradient(145deg, #1a1f26, #262c36) !important;
-  border: 1px solid #00d2ff !important;
-  box-shadow: 0 0 20px rgba(0, 210, 255, 0.3) !important;
-}
-
-.dark .glass-card-strong * {
-  color: #ffffff !important;
-}
-
-/* ── Modal/Popup specific fixes ──────────────────────────── */
-.dark [class*="fixed"][class*="inset-0"] > div,
-.dark .modal-content,
-.dark .popup-content {
-  background: linear-gradient(145deg, #0b0e11, #1a1f26) !important;
-  color: #ffffff !important;
-}
-
-/* ── Input styling for dark mode ─────────────────────────── */
-.dark .input-crypto,
-.dark input[class*="input"] {
-  background-color: #1e293b !important;
-  color: #ffffff !important;
-  border: 2px solid #334155 !important;
-}
-.dark .input-crypto:focus,
-.dark input[class*="input"]:focus {
-  border-color: #00d2ff !important;
-  box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.2) !important;
-}
-
-/* ══════════════════════════════════════════════════════════
-   COMPREHENSIVE DARK MODE THEME
-   Complete website transformation when .dark class is applied
-   ══════════════════════════════════════════════════════════ */
-
-.dark {
-  /* Base colors inspired by crypto platforms */
-  --background:           #0b0e11;  /* Deep dark blue-black */
-  --foreground:           #ffffff;   /* Pure white text */
-  --card:                 #1a1f26;   /* Dark charcoal cards */
-  --card-foreground:      #ffffff;
-  --popover:              #1a1f26;
-  --popover-foreground:   #ffffff;
-  --primary:              #00d2ff;   /* Bright cyan primary */
-  --primary-foreground:   #000000;
-  --secondary:            #262c36;   /* Darker secondary */
-  --secondary-foreground: #ffffff;
-  --muted:                #262c36;
-  --muted-foreground:     #94a3b8;   /* Light gray muted */
-  --accent:               #00d2ff;
-  --accent-foreground:    #000000;
-  --destructive:          #ff4757;   /* Bright red */
-  --border:               #334155;   /* Visible borders */
-  --input:                #1e293b;   /* Dark input backgrounds */
-  --ring:                 #00d2ff;
-  
-  /* Sidebar colors */
-  --sidebar:              #0f172a;
-  --sidebar-foreground:   #ffffff;
-  --sidebar-border:       #334155;
-  --sidebar-accent:       #1e293b;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-primary:      #00d2ff;
-  --sidebar-primary-foreground: #000000;
-}
-
-/* ══════════════════════════════════════════════════════════
-   BASE DARK THEME OVERRIDES
-   ══════════════════════════════════════════════════════════ */
-.dark html,
-.dark body {
-  background: linear-gradient(135deg, #0b0e11 0%, #1a1f26 100%) !important;
-  color: #ffffff !important;
-  min-height: 100vh;
-}
-
-/* ── All headings and text elements ─────────────────────── */
-.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
-.dark p, .dark span, .dark div, .dark label, .dark a {
-  color: #ffffff !important;
-}
-
-/* ── Specific text color classes ────────────────────────── */
-.dark .text-white { color: #ffffff !important; }
-.dark .text-black { color: #ffffff !important; }
-.dark .text-gray-100, .dark .text-gray-200 { color: #f1f5f9 !important; }
-.dark .text-gray-300, .dark .text-gray-400 { color: #cbd5e1 !important; }
-.dark .text-gray-500, .dark .text-gray-600 { color: #94a3b8 !important; }
-.dark .text-gray-700, .dark .text-gray-800 { color: #64748b !important; }
-.dark .text-gray-900 { color: #ffffff !important; }
-.dark .text-slate-300, .dark .text-slate-400 { color: #cbd5e1 !important; }
-.dark .text-slate-500, .dark .text-slate-600 { color: #94a3b8 !important; }
-.dark .text-slate-700, .dark .text-slate-800 { color: #64748b !important; }
-.dark .text-slate-900 { color: #ffffff !important; }
-
-/* WebYatra warm colors → cool cyber colors */
-.dark .text-warm-700 { color: #64748b !important; }
-.dark .text-warm-600 { color: #94a3b8 !important; }
-.dark .text-warm-500 { color: #cbd5e1 !important; }
-.dark .text-dark-900 { color: #ffffff !important; }
-
-/* ══════════════════════════════════════════════════════════
-   CARDS AND CONTAINERS
-   ══════════════════════════════════════════════════════════ */
-.dark .glass-card {
-  background: linear-gradient(145deg, #1a1f26, #262c36) !important;
-  border: 1px solid #334155 !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 20px rgba(0, 210, 255, 0.1) !important;
-  backdrop-filter: blur(10px) !important;
-}
-.dark .glass-card * { color: #ffffff !important; }
-
-.dark .glass-card-strong {
-  background: linear-gradient(145deg, #262c36, #334155) !important;
-  border: 1px solid #475569 !important;
-  color: #ffffff !important;
-  box-shadow: 0 8px 32px rgba(0, 210, 255, 0.15) !important;
-}
-.dark .glass-card-strong * { color: #ffffff !important; }
-
-/* ── Background variants ─────────────────────────────────── */
-.dark .bg-white { background-color: #1a1f26 !important; }
-.dark .bg-gray-50 { background-color: #1e293b !important; }
-.dark .bg-gray-100 { background-color: #262c36 !important; }
-.dark .bg-cream-50 { background-color: #1e293b !important; }
-.dark .bg-cream-100 { background-color: #262c36 !important; }
-.dark .bg-cream-200 { background-color: #334155 !important; }
-
-/* ── Warm color backgrounds ──────────────────────────────── */
-.dark .bg-warm-400\/10 { background-color: rgba(0, 210, 255, 0.1) !important; }
-.dark .bg-warm-400\/15 { background-color: rgba(0, 210, 255, 0.15) !important; }
-.dark .bg-warm-400\/20 { background-color: rgba(0, 210, 255, 0.2) !important; }
-.dark .bg-warm-400\/25 { background-color: rgba(0, 210, 255, 0.25) !important; }
-
-/* ── Borders ─────────────────────────────────────────────── */
-.dark .border-warm-400\/20 { border-color: rgba(0, 210, 255, 0.3) !important; }
-.dark .border-warm-400\/30 { border-color: rgba(0, 210, 255, 0.4) !important; }
-.dark .border-gray-200, .dark .border-gray-300 { border-color: #334155 !important; }
-.dark .border-white\/10 { border-color: rgba(255, 255, 255, 0.1) !important; }
-.dark .border-white\/20 { border-color: rgba(255, 255, 255, 0.2) !important; }
-
-/* ══════════════════════════════════════════════════════════
-   BUTTONS AND INTERACTIVE ELEMENTS
-   ══════════════════════════════════════════════════════════ */
-.dark .btn-crypto {
-  background: linear-gradient(135deg, #00d2ff, #0099cc) !important;
-  color: #000000 !important;
-  border: none !important;
-}
-.dark .btn-crypto:hover {
-  background: linear-gradient(135deg, #00b8e6, #0088bb) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 8px 25px rgba(0, 210, 255, 0.4) !important;
-}
-
-.dark .btn-crypto-outline {
-  border: 2px solid #00d2ff !important;
-  color: #00d2ff !important;
-  background: transparent !important;
-}
-.dark .btn-crypto-outline:hover {
-  background: linear-gradient(135deg, #00d2ff, #0099cc) !important;
-  color: #000000 !important;
-}
-
-/* ── Generic button fixes ────────────────────────────────── */
-.dark button {
-  color: #ffffff !important;
-}
-.dark button:hover {
-  background-color: rgba(0, 210, 255, 0.1) !important;
-}
-
-/* ══════════════════════════════════════════════════════════
-   FORMS AND INPUTS
-   ══════════════════════════════════════════════════════════ */
-.dark input, .dark textarea, .dark select {
-  background-color: #1e293b !important;
-  color: #ffffff !important;
-  border: 1px solid #334155 !important;
-}
-.dark input::placeholder, .dark textarea::placeholder {
-  color: #64748b !important;
-}
-.dark input:focus, .dark textarea:focus, .dark select:focus {
-  border-color: #00d2ff !important;
-  box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.2) !important;
-  outline: none !important;
-}
-
-/* ══════════════════════════════════════════════════════════
-   SIDEBAR AND NAVIGATION
-   ══════════════════════════════════════════════════════════ */
-.dark .mobile-nav-sidebar,
-.dark .mobile-sidebar,
-.dark .desktop-sidebar {
-  background: linear-gradient(180deg, #0f172a 0%, #1a1f26 100%) !important;
-  border-right: 1px solid #334155 !important;
-  color: #ffffff !important;
-}
-
-.dark .sidebar-item:hover {
-  background: rgba(0, 210, 255, 0.1) !important;
-}
-
-/* ══════════════════════════════════════════════════════════
-   POPUPS AND MODALS - THE MAIN FIX
-   ══════════════════════════════════════════════════════════ */
-.dark [class*="fixed"][class*="inset-0"],
-.dark [class*="absolute"][class*="inset-0"],
-.dark .modal, .dark .popup, .dark .dropdown {
-  background-color: rgba(11, 14, 17, 0.95) !important;
-  backdrop-filter: blur(10px) !important;
-}
-
-/* ── Popup content containers ───────────────────────────── */
-.dark .popup-content,
-.dark [class*="bg-white"][class*="rounded"],
-.dark [class*="bg-gray"][class*="rounded"],
-.dark [class*="p-6"][class*="rounded"],
-.dark [class*="max-w"][class*="mx-auto"] {
-  background: linear-gradient(145deg, #1a1f26, #262c36) !important;
-  border: 1px solid #334155 !important;
-  color: #ffffff !important;
-}
-
-/* ── Address text and codes (the invisible text fix) ──── */
-.dark code, 
-.dark .font-mono,
-.dark [class*="text-sm"][class*="text-gray"],
-.dark [class*="break-all"],
-.dark .address-text,
-.dark .wallet-address {
-  color: #ffffff !important;
-  background-color: #1e293b !important;
-  padding: 0.5rem !important;
-  border-radius: 0.5rem !important;
-  border: 1px solid #334155 !important;
-}
-
-/* ── Copy buttons and action buttons in popups ──────────── */
-.dark .copy-button,
-.dark [class*="bg-emerald"],
-.dark [class*="bg-green"] {
-  background: linear-gradient(135deg, #00d2ff, #0099cc) !important;
-  color: #000000 !important;
-  border: none !important;
-}
-
-/* ══════════════════════════════════════════════════════════
-   TABLES AND DATA DISPLAY
-   ══════════════════════════════════════════════════════════ */
-.dark table { 
-  background-color: #1a1f26 !important; 
-  color: #ffffff !important; 
-  border: 1px solid #334155 !important;
-}
-.dark thead { background-color: #262c36 !important; }
-.dark th { 
-  color: #ffffff !important; 
-  border-color: #334155 !important; 
-  background-color: #262c36 !important;
-}
-.dark td { 
-  color: #ffffff !important; 
-  border-color: #334155 !important; 
-}
-.dark tr:hover td { 
-  background-color: rgba(0, 210, 255, 0.1) !important; 
-}
-
-/* ══════════════════════════════════════════════════════════
-   STATUS COLORS (KEEP VISIBLE)
-   ══════════════════════════════════════════════════════════ */
-/* Green/success states */
-.dark .text-green-600, .dark .text-green-700 { color: #10b981 !important; }
-.dark .text-emerald-500, .dark .text-emerald-600 { color: #10b981 !important; }
-.dark .bg-green-50 { background-color: rgba(16, 185, 129, 0.1) !important; }
-.dark .bg-emerald-50 { background-color: rgba(16, 185, 129, 0.1) !important; }
-.dark .border-green-200, .dark .border-green-300 { border-color: rgba(16, 185, 129, 0.3) !important; }
-
-/* Red/error states */
-.dark .text-red-500, .dark .text-red-600, .dark .text-red-700 { color: #ef4444 !important; }
-.dark .bg-red-50 { background-color: rgba(239, 68, 68, 0.1) !important; }
-.dark .border-red-200, .dark .border-red-300 { border-color: rgba(239, 68, 68, 0.3) !important; }
-
-/* Yellow/warning states */
-.dark .text-yellow-500, .dark .text-yellow-600 { color: #f59e0b !important; }
-.dark .bg-yellow-50 { background-color: rgba(245, 158, 11, 0.1) !important; }
-
-/* Amber/gold states */
-.dark .text-amber-500, .dark .text-amber-600 { color: #f59e0b !important; }
-.dark .bg-amber-50 { background-color: rgba(245, 158, 11, 0.1) !important; }
-
-/* ══════════════════════════════════════════════════════════
-   PAGE SPECIFIC FIXES
-   ══════════════════════════════════════════════════════════ */
-
-/* ── Landing page ────────────────────────────────────────── */
-.dark .animated-bg,
-.dark .gradient-crypto {
-  background: linear-gradient(-45deg, #0b0e11, #1a1f26, #262c36, #1a1f26) !important;
-  background-size: 400% 400% !important;
-  animation: gradientShift 15s ease infinite;
-}
-
-/* ── Dashboard specific ──────────────────────────────────── */
-.dark .main-content,
-.dark [class*="min-h-screen"] {
-  background: linear-gradient(135deg, #0b0e11 0%, #1a1f26 100%) !important;
-  color: #ffffff !important;
-}
-
-/* ── Admin panel ─────────────────────────────────────────── */
-.dark .container, .dark .container * {
-  color: #ffffff !important;
-}
-
-/* ══════════════════════════════════════════════════════════
-   SCROLLBARS
-   ══════════════════════════════════════════════════════════ */
-.dark ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-.dark ::-webkit-scrollbar-track {
+/* Wallet address display - always visible */
+.wallet-address-display {
   background: #1a1f26;
-  border-radius: 4px;
-}
-.dark ::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
-}
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
-}
-
-/* ══════════════════════════════════════════════════════════
-   ANIMATIONS
-   ══════════════════════════════════════════════════════════ */
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  color: #58a6ff;
+  font-family: monospace;
+  font-size: 0.8rem;
+  word-break: break-all;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #30363d;
+  width: 100%;
 }
 
-/* ══════════════════════════════════════════════════════════
-   UTILITY OVERRIDES
-   ══════════════════════════════════════════════════════════ */
-.dark .opacity-60 { opacity: 0.8 !important; }
-.dark .opacity-70 { opacity: 0.9 !important; }
-.dark .opacity-80 { opacity: 0.95 !important; }
-
-/* Force visibility for any remaining invisible elements */
-.dark .invisible-fix,
-.dark .text-gray-400,
-.dark .text-gray-500 {
-  color: #cbd5e1 !important;
-}
-
-/* ── Dropdown and select menus ───────────────────────────── */
-.dark select option {
-  background-color: #1e293b !important;
-  color: #ffffff !important;
-}
-
-.dark .dropdown-menu,
-.dark [role="menu"],
-.dark [role="listbox"] {
-  background-color: #1a1f26 !important;
-  border: 1px solid #334155 !important;
-  color: #ffffff !important;
-}
-
-/* ── Loading states ──────────────────────────────────────── */
-.dark .animate-spin {
-  color: #00d2ff !important;
-}
-
-.dark .loading-text {
-  color: #94a3b8 !important;
+/* Light mode wallet address */
+.wallet-address-display-light {
+  background: #f0ebe3;
+  color: #3D2B1F;
+  font-family: monospace;
+  font-size: 0.8rem;
+  word-break: break-all;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e2d9ce;
+  width: 100%;
 }

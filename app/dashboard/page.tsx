@@ -2828,17 +2828,18 @@ function DepositTab({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/90 backdrop-blur-lg z-50 flex items-start sm:items-center justify-center overflow-hidden"
+              className="fixed inset-0 bg-black/90 backdrop-blur-lg z-50 overflow-y-auto"
               onClick={() => setShowQRModal(false)}
             >
+              <div className="min-h-screen flex items-start sm:items-center justify-center p-0 sm:p-4 sm:py-8">
               <motion.div
                 initial={{ scale: 0.9, opacity: 0, y: 100 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.9, opacity: 0, y: 100 }}
                 transition={{ type: "spring", damping: 25, stiffness: 300 }}
                 className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-0 sm:border border-emerald-500/20 
-                         rounded-none sm:rounded-3xl w-full h-full sm:h-auto sm:max-w-lg md:max-w-2xl lg:max-w-4xl 
-                         sm:max-h-[90vh] overflow-hidden shadow-2xl shadow-emerald-500/10 
+                         rounded-none sm:rounded-3xl w-full sm:max-w-lg md:max-w-2xl lg:max-w-4xl 
+                         overflow-y-auto shadow-2xl shadow-emerald-500/10
                          flex flex-col"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -3296,6 +3297,7 @@ function DepositTab({
                   </p>
                 </div>
               </motion.div>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
