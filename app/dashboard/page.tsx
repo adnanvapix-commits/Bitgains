@@ -1494,36 +1494,29 @@ function OverviewTab({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative overflow-hidden bg-gradient-to-br from-emerald-500/20 via-green-400/10 to-emerald-600/20 backdrop-blur-xl border border-emerald-500/30 rounded-2xl sm:rounded-3xl p-4 sm:p-6 group hover:scale-105 transition-all duration-300"
+          className="relative overflow-hidden bg-card border border-border rounded-2xl sm:rounded-3xl p-4 sm:p-6 group hover:scale-105 transition-all duration-300 hover:border-primary/40 hover:shadow-md"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-green-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div className="relative">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-emerald-500 to-green-400 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                <DollarSign className="w-6 h-6 sm:w-7 sm:h-7 text-black font-bold" />
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-primary to-accent rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+                <DollarSign className="w-6 h-6 sm:w-7 sm:h-7 text-primary-foreground font-bold" />
               </div>
-              <div className="px-3 py-1 bg-emerald-500/20 rounded-full border border-emerald-500/30">
-                <span className="text-emerald-400 text-sm font-medium">
-                  +2.5%
-                </span>
+              <div className="px-3 py-1 bg-primary/15 rounded-full border border-primary/25">
+                <span className="text-primary text-sm font-medium">+2.5%</span>
               </div>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">
+            <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-1 sm:mb-2">
               {showBalance ? data.totalBalance.toLocaleString() : "••••••"}
             </h3>
-            <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-1">
-              Total Balance (USDT)
-            </p>
+            <p className="text-muted-foreground text-xs sm:text-sm mb-1">Total Balance (USDT)</p>
             {walletData && walletData.totalDeposited > 0 && (
-              <p className="text-emerald-400 text-xs mb-1">
+              <p className="text-primary text-xs mb-1">
                 Total Deposited: {formatCurrency(walletData.totalDeposited)}
               </p>
             )}
             <div className="flex items-center space-x-2 text-xs">
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-              <span className="text-emerald-400">
-                Daily: +{data.dailyEarnings} USDT
-              </span>
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+              <span className="text-primary">Daily: +{data.dailyEarnings} USDT</span>
             </div>
           </div>
         </motion.div>
@@ -1533,29 +1526,24 @@ function OverviewTab({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="relative overflow-hidden bg-gradient-to-br from-cyan-500/20 via-blue-400/10 to-cyan-600/20 backdrop-blur-xl border border-cyan-500/30 rounded-2xl sm:rounded-3xl p-4 sm:p-6 group hover:scale-105 transition-all duration-300"
+          className="relative overflow-hidden bg-card border border-border rounded-2xl sm:rounded-3xl p-4 sm:p-6 group hover:scale-105 transition-all duration-300 hover:border-primary/40 hover:shadow-md"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-blue-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div className="relative">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-cyan-500 to-blue-400 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-cyan-500/20">
-                <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 text-black font-bold" />
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-primary to-accent rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+                <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 text-primary-foreground font-bold" />
               </div>
-              <div className="px-3 py-1 bg-cyan-500/20 rounded-full border border-cyan-500/30">
-                <span className="text-cyan-400 text-sm font-medium">
-                  5-15% Monthly
-                </span>
+              <div className="px-3 py-1 bg-primary/15 rounded-full border border-primary/25">
+                <span className="text-primary text-sm font-medium">5-15% Monthly</span>
               </div>
             </div>
-            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">
+            <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-1 sm:mb-2">
               {showBalance ? data.stakedAmount.toLocaleString() : "••••••"}
             </h3>
-            <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-1">
-              Staked Amount (USDT)
-            </p>
+            <p className="text-muted-foreground text-xs sm:text-sm mb-1">Staked Amount (USDT)</p>
             <div className="flex items-center space-x-2 text-xs">
-              <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
-              <span className="text-cyan-400">Earning: 5%-15% monthly</span>
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+              <span className="text-primary">Earning: 5%-15% monthly</span>
             </div>
           </div>
         </motion.div>
@@ -1565,29 +1553,24 @@ function OverviewTab({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="relative overflow-hidden bg-gradient-to-br from-yellow-500/20 via-orange-400/10 to-yellow-600/20 backdrop-blur-xl border border-yellow-500/30 rounded-2xl sm:rounded-3xl p-4 sm:p-6 group hover:scale-105 transition-all duration-300"
+          className="relative overflow-hidden bg-card border border-border rounded-2xl sm:rounded-3xl p-4 sm:p-6 group hover:scale-105 transition-all duration-300 hover:border-primary/40 hover:shadow-md"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/5 to-orange-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div className="relative">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-yellow-500 to-orange-400 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-yellow-500/20">
-                <Wallet className="w-6 h-6 sm:w-7 sm:h-7 text-black font-bold" />
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-primary to-accent rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+                <Wallet className="w-6 h-6 sm:w-7 sm:h-7 text-primary-foreground font-bold" />
               </div>
-              <div className="px-3 py-1 bg-yellow-500/20 rounded-full border border-yellow-500/30">
-                <span className="text-yellow-400 text-sm font-medium">
-                  Available
-                </span>
+              <div className="px-3 py-1 bg-primary/15 rounded-full border border-primary/25">
+                <span className="text-primary text-sm font-medium">Available</span>
               </div>
             </div>
-            <h3 className="text-3xl font-bold text-white mb-2">
+            <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-1 sm:mb-2">
               {showBalance ? data.availableAmount.toLocaleString() : "••••••"}
             </h3>
-            <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">
-              Available Balance (USDT)
-            </p>
+            <p className="text-muted-foreground text-xs sm:text-sm mb-1">Available Balance (USDT)</p>
             <div className="flex items-center space-x-2 text-xs">
-              <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-              <span className="text-yellow-400">Ready to stake</span>
+              <div className="w-2 h-2 bg-primary rounded-full"></div>
+              <span className="text-primary">Ready to stake</span>
             </div>
           </div>
         </motion.div>
@@ -1597,28 +1580,25 @@ function OverviewTab({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="relative overflow-hidden bg-gradient-to-br from-purple-500/20 via-pink-400/10 to-purple-600/20 backdrop-blur-xl border border-purple-500/30 rounded-3xl p-6 group hover:scale-105 transition-all duration-300"
+          className="relative overflow-hidden bg-card border border-border rounded-2xl sm:rounded-3xl p-4 sm:p-6 group hover:scale-105 transition-all duration-300 hover:border-primary/40 hover:shadow-md"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           <div className="relative">
-            <div className="flex items-center justify-between mb-4">
-              <div className="w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-400 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/20">
-                <BarChart3 className="w-7 h-7 text-black font-bold" />
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-primary to-accent rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+                <BarChart3 className="w-6 h-6 sm:w-7 sm:h-7 text-primary-foreground font-bold" />
               </div>
-              <div className="px-3 py-1 bg-purple-500/20 rounded-full border border-purple-500/30">
-                <span className="text-purple-400 text-sm font-medium">
-                  Earnings
-                </span>
+              <div className="px-3 py-1 bg-primary/15 rounded-full border border-primary/25">
+                <span className="text-primary text-sm font-medium">Earnings</span>
               </div>
             </div>
-            <h3 className="text-3xl font-bold text-white mb-2">
+            <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-1 sm:mb-2">
               {showBalance ? data.earnings.toLocaleString() : "••••••"}
             </h3>
-            <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">Total Earnings (USDT)</p>
+            <p className="text-muted-foreground text-xs sm:text-sm mb-1">Total Earnings (USDT)</p>
             <div className="flex items-center space-x-2 text-xs">
-              <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
-              <span className="text-purple-400">
-                +{((data.earnings / data.totalStaked) * 100).toFixed(2)}% return
+              <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+              <span className="text-primary">
+                +{((data.earnings / (data.totalStaked || 1)) * 100).toFixed(2)}% return
               </span>
             </div>
           </div>
@@ -1715,20 +1695,20 @@ function OverviewTab({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.5 }}
-        className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-xl border border-warm-400/30 rounded-3xl p-8"
+        className="bg-card border border-border rounded-3xl p-6 sm:p-8"
       >
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
           <div>
-            <h3 className="text-2xl font-bold text-white mb-2">
+            <h3 className="text-2xl font-bold text-foreground mb-2">
               Portfolio Growth
             </h3>
-            <p className="text-slate-600 dark:text-slate-300 text-sm">
+            <p className="text-muted-foreground text-sm">
               Track your balance over time
             </p>
           </div>
 
           {/* Time Range Filter */}
-          <div className="flex items-center gap-2 bg-slate-800/80 dark:bg-slate-700/60 rounded-full p-1 border border-warm-400/20">
+          <div className="flex items-center gap-1 bg-secondary border border-border rounded-full p-1">
             {[
               { label: "7D", value: "7d" as const },
               { label: "30D", value: "30d" as const },
@@ -1741,8 +1721,8 @@ function OverviewTab({
                 onClick={() => setTimeRange(range.value)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${
                   timeRange === range.value
-                    ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/30"
-                    : "text-gray-400 hover:text-white hover:bg-slate-800/80 dark:bg-slate-700/60"
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-primary/10"
                 }`}
               >
                 {range.label}
@@ -1754,18 +1734,18 @@ function OverviewTab({
         <div className="h-64 sm:h-80 lg:h-96">
           {loadingChart ? (
             <div className="flex items-center justify-center h-full">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
           ) : portfolioData.length === 0 ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
-                <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-slate-800/80 dark:bg-slate-700/60 flex items-center justify-center">
-                  <TrendingUp className="w-12 h-12 text-white/40" />
+                <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-secondary border border-border flex items-center justify-center">
+                  <TrendingUp className="w-12 h-12 text-muted-foreground/40" />
                 </div>
-                <p className="text-slate-600 dark:text-slate-300 text-lg font-medium">
+                <p className="text-muted-foreground text-lg font-medium">
                   No Portfolio Data Yet
                 </p>
-                <p className="text-white/40 text-sm">
+                <p className="text-muted-foreground/60 text-sm">
                   Start transacting to see your portfolio growth
                 </p>
               </div>
@@ -2499,25 +2479,25 @@ function DepositTab({
 
             {/* Benefits Display */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="flex items-center space-x-2 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-3">
-                <Shield className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+              <div className="flex items-center space-x-2 bg-secondary border border-border rounded-xl p-3">
+                <Shield className="w-5 h-5 text-primary flex-shrink-0" />
                 <div>
-                  <p className="text-white font-medium text-sm">Secure</p>
-                  <p className="text-slate-600 dark:text-slate-300 text-xs">Multi-network support</p>
+                  <p className="text-foreground font-medium text-sm">Secure</p>
+                  <p className="text-muted-foreground text-xs">Multi-network support</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-3">
-                <Zap className="w-5 h-5 text-yellow-400 flex-shrink-0" />
+              <div className="flex items-center space-x-2 bg-secondary border border-border rounded-xl p-3">
+                <Zap className="w-5 h-5 text-primary flex-shrink-0" />
                 <div>
-                  <p className="text-white font-medium text-sm">Fast</p>
-                  <p className="text-slate-600 dark:text-slate-300 text-xs">Instant verification</p>
+                  <p className="text-foreground font-medium text-sm">Fast</p>
+                  <p className="text-muted-foreground text-xs">Instant verification</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-3">
-                <Award className="w-5 h-5 text-purple-400 flex-shrink-0" />
+              <div className="flex items-center space-x-2 bg-secondary border border-border rounded-xl p-3">
+                <Award className="w-5 h-5 text-primary flex-shrink-0" />
                 <div>
-                  <p className="text-white font-medium text-sm">Earn 12.5%</p>
-                  <p className="text-slate-600 dark:text-slate-300 text-xs">Start immediately</p>
+                  <p className="text-foreground font-medium text-sm">Earn 12.5%</p>
+                  <p className="text-muted-foreground text-xs">Start immediately</p>
                 </div>
               </div>
             </div>
@@ -2826,78 +2806,75 @@ function DepositTab({
         {/* Mobile-Optimized QR Code Modal */}
         <AnimatePresence>
           {showQRModal && (
+            /* Outer: full-screen scrollable backdrop — user can scroll anywhere */
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/90 backdrop-blur-lg z-50 overflow-y-auto"
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 overflow-y-auto"
               onClick={() => setShowQRModal(false)}
             >
-              <div className="min-h-screen flex items-start sm:items-center justify-center p-0 sm:p-4 sm:py-8">
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0, y: 100 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 100 }}
-                transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-0 sm:border border-emerald-500/20 
-                         rounded-none sm:rounded-3xl w-full sm:max-w-lg md:max-w-2xl lg:max-w-4xl 
-                         overflow-y-auto shadow-2xl shadow-emerald-500/10
-                         flex flex-col"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {/* Mobile-Optimized Header with Safe Area */}
-                <div className="bg-gradient-to-r from-emerald-500/10 to-green-400/10 border-b border-emerald-500/20 px-3 sm:px-6 lg:px-8 pt-safe-top pb-3 sm:py-6 flex-shrink-0">
-                  <div className="flex items-center justify-between pt-2 sm:pt-0">
-                    <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-emerald-500 to-green-400 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
-                        <QrCode className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
+              {/* Inner wrapper: centres modal, min-height forces scroll room */}
+              <div className="min-h-full flex items-start sm:items-center justify-center p-0 sm:p-4 sm:py-8">
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0, y: 40 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0.95, opacity: 0, y: 40 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                  className="bg-card border-0 sm:border border-border
+                           rounded-none sm:rounded-3xl w-full sm:max-w-lg md:max-w-2xl lg:max-w-4xl
+                           shadow-2xl flex flex-col"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* Header */}
+                  <div className="bg-primary/10 border-b border-border px-3 sm:px-6 lg:px-8 pt-safe-top pb-3 sm:py-6 flex-shrink-0 rounded-t-none sm:rounded-t-3xl">
+                    <div className="flex items-center justify-between pt-2 sm:pt-0">
+                      <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-primary to-accent rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0">
+                          <QrCode className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
+                        </div>
+                        <div className="min-w-0">
+                          <h3 className="text-base sm:text-xl lg:text-2xl font-bold text-foreground truncate">
+                            Deposit {formatCurrency(amount)}
+                          </h3>
+                          <p className="text-muted-foreground text-xs sm:text-sm truncate">
+                            {selectedToken} • Select Network
+                          </p>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <h3 className="text-base sm:text-xl lg:text-2xl font-bold text-white truncate">
-                          Deposit {formatCurrency(amount)}
-                        </h3>
-                        <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm truncate">
-                          {selectedToken} • Select Network
-                        </p>
-                      </div>
+                      <button
+                        onClick={() => setShowQRModal(false)}
+                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-secondary border border-border hover:bg-primary/10 flex items-center justify-center transition-all duration-300 flex-shrink-0 ml-2"
+                      >
+                        <X className="w-4 h-4 sm:w-5 sm:h-5 text-foreground" />
+                      </button>
                     </div>
-                    <button
-                      onClick={() => setShowQRModal(false)}
-                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-warm-400/15 hover:bg-warm-400/25 flex items-center justify-center transition-all duration-300 flex-shrink-0 ml-2"
-                    >
-                      <X className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                    </button>
                   </div>
-                </div>
 
-                <div className="flex-1 overflow-y-auto w-full overscroll-contain">
+                  {/* Body — not independently scrollable; the outer overlay scrolls */}
                   <div className="px-3 sm:px-6 lg:px-8 py-3 sm:py-6 space-y-3 sm:space-y-6">
-                    {/* Mobile-First Network Selection */}
+                    {/* Network Selection */}
                     <div className="space-y-3 sm:space-y-4">
-                      <h4 className="text-white font-bold text-base sm:text-lg text-center">
+                      <h4 className="text-foreground font-bold text-base sm:text-lg text-center">
                         Choose Network
                       </h4>
 
-                      {/* TRC-20 Network Card - Mobile Optimized */}
-                      <div className="bg-gradient-to-br from-emerald-500/15 to-green-400/10 backdrop-blur-xl border border-emerald-500/30 rounded-xl sm:rounded-2xl p-3 sm:p-6">
+                      {/* TRC-20 Card */}
+                      <div className="bg-primary/8 border border-primary/30 rounded-xl sm:rounded-2xl p-3 sm:p-6">
                         <div className="text-center">
                           <div className="flex items-center justify-center space-x-2 mb-2 sm:mb-3">
-                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-emerald-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                              <span className="text-black font-bold text-xs sm:text-sm">
-                                T
-                              </span>
+                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+                              <span className="text-primary-foreground font-bold text-xs sm:text-sm">T</span>
                             </div>
-                            <h5 className="text-white font-bold text-sm sm:text-lg">
-                              TRC-20
-                            </h5>
-                            <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded text-xs font-medium">
+                            <h5 className="text-foreground font-bold text-sm sm:text-lg">TRC-20</h5>
+                            <span className="px-2 py-0.5 bg-primary/15 text-primary rounded text-xs font-medium border border-primary/25">
                               Recommended
                             </span>
                           </div>
 
-                          {/* Mobile-Sized QR Code */}
-                          <div className="relative group mb-3 sm:mb-4">
-                            <div className="bg-white p-2 sm:p-4 rounded-lg sm:rounded-2xl shadow-2xl mx-auto w-fit">
+                          {/* QR Code — white background always so QR is scannable */}
+                          <div className="mb-3 sm:mb-4">
+                            <div className="bg-white p-2 sm:p-4 rounded-lg sm:rounded-2xl shadow-md mx-auto w-fit">
                               <Image
                                 src="/qr.jpeg"
                                 alt="USDT Deposit QR Code - TRC-20"
@@ -2908,61 +2885,43 @@ function DepositTab({
                             </div>
                           </div>
 
-                          {/* Mobile-Friendly Address Display */}
-                          <div className="bg-black/30 rounded-lg sm:rounded-xl p-2 sm:p-3 mb-2 sm:mb-3 border border-emerald-500/30">
-                            <p className="text-emerald-400 font-mono text-xs sm:text-sm break-all line-clamp-2">
+                          {/* Address — no line-clamp so full address is always visible */}
+                          <div className="bg-secondary border border-border rounded-lg sm:rounded-xl p-2 sm:p-3 mb-2 sm:mb-3">
+                            <p className="text-primary font-mono text-xs sm:text-sm break-all select-all">
                               TXMAjhdDAtY4FY9biErqAqx3VS7rfiU7gV
                             </p>
                           </div>
 
-                          {/* Large Touch-Friendly Copy Button */}
                           <button
                             onClick={() => {
-                              navigator.clipboard.writeText(
-                                "0x742d35Cc6634C0532925a3b8D1DD2C1e9B8e4CfD"
-                              );
-                              setNotifications((prev) => [
-                                {
-                                  id: Date.now(),
-                                  type: "success",
-                                  message: "TRC-20 address copied!",
-                                  timestamp: new Date(),
-                                },
-                                ...prev,
-                              ]);
-                              setTimeout(
-                                () => setNotifications((prev) => prev.slice(1)),
-                                3000
-                              );
+                              navigator.clipboard.writeText("TXMAjhdDAtY4FY9biErqAqx3VS7rfiU7gV");
+                              setNotifications((prev) => [{ id: Date.now(), type: "success", message: "TRC-20 address copied!", timestamp: new Date() }, ...prev]);
+                              setTimeout(() => setNotifications((prev) => prev.slice(1)), 3000);
                             }}
-                            className="w-full py-2.5 sm:py-4 px-3 sm:px-4 bg-emerald-500/20 hover:bg-emerald-500/30 
-                                     active:bg-emerald-500/40 border border-emerald-500/30 hover:border-emerald-500/50 
-                                     text-emerald-400 rounded-lg sm:rounded-xl transition-all duration-200 
+                            className="w-full py-2.5 sm:py-4 px-3 sm:px-4 bg-primary/10 hover:bg-primary/20
+                                     active:bg-primary/30 border border-primary/30 hover:border-primary/50
+                                     text-primary rounded-lg sm:rounded-xl transition-all duration-200
                                      flex items-center justify-center space-x-2 touch-manipulation text-sm sm:text-base"
                           >
                             <Copy className="w-4 h-4 sm:w-5 sm:h-5" />
-                            <span className="font-bold">Copy TRC-20</span>
+                            <span className="font-bold">Copy TRC-20 Address</span>
                           </button>
                         </div>
                       </div>
 
-                      {/* BEP-20 Network Card - Mobile Optimized */}
-                      <div className="bg-gradient-to-br from-yellow-500/15 to-orange-400/10 backdrop-blur-xl border border-yellow-500/30 rounded-xl sm:rounded-2xl p-3 sm:p-6">
+                      {/* BEP-20 Card */}
+                      <div className="bg-secondary border border-border rounded-xl sm:rounded-2xl p-3 sm:p-6">
                         <div className="text-center">
                           <div className="flex items-center justify-center space-x-2 mb-2 sm:mb-3">
-                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-yellow-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                              <span className="text-black font-bold text-xs sm:text-sm">
-                                B
-                              </span>
+                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-muted-foreground rounded-lg flex items-center justify-center flex-shrink-0">
+                              <span className="text-background font-bold text-xs sm:text-sm">B</span>
                             </div>
-                            <h5 className="text-white font-bold text-sm sm:text-lg">
-                              BEP-20 (BSC)
-                            </h5>
+                            <h5 className="text-foreground font-bold text-sm sm:text-lg">BEP-20 (BSC)</h5>
                           </div>
 
-                          {/* Mobile-Sized QR Code */}
-                          <div className="relative group mb-3 sm:mb-4">
-                            <div className="bg-white p-2 sm:p-4 rounded-lg sm:rounded-2xl shadow-2xl mx-auto w-fit">
+                          {/* QR Code */}
+                          <div className="mb-3 sm:mb-4">
+                            <div className="bg-white p-2 sm:p-4 rounded-lg sm:rounded-2xl shadow-md mx-auto w-fit">
                               <Image
                                 src="/Bep20.jpeg"
                                 alt="USDT Deposit QR Code - BEP-20"
@@ -2973,332 +2932,205 @@ function DepositTab({
                             </div>
                           </div>
 
-                          <div className="bg-black/30 rounded-lg sm:rounded-xl p-2 sm:p-3 mb-2 sm:mb-3 border border-yellow-500/30">
-                            <p className="text-yellow-400 font-mono text-xs sm:text-sm break-all line-clamp-2">
+                          <div className="bg-secondary border border-border rounded-lg sm:rounded-xl p-2 sm:p-3 mb-2 sm:mb-3">
+                            <p className="text-muted-foreground font-mono text-xs sm:text-sm break-all select-all">
                               0x150D8a5488C3ce3Bc8718F12084E7262cC7e8933
                             </p>
                           </div>
 
                           <button
                             onClick={() => {
-                              navigator.clipboard.writeText(
-                                "0x742d35Cc6634C0532925a3b8D1DD2C1e9B8e4CfD"
-                              );
-                              setNotifications((prev) => [
-                                {
-                                  id: Date.now(),
-                                  type: "success",
-                                  message: "BEP-20 address copied!",
-                                  timestamp: new Date(),
-                                },
-                                ...prev,
-                              ]);
-                              setTimeout(
-                                () => setNotifications((prev) => prev.slice(1)),
-                                3000
-                              );
+                              navigator.clipboard.writeText("0x150D8a5488C3ce3Bc8718F12084E7262cC7e8933");
+                              setNotifications((prev) => [{ id: Date.now(), type: "success", message: "BEP-20 address copied!", timestamp: new Date() }, ...prev]);
+                              setTimeout(() => setNotifications((prev) => prev.slice(1)), 3000);
                             }}
-                            className="w-full py-2.5 sm:py-4 px-3 sm:px-4 bg-yellow-500/20 hover:bg-yellow-500/30 
-                                     active:bg-yellow-500/40 border border-yellow-500/30 hover:border-yellow-500/50 
-                                     text-yellow-400 rounded-lg sm:rounded-xl transition-all duration-200 
+                            className="w-full py-2.5 sm:py-4 px-3 sm:px-4 bg-secondary hover:bg-primary/10
+                                     active:bg-primary/15 border border-border hover:border-primary/40
+                                     text-foreground rounded-lg sm:rounded-xl transition-all duration-200
                                      flex items-center justify-center space-x-2 touch-manipulation text-sm sm:text-base"
                           >
                             <Copy className="w-4 h-4 sm:w-5 sm:h-5" />
-                            <span className="font-bold">Copy BEP-20</span>
+                            <span className="font-bold">Copy BEP-20 Address</span>
                           </button>
                         </div>
                       </div>
                     </div>
 
-                    {/* Mobile-Optimized Transaction Summary */}
-                    <div className="bg-gradient-to-br from-blue-500/10 to-purple-400/5 backdrop-blur-xl border border-blue-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-6">
+                    {/* Transaction Summary */}
+                    <div className="bg-secondary border border-border rounded-xl sm:rounded-2xl p-3 sm:p-6">
                       <div className="flex items-center space-x-2 mb-3 sm:mb-4">
-                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <Info className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Info className="w-3 h-3 sm:w-4 sm:h-4 text-primary-foreground" />
                         </div>
-                        <h4 className="text-white font-bold text-sm sm:text-lg">
-                          Summary
-                        </h4>
+                        <h4 className="text-foreground font-bold text-sm sm:text-lg">Summary</h4>
                       </div>
-
                       <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-3 sm:mb-4">
-                        <div className="text-center p-2 sm:p-3 bg-warm-400/15 rounded-lg">
-                          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
-                            Amount
-                          </p>
-                          <p className="text-white font-bold text-sm sm:text-base">
-                            {formatCurrency(amount)}
-                          </p>
+                        <div className="text-center p-2 sm:p-3 bg-card border border-border rounded-lg">
+                          <p className="text-muted-foreground text-xs sm:text-sm">Amount</p>
+                          <p className="text-foreground font-bold text-sm sm:text-base">{formatCurrency(amount)}</p>
                         </div>
-                        <div className="text-center p-2 sm:p-3 bg-warm-400/15 rounded-lg">
-                          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
-                            Token
-                          </p>
-                          <p className="text-white font-bold text-sm sm:text-base">
-                            {selectedToken}
-                          </p>
+                        <div className="text-center p-2 sm:p-3 bg-card border border-border rounded-lg">
+                          <p className="text-muted-foreground text-xs sm:text-sm">Token</p>
+                          <p className="text-foreground font-bold text-sm sm:text-base">{selectedToken}</p>
                         </div>
                       </div>
-
-                      <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm text-center">
-                        Processing: 1-5 minutes
-                      </p>
+                      <p className="text-muted-foreground text-xs sm:text-sm text-center">Processing: 1-5 minutes</p>
                     </div>
 
-                    {/* Transaction ID Input Field */}
-                    <div className="bg-gradient-to-br from-cyan-500/10 to-blue-400/5 backdrop-blur-xl border border-cyan-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-6">
+                    {/* Transaction ID */}
+                    <div className="bg-secondary border border-border rounded-xl sm:rounded-2xl p-3 sm:p-6">
                       <div className="flex items-center space-x-2 mb-2 sm:mb-3">
-                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <CreditCard className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+                          <CreditCard className="w-3 h-3 sm:w-4 sm:h-4 text-primary-foreground" />
                         </div>
-                        <h4 className="text-white font-bold text-sm sm:text-lg">
-                          Transaction ID
-                        </h4>
-                        <span className="px-2 py-0.5 bg-red-500/20 text-red-400 rounded text-xs font-medium">
-                          Required
-                        </span>
+                        <h4 className="text-foreground font-bold text-sm sm:text-lg">Transaction ID</h4>
+                        <span className="px-2 py-0.5 bg-destructive/15 text-destructive rounded text-xs font-medium">Required</span>
                       </div>
-
-                      <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-3">
-                        Enter your transaction hash or ID for faster
-                        verification
+                      <p className="text-muted-foreground text-xs sm:text-sm mb-3">
+                        Enter your transaction hash or ID for faster verification
                       </p>
-
                       <input
                         type="text"
                         value={userTransactionId}
                         onChange={(e) => setUserTransactionId(e.target.value)}
                         placeholder="Enter transaction ID (e.g., 0xabc123...)"
-                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-warm-400/15 border border-cyan-500/30 rounded-lg sm:rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 transition-all duration-300 text-xs sm:text-sm font-mono"
+                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-card border border-border rounded-lg sm:rounded-xl text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all duration-300 text-xs sm:text-sm font-mono"
                         maxLength={200}
                       />
-                      <p className="text-white/50 text-xs mt-2">
-                        This helps us verify your payment faster
-                      </p>
+                      <p className="text-muted-foreground/60 text-xs mt-2">This helps us verify your payment faster</p>
                     </div>
 
-                    {/* Mobile-Optimized Screenshot Upload */}
-                    <div className="bg-gradient-to-br from-purple-500/10 to-pink-400/5 backdrop-blur-xl border border-purple-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-6">
+                    {/* Screenshot Upload */}
+                    <div className="bg-secondary border border-border rounded-xl sm:rounded-2xl p-3 sm:p-6">
                       <div className="flex items-center space-x-2 mb-2 sm:mb-3">
-                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <Upload className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Upload className="w-3 h-3 sm:w-4 sm:h-4 text-primary-foreground" />
                         </div>
-                        <h4 className="text-white font-bold text-sm sm:text-lg">
-                          Payment Proof
-                        </h4>
-                        <span className="px-2 py-0.5 bg-red-500/20 text-red-400 rounded text-xs font-medium">
-                          Required
-                        </span>
+                        <h4 className="text-foreground font-bold text-sm sm:text-lg">Payment Proof</h4>
+                        <span className="px-2 py-0.5 bg-destructive/15 text-destructive rounded text-xs font-medium">Required</span>
                       </div>
-
-                      <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mb-3">
-                        Upload transaction screenshot
-                      </p>
+                      <p className="text-muted-foreground text-xs sm:text-sm mb-3">Upload transaction screenshot</p>
 
                       {!uploadedScreenshot ? (
-                        <div className="border-2 border-dashed border-purple-400/30 hover:border-purple-400/60 rounded-lg p-4 sm:p-6 text-center transition-all duration-300 bg-purple-500/5">
+                        <div className="border-2 border-dashed border-primary/30 hover:border-primary/60 rounded-lg p-4 sm:p-6 text-center transition-all duration-300 bg-primary/5">
                           <label className="cursor-pointer block">
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={handleScreenshotUpload}
-                              className="hidden"
-                            />
+                            <input type="file" accept="image/*" onChange={handleScreenshotUpload} className="hidden" />
                             <div className="space-y-2">
-                              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mx-auto">
-                                <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+                              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/15 rounded-lg flex items-center justify-center mx-auto">
+                                <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                               </div>
                               <div>
-                                <p className="text-white font-medium text-xs sm:text-sm">
-                                  Tap to Upload
-                                </p>
-                                <p className="text-slate-600 dark:text-slate-300 text-xs">
-                                  PNG, JPG up to 5MB
-                                </p>
+                                <p className="text-foreground font-medium text-xs sm:text-sm">Tap to Upload</p>
+                                <p className="text-muted-foreground text-xs">PNG, JPG up to 5MB</p>
                               </div>
                             </div>
                           </label>
                         </div>
                       ) : (
-                        <div className="bg-green-500/15 border border-green-500/30 rounded-lg p-3 sm:p-4">
+                        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-3 sm:p-4">
                           <div className="flex items-center space-x-2 sm:space-x-3">
                             <div className="relative flex-shrink-0">
                               {screenshotPreview && (
-                                <img
-                                  src={screenshotPreview}
-                                  alt="Payment screenshot"
-                                  className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg border-2 border-green-500/40"
-                                />
+                                <img src={screenshotPreview} alt="Payment screenshot"
+                                  className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg border-2 border-emerald-500/40" />
                               )}
-                              <div className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-green-500 rounded-full flex items-center justify-center">
+                              <div className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-emerald-500 rounded-full flex items-center justify-center">
                                 <Check className="w-2 h-2 sm:w-3 sm:h-3 text-white" />
                               </div>
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-white font-semibold text-xs sm:text-sm truncate">
-                                {uploadedScreenshot.name}
-                              </p>
-                              <p className="text-slate-600 dark:text-slate-300 text-xs">
-                                {(
-                                  uploadedScreenshot.size /
-                                  1024 /
-                                  1024
-                                ).toFixed(1)}{" "}
-                                MB • Ready
-                              </p>
+                              <p className="text-foreground font-semibold text-xs sm:text-sm truncate">{uploadedScreenshot.name}</p>
+                              <p className="text-muted-foreground text-xs">{(uploadedScreenshot.size / 1024 / 1024).toFixed(1)} MB • Ready</p>
                             </div>
-                            <button
-                              onClick={removeScreenshot}
-                              className="w-7 h-7 sm:w-8 sm:h-8 bg-red-500/20 hover:bg-red-500/30 rounded-lg flex items-center justify-center transition-colors flex-shrink-0"
-                            >
-                              <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 text-red-400" />
+                            <button onClick={removeScreenshot}
+                              className="w-7 h-7 sm:w-8 sm:h-8 bg-destructive/15 hover:bg-destructive/25 rounded-lg flex items-center justify-center transition-colors flex-shrink-0">
+                              <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 text-destructive" />
                             </button>
                           </div>
                         </div>
                       )}
                     </div>
 
-                    {/* Mobile-Friendly Instructions */}
-                    <div className="bg-gradient-to-br from-amber-500/10 to-orange-400/5 backdrop-blur-xl border border-amber-500/20 rounded-xl sm:rounded-2xl p-3 sm:p-6">
+                    {/* Steps */}
+                    <div className="bg-primary/8 border border-primary/20 rounded-xl sm:rounded-2xl p-3 sm:p-6">
                       <div className="flex items-center space-x-2 mb-3 sm:mb-4">
-                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-amber-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 text-black" />
+                        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+                          <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 text-primary-foreground" />
                         </div>
-                        <h4 className="text-white font-bold text-sm sm:text-lg">
-                          Steps
-                        </h4>
+                        <h4 className="text-foreground font-bold text-sm sm:text-lg">Steps</h4>
                       </div>
-
                       <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
-                        <div className="flex items-start space-x-2 sm:space-x-3">
-                          <div className="w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <span className="text-black text-xs font-bold">
-                              1
-                            </span>
+                        {[
+                          <>Send <span className="font-bold text-primary">{formatCurrency(amount)} {selectedToken}</span></>,
+                          "Use TRC-20 (faster) or BEP-20",
+                          "Upload screenshot proof",
+                          `Tap "Confirm Deposit"`,
+                        ].map((step, i) => (
+                          <div key={i} className="flex items-start space-x-2 sm:space-x-3">
+                            <div className="w-5 h-5 bg-primary rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <span className="text-primary-foreground text-xs font-bold">{i + 1}</span>
+                            </div>
+                            <p className="text-foreground">{step}</p>
                           </div>
-                          <p className="text-slate-900 dark:text-white">
-                            Send{" "}
-                            <span className="font-bold text-amber-400">
-                              {formatCurrency(amount)} {selectedToken}
-                            </span>
-                          </p>
-                        </div>
-                        <div className="flex items-start space-x-2 sm:space-x-3">
-                          <div className="w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <span className="text-black text-xs font-bold">
-                              2
-                            </span>
-                          </div>
-                          <p className="text-slate-900 dark:text-white">
-                            Use TRC-20 (faster) or BEP-20
-                          </p>
-                        </div>
-                        <div className="flex items-start space-x-2 sm:space-x-3">
-                          <div className="w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <span className="text-black text-xs font-bold">
-                              3
-                            </span>
-                          </div>
-                          <p className="text-slate-900 dark:text-white">
-                            Upload screenshot proof
-                          </p>
-                        </div>
-                        <div className="flex items-start space-x-2 sm:space-x-3">
-                          <div className="w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <span className="text-black text-xs font-bold">
-                              4
-                            </span>
-                          </div>
-                          <p className="text-slate-900 dark:text-white">Tap "Confirm Deposit"</p>
-                        </div>
+                        ))}
                       </div>
                     </div>
-                  </div>
-                </div>
 
-                {/* Mobile-Optimized Footer with Safe Area */}
-                <div className="flex-shrink-0 border-t border-warm-400/20 px-3 sm:px-6 pt-3 sm:pt-4 pb-safe-bottom bg-gradient-to-r from-slate-900/95 to-slate-800/95 backdrop-blur-sm">
-                  <div className="space-y-2 sm:space-y-3">
-                    {/* Primary Action Button */}
-                    <button
-                      onClick={handleModalDone}
-                      disabled={
-                        isProcessing ||
-                        !uploadedScreenshot ||
-                        !userTransactionId.trim()
-                      }
-                      className={`w-full py-3 sm:py-4 px-4 sm:px-6 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-lg transition-all duration-300 shadow-lg touch-manipulation ${
-                        !uploadedScreenshot || !userTransactionId.trim()
-                          ? "bg-warm-400/15 text-white/50 cursor-not-allowed border border-warm-400/20"
-                          : "bg-gradient-to-r from-emerald-500 to-green-400 hover:from-emerald-600 hover:to-green-500 active:scale-95 text-black shadow-emerald-500/30"
-                      }`}
-                    >
-                      {isProcessing ? (
-                        <div className="flex items-center justify-center space-x-2">
-                          <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                          <span>Processing...</span>
-                        </div>
-                      ) : !uploadedScreenshot ? (
-                        <div className="flex items-center justify-center space-x-2">
-                          <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
-                          <span>Upload Screenshot</span>
-                        </div>
-                      ) : !userTransactionId.trim() ? (
-                        <div className="flex items-center justify-center space-x-2">
-                          <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
-                          <span>Enter Transaction ID</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-center space-x-2">
-                          <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6" />
-                          <span>Confirm Deposit {formatCurrency(amount)}</span>
-                        </div>
-                      )}
-                    </button>
+                    {/* Footer actions — part of the scrollable body so they're always reachable */}
+                    <div className="border-t border-border pt-3 sm:pt-4 pb-safe-bottom space-y-2 sm:space-y-3">
+                      <button
+                        onClick={handleModalDone}
+                        disabled={isProcessing || !uploadedScreenshot || !userTransactionId.trim()}
+                        className={`w-full py-3 sm:py-4 px-4 sm:px-6 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-lg transition-all duration-300 shadow-sm touch-manipulation ${
+                          !uploadedScreenshot || !userTransactionId.trim()
+                            ? "bg-muted text-muted-foreground cursor-not-allowed border border-border"
+                            : "bg-gradient-to-r from-primary to-accent hover:opacity-90 active:scale-95 text-primary-foreground shadow-primary/20"
+                        }`}
+                      >
+                        {isProcessing ? (
+                          <div className="flex items-center justify-center space-x-2">
+                            <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                            <span>Processing...</span>
+                          </div>
+                        ) : !uploadedScreenshot ? (
+                          <div className="flex items-center justify-center space-x-2">
+                            <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
+                            <span>Upload Screenshot</span>
+                          </div>
+                        ) : !userTransactionId.trim() ? (
+                          <div className="flex items-center justify-center space-x-2">
+                            <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
+                            <span>Enter Transaction ID</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center space-x-2">
+                            <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6" />
+                            <span>Confirm Deposit {formatCurrency(amount)}</span>
+                          </div>
+                        )}
+                      </button>
 
-                    {/* Secondary Cancel Button */}
-                    <button
-                      onClick={() => setShowQRModal(false)}
-                      className="w-full py-2 sm:py-3 px-4 sm:px-6 bg-warm-400/15 hover:bg-warm-400/25 active:bg-white/25 text-white rounded-lg sm:rounded-xl transition-all duration-200 border border-warm-400/30 hover:border-white/30 font-medium touch-manipulation text-sm sm:text-base"
-                    >
-                      Cancel
-                    </button>
-                  </div>
+                      <button
+                        onClick={() => setShowQRModal(false)}
+                        className="w-full py-2 sm:py-3 px-4 sm:px-6 bg-secondary hover:bg-primary/10 active:bg-primary/15 text-foreground rounded-lg sm:rounded-xl transition-all duration-200 border border-border hover:border-primary/30 font-medium touch-manipulation text-sm sm:text-base"
+                      >
+                        Cancel
+                      </button>
 
-                  {/* Mobile-Friendly Progress Indicator */}
-                  <div className="mt-2 sm:mt-3 flex items-center justify-center space-x-2 pb-2 sm:pb-0">
-                    <div
-                      className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-colors ${
-                        amount > 0 ? "bg-emerald-400" : "bg-warm-400/25"
-                      }`}
-                    ></div>
-                    <div
-                      className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-colors ${
-                        userTransactionId.trim()
-                          ? "bg-emerald-400"
-                          : "bg-warm-400/25"
-                      }`}
-                    ></div>
-                    <div
-                      className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-colors ${
-                        uploadedScreenshot ? "bg-emerald-400" : "bg-warm-400/25"
-                      }`}
-                    ></div>
-                    <div
-                      className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-colors ${
-                        isProcessing ? "bg-emerald-400" : "bg-warm-400/25"
-                      }`}
-                    ></div>
+                      {/* Progress dots */}
+                      <div className="flex items-center justify-center space-x-2 pt-1">
+                        {[amount > 0, !!userTransactionId.trim(), !!uploadedScreenshot, isProcessing].map((done, i) => (
+                          <div key={i} className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-colors ${done ? "bg-primary" : "bg-border"}`} />
+                        ))}
+                      </div>
+                      <p className="text-center text-muted-foreground text-xs">
+                        {!userTransactionId.trim() ? "Step 2 of 4: Enter transaction ID"
+                          : !uploadedScreenshot ? "Step 3 of 4: Upload proof"
+                          : "Step 4 of 4: Ready to confirm"}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-center text-slate-600 dark:text-slate-300 text-xs mt-2 pb-1">
-                    {!userTransactionId.trim()
-                      ? "Step 2 of 4: Enter transaction ID"
-                      : !uploadedScreenshot
-                      ? "Step 3 of 4: Upload proof"
-                      : "Step 4 of 4: Ready"}
-                  </p>
-                </div>
-              </motion.div>
+                </motion.div>
               </div>
             </motion.div>
           )}
@@ -6222,8 +6054,8 @@ function AnalyticsTab() {
                 onClick={() => setTimeRange(range.id)}
                 className={`px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                   timeRange === range.id
-                    ? "bg-emerald-500 text-black"
-                    : "bg-warm-400/15 text-slate-600 dark:text-slate-300 hover:bg-warm-400/25 hover:text-white"
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "bg-secondary border border-border text-muted-foreground hover:bg-primary/10 hover:text-foreground"
                 }`}
               >
                 {range.label}
@@ -8677,24 +8509,31 @@ function AddressBookTab() {
   const [newLabel, setNewLabel] = useState("");
   const [newAddress, setNewAddress] = useState("");
   const [newNetwork, setNewNetwork] = useState("ERC-20");
-  const [addresses, setAddresses] = useState([
-    { id: 1, label: "My Binance Wallet", address: "0x742d35Cc6634C0532925a3b8D4C9B2aBd6a84c3e", network: "ERC-20", verified: true, lastUsed: "2024-01-15" },
-    { id: 2, label: "Hardware Wallet", address: "TQn9Y2khEsLJW1ChVWFMSMeRDow5KEFH4V", network: "TRC-20", verified: true, lastUsed: "2024-01-10" },
-  ]);
+  const [addresses, setAddresses] = useState<{ id: number; label: string; address: string; network: string; verified: boolean; lastUsed: string }[]>([]);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
 
   const networks = ["ERC-20", "TRC-20", "BEP-20"];
 
   const maskAddress = (addr: string) => `${addr.slice(0, 8)}...${addr.slice(-8)}`;
 
+  const handleCopy = (addr: { id: number; address: string }) => {
+    navigator.clipboard.writeText(addr.address);
+    setCopiedId(addr.id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="glass-card p-6 flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      {/* Header */}
+      <div className="glass-card p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Address Book</h2>
-          <p className="text-slate-600 dark:text-slate-300">Save and manage trusted withdrawal addresses</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1">Address Book</h2>
+          <p className="text-muted-foreground text-sm">Save and manage trusted withdrawal addresses</p>
         </div>
-        <button onClick={() => setShowAddForm(!showAddForm)}
-          className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-warm-500 to-warm-600 text-white rounded-xl font-semibold text-sm hover:opacity-90 transition-all">
+        <button
+          onClick={() => setShowAddForm(!showAddForm)}
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl font-semibold text-sm hover:opacity-90 transition-all w-full sm:w-auto"
+        >
           <Plus className="w-4 h-4" />
           Add Address
         </button>
@@ -8702,39 +8541,62 @@ function AddressBookTab() {
 
       {/* Add Form */}
       {showAddForm && (
-        <div className="glass-card p-6 border-2 border-warm-400/40">
-          <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Add New Address</h3>
+        <div className="glass-card p-4 sm:p-6 border-2 border-primary/30">
+          <h3 className="font-semibold text-foreground mb-4">Add New Address</h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
             <div>
-              <label className="block text-xs text-warm-600 mb-1.5 font-medium">Label</label>
-              <input value={newLabel} onChange={e => setNewLabel(e.target.value)}
+              <label className="block text-xs text-muted-foreground mb-1.5 font-medium">Label</label>
+              <input
+                value={newLabel}
+                onChange={e => setNewLabel(e.target.value)}
                 placeholder="e.g. My Binance Wallet"
-                className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-100 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-warm-400 text-sm" />
+                className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary text-sm transition-all"
+              />
             </div>
             <div>
-              <label className="block text-xs text-warm-600 mb-1.5 font-medium">Network</label>
-              <select value={newNetwork} onChange={e => setNewNetwork(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-100 text-slate-900 dark:text-white outline-none text-sm">
+              <label className="block text-xs text-muted-foreground mb-1.5 font-medium">Network</label>
+              <select
+                value={newNetwork}
+                onChange={e => setNewNetwork(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none text-sm"
+              >
                 {networks.map(n => <option key={n}>{n}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-warm-600 mb-1.5 font-medium">Wallet Address</label>
-              <input value={newAddress} onChange={e => setNewAddress(e.target.value)}
+              <label className="block text-xs text-muted-foreground mb-1.5 font-medium">Wallet Address</label>
+              <input
+                value={newAddress}
+                onChange={e => setNewAddress(e.target.value)}
                 placeholder="0x..."
-                className="w-full px-3 py-2.5 rounded-xl border border-warm-400/30 bg-cream-100 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-warm-400 text-sm" />
+                className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary text-sm transition-all"
+              />
             </div>
           </div>
-          <div className="flex gap-3">
-            <button onClick={() => {
-              if (newLabel && newAddress) {
-                setAddresses(prev => [...prev, { id: Date.now(), label: newLabel, address: newAddress, network: newNetwork, verified: false, lastUsed: "—" }]);
-                setNewLabel(""); setNewAddress(""); setShowAddForm(false);
-              }
-            }} className="px-5 py-2 bg-gradient-to-r from-warm-500 to-warm-600 text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-all">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={() => {
+                if (newLabel.trim() && newAddress.trim()) {
+                  setAddresses(prev => [...prev, {
+                    id: Date.now(),
+                    label: newLabel.trim(),
+                    address: newAddress.trim(),
+                    network: newNetwork,
+                    verified: false,
+                    lastUsed: "—"
+                  }]);
+                  setNewLabel(""); setNewAddress(""); setShowAddForm(false);
+                }
+              }}
+              disabled={!newLabel.trim() || !newAddress.trim()}
+              className="flex-1 sm:flex-none px-5 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl text-sm font-semibold hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            >
               Save Address
             </button>
-            <button onClick={() => setShowAddForm(false)} className="px-5 py-2 border border-warm-400/30 text-slate-600 dark:text-slate-300 rounded-xl text-sm hover:bg-warm-400/10 transition-all">
+            <button
+              onClick={() => { setShowAddForm(false); setNewLabel(""); setNewAddress(""); }}
+              className="flex-1 sm:flex-none px-5 py-2.5 border border-border text-muted-foreground rounded-xl text-sm hover:bg-primary/10 hover:text-foreground hover:border-primary/30 transition-all"
+            >
               Cancel
             </button>
           </div>
@@ -8742,45 +8604,69 @@ function AddressBookTab() {
       )}
 
       {/* Security Note */}
-      <div className="glass-card p-4 border border-amber-300/50 bg-amber-50/50 flex gap-3">
-        <Shield className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+      <div className="glass-card p-4 border border-primary/25 bg-primary/5 flex gap-3">
+        <Shield className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
         <div className="text-sm">
-          <strong className="text-slate-900 dark:text-white">Security Tip:</strong>
-          <span className="text-slate-600 dark:text-slate-300"> Only save addresses you fully trust. Always verify the first 4 and last 4 characters before withdrawing.</span>
+          <strong className="text-foreground">Security Tip:</strong>
+          <span className="text-muted-foreground"> Only save addresses you fully trust. Always verify the first 4 and last 4 characters before withdrawing.</span>
         </div>
       </div>
 
       {/* Address List */}
       <div className="space-y-3">
         {addresses.length === 0 ? (
-          <div className="glass-card p-12 text-center">
+          <div className="glass-card p-10 sm:p-12 text-center">
             <div className="text-4xl mb-3">📋</div>
-            <div className="text-lg font-semibold text-slate-900 dark:text-white mb-1">No addresses saved</div>
-            <div className="text-slate-600 dark:text-slate-300 text-sm">Add trusted wallets for faster withdrawals</div>
+            <div className="text-lg font-semibold text-foreground mb-1">No addresses saved</div>
+            <div className="text-muted-foreground text-sm mb-4">Add trusted wallets for faster withdrawals</div>
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/25 text-primary rounded-xl text-sm font-medium hover:bg-primary/20 transition-all"
+            >
+              <Plus className="w-4 h-4" />
+              Add your first address
+            </button>
           </div>
         ) : (
           addresses.map(addr => (
-            <div key={addr.id} className="glass-card p-5 flex items-center justify-between group hover:-translate-y-0.5 transition-all">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-warm-400/20 flex items-center justify-center text-warm-600 font-bold text-sm flex-shrink-0">
+            <div
+              key={addr.id}
+              className="glass-card p-4 sm:p-5 flex items-start sm:items-center justify-between gap-3 hover:-translate-y-0.5 transition-all"
+            >
+              <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary/15 border border-primary/20 flex items-center justify-center text-primary font-bold text-sm flex-shrink-0 mt-0.5 sm:mt-0">
                   {addr.label.charAt(0).toUpperCase()}
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-slate-900 dark:text-white">{addr.label}</span>
-                    {addr.verified && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">✓ Verified</span>}
-                    <span className="text-xs bg-warm-400/15 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-full">{addr.network}</span>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
+                    <span className="font-semibold text-foreground text-sm sm:text-base">{addr.label}</span>
+                    {addr.verified && (
+                      <span className="text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full font-medium border border-emerald-200 dark:border-emerald-700/40">✓ Verified</span>
+                    )}
+                    <span className="text-xs bg-secondary border border-border text-muted-foreground px-2 py-0.5 rounded-full">{addr.network}</span>
                   </div>
-                  <div className="text-sm text-warm-600 font-mono mt-0.5">{maskAddress(addr.address)}</div>
-                  <div className="text-xs text-warm-500 mt-0.5">Last used: {addr.lastUsed}</div>
+                  <div className="text-sm text-primary font-mono truncate max-w-[200px] sm:max-w-xs">{maskAddress(addr.address)}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">Last used: {addr.lastUsed}</div>
                 </div>
               </div>
-              <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                <button className="p-2 rounded-lg hover:bg-warm-400/15 text-warm-600 transition-all" title="Copy address">
-                  <Copy className="w-4 h-4" />
+
+              {/* Action buttons — always visible on mobile, no group-hover needed */}
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                <button
+                  onClick={() => handleCopy(addr)}
+                  className="p-2 sm:p-2.5 rounded-lg bg-secondary border border-border hover:bg-primary/10 hover:border-primary/30 text-muted-foreground hover:text-primary transition-all"
+                  title="Copy address"
+                >
+                  {copiedId === addr.id
+                    ? <Check className="w-4 h-4 text-primary" />
+                    : <Copy className="w-4 h-4" />
+                  }
                 </button>
-                <button onClick={() => setAddresses(prev => prev.filter(a => a.id !== addr.id))}
-                  className="p-2 rounded-lg hover:bg-red-50 text-red-400 transition-all" title="Delete">
+                <button
+                  onClick={() => setAddresses(prev => prev.filter(a => a.id !== addr.id))}
+                  className="p-2 sm:p-2.5 rounded-lg bg-destructive/10 border border-destructive/20 hover:bg-destructive/20 text-destructive transition-all"
+                  title="Delete address"
+                >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
@@ -8790,18 +8676,20 @@ function AddressBookTab() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
-        {[
-          { label: "Saved Addresses", value: addresses.length },
-          { label: "Verified", value: addresses.filter(a => a.verified).length },
-          { label: "Networks", value: [...new Set(addresses.map(a => a.network))].length },
-        ].map(s => (
-          <div key={s.label} className="glass-card p-4 text-center">
-            <div className="text-2xl font-bold text-slate-900 dark:text-white">{s.value}</div>
-            <div className="text-xs text-warm-600">{s.label}</div>
-          </div>
-        ))}
-      </div>
+      {addresses.length > 0 && (
+        <div className="grid grid-cols-3 gap-3 sm:gap-4">
+          {[
+            { label: "Saved", value: addresses.length },
+            { label: "Verified", value: addresses.filter(a => a.verified).length },
+            { label: "Networks", value: [...new Set(addresses.map(a => a.network))].length },
+          ].map(s => (
+            <div key={s.label} className="glass-card p-3 sm:p-4 text-center">
+              <div className="text-xl sm:text-2xl font-bold text-foreground">{s.value}</div>
+              <div className="text-xs text-muted-foreground mt-0.5">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -8844,13 +8732,13 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Portfolio Analytics</h2>
           <p className="text-slate-600 dark:text-slate-300">Deep insights into your investment performance</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           {["7d", "30d", "90d", "1y", "All"].map(p => (
             <button key={p} onClick={() => setPeriod(p)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
                 period === p
-                  ? "bg-amber-600 text-white shadow-sm shadow-amber-600/30 scale-105"
-                  : "bg-white border border-warm-400/30 text-slate-600 dark:text-slate-300 hover:border-amber-500/50 hover:bg-amber-50"
+                  ? "bg-primary text-primary-foreground shadow-sm scale-105"
+                  : "bg-secondary border border-border text-muted-foreground hover:border-primary/40 hover:bg-primary/10"
               }`}>
               {p}
             </button>
