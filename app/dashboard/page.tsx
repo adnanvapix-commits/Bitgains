@@ -6260,39 +6260,37 @@ function AnalyticsTab() {
         transition={{ duration: 0.5, delay: 0.6 }}
         className="glass-card p-6"
       >
-        <h3 className="text-xl font-semibold text-white mb-6">
+        <h3 className="text-xl font-semibold text-foreground mb-6">
           Performance Summary
         </h3>
         {loading ? (
           <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl">
-              <p className="text-slate-600 dark:text-slate-300 text-sm mb-2">Best Day</p>
-              <p className="text-2xl font-bold text-emerald-400">
+            <div className="text-center p-4 bg-secondary border border-border rounded-xl">
+              <p className="text-muted-foreground text-sm mb-2">Best Day</p>
+              <p className="text-2xl font-bold text-foreground">
                 ${analyticsData?.bestDay.toFixed(2) || "0.00"}
               </p>
-              <p className="text-slate-600 dark:text-slate-300 text-xs">
-                {analyticsData?.bestDay > 0
-                  ? "Highest daily reward"
-                  : "No rewards yet"}
+              <p className="text-muted-foreground text-xs">
+                {analyticsData?.bestDay > 0 ? "Highest daily reward" : "No rewards yet"}
               </p>
             </div>
-            <div className="text-center p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl">
-              <p className="text-slate-600 dark:text-slate-300 text-sm mb-2">Average Daily</p>
-              <p className="text-2xl font-bold text-white">
+            <div className="text-center p-4 bg-secondary border border-border rounded-xl">
+              <p className="text-muted-foreground text-sm mb-2">Average Daily</p>
+              <p className="text-2xl font-bold text-foreground">
                 ${analyticsData?.avgDaily.toFixed(2) || "0.00"}
               </p>
-              <p className="text-slate-600 dark:text-slate-300 text-xs">Last 7 days</p>
+              <p className="text-muted-foreground text-xs">Last 7 days</p>
             </div>
-            <div className="text-center p-4 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl">
-              <p className="text-slate-600 dark:text-slate-300 text-sm mb-2">Total Staked</p>
-              <p className="text-2xl font-bold text-cyan-400">
+            <div className="text-center p-4 bg-secondary border border-border rounded-xl">
+              <p className="text-muted-foreground text-sm mb-2">Total Staked</p>
+              <p className="text-2xl font-bold text-foreground">
                 ${analyticsData?.stakedAmount.toLocaleString() || "0.00"}
               </p>
-              <p className="text-slate-600 dark:text-slate-300 text-xs">Principal amount</p>
+              <p className="text-muted-foreground text-xs">Principal amount</p>
             </div>
           </div>
         )}
@@ -7900,11 +7898,11 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
                 <button key={opt.days} onClick={() => setDuration(opt.days)}
                   className={`p-3 rounded-xl border-2 text-center transition-all duration-200 ${
                     duration === opt.days
-                      ? "border-primary bg-primary text-primary-foreground shadow-md shadow-primary/25 scale-[1.03]"
+                      ? "border-primary bg-primary/10 text-foreground shadow-sm scale-[1.03]"
                       : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:bg-primary/5"
                   }`}>
                   <div className="font-bold text-sm">{opt.label}</div>
-                  <div className={`text-xs ${duration === opt.days ? "text-primary-foreground/80" : "text-muted-foreground"}`}>{opt.rate}</div>
+                  <div className={`text-xs ${duration === opt.days ? "text-primary font-medium" : "text-muted-foreground"}`}>{opt.rate}</div>
                 </button>
               ))}
             </div>
@@ -7928,13 +7926,13 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
         {/* Results Panel */}
         <div className="space-y-4">
           {/* Tier Badge */}
-          <div className="glass-card p-5 bg-gradient-to-r from-primary to-accent text-primary-foreground">
+          <div className="glass-card p-5 bg-primary/8 border border-primary/25">
             <div className="flex items-center gap-3">
               <span className="text-3xl">{currentTier.icon}</span>
               <div>
-                <div className="text-sm font-medium opacity-90">Your Tier</div>
-                <div className="text-2xl font-bold">{currentTier.label} Member</div>
-                <div className="text-sm opacity-80">{currentTier.rate} monthly rate · ${currentTier.min.toLocaleString()}–{currentTier.max === Infinity ? "∞" : `$${currentTier.max.toLocaleString()}`}</div>
+                <div className="text-sm font-medium text-muted-foreground">Your Tier</div>
+                <div className="text-2xl font-bold text-foreground">{currentTier.label} Member</div>
+                <div className="text-sm text-muted-foreground">{currentTier.rate} monthly rate · ${currentTier.min.toLocaleString()}–{currentTier.max === Infinity ? "∞" : `$${currentTier.max.toLocaleString()}`}</div>
               </div>
             </div>
           </div>
@@ -8142,9 +8140,9 @@ function StakingPlansTab() {
             </div>
 
             {/* Rate */}
-            <div className="p-3 rounded-xl bg-gradient-to-r from-primary to-accent text-primary-foreground text-center mb-4">
-              <div className="text-3xl font-black">{plan.rate}</div>
-              <div className="text-xs opacity-80">Per Month (APM)</div>
+            <div className="p-3 rounded-xl bg-primary/10 border border-primary/20 text-center mb-4">
+              <div className="text-3xl font-black text-primary">{plan.rate}</div>
+              <div className="text-xs text-muted-foreground">Per Month (APM)</div>
             </div>
 
             {/* Duration */}
@@ -8718,15 +8716,14 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
         <h3 className="font-semibold text-foreground mb-4">📊 Portfolio Insights</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
-            { icon: "🎯", title: "Optimization Tip",  desc: bal < 1000 ? `Add $${(1000 - bal).toFixed(2)} to reach Silver tier (8%/month).` : bal < 5000 ? `Add $${(5000 - bal).toFixed(2)} to reach Gold tier (12%/month).` : "You're at a great tier! Keep compounding." },
-            { icon: "🔄", title: "Compounding Boost", desc: earned > 0 ? `You've earned $${earned.toFixed(2)} so far. Auto-compound could boost this by ~33% over 12 months.` : "Enable auto-compound after your first stake to maximize growth." },
-            { icon: "📅", title: "Active Stakes",     desc: (walletData?.wallet?.stakes?.filter((s: any) => s.status === "active")?.length ?? 0) > 0 ? `${walletData.wallet.stakes.filter((s: any) => s.status === "active").length} active stake(s) currently running.` : "No active stakes. Deposit and stake USDT to start earning." },
-            { icon: "🏆", title: "Tier Status",       desc: bal >= 25000 ? "Platinum tier — earning maximum 15%/month! 🎉" : bal >= 5000 ? `Gold tier. Add $${(25000 - bal).toFixed(2)} for Platinum.` : bal >= 1000 ? `Silver tier. Add $${(5000 - bal).toFixed(2)} for Gold.` : `Add $${(1000 - bal).toFixed(2)} for Silver tier.` },
-            { icon: "📈", title: "Monthly Potential", desc: bal > 0 ? `Staking $${bal.toFixed(2)} could earn ~$${(bal * 0.05).toFixed(2)}–$${(bal * 0.15).toFixed(2)}/month.` : "Deposit USDT to see your earning potential." },
-            { icon: "🛡️", title: "Risk Assessment",  desc: "Your portfolio risk is LOW. USDT staking provides stable, predictable monthly returns with no market volatility." },
+            { title: "Optimization Tip",  desc: bal < 1000 ? `Add $${(1000 - bal).toFixed(2)} to reach Silver tier (8%/month).` : bal < 5000 ? `Add $${(5000 - bal).toFixed(2)} to reach Gold tier (12%/month).` : "You're at a great tier! Keep compounding." },
+            { title: "Compounding Boost", desc: earned > 0 ? `You've earned $${earned.toFixed(2)} so far. Auto-compound could boost this by ~33% over 12 months.` : "Enable auto-compound after your first stake to maximize growth." },
+            { title: "Active Stakes",     desc: (walletData?.wallet?.stakes?.filter((s: any) => s.status === "active")?.length ?? 0) > 0 ? `${walletData.wallet.stakes.filter((s: any) => s.status === "active").length} active stake(s) currently running.` : "No active stakes. Deposit and stake USDT to start earning." },
+            { title: "Tier Status",       desc: bal >= 25000 ? "Platinum tier — earning maximum 15%/month!" : bal >= 5000 ? `Gold tier. Add $${(25000 - bal).toFixed(2)} for Platinum.` : bal >= 1000 ? `Silver tier. Add $${(5000 - bal).toFixed(2)} for Gold.` : `Add $${(1000 - bal).toFixed(2)} for Silver tier.` },
+            { title: "Monthly Potential", desc: bal > 0 ? `Staking $${bal.toFixed(2)} could earn ~$${(bal * 0.05).toFixed(2)}–$${(bal * 0.15).toFixed(2)}/month.` : "Deposit USDT to see your earning potential." },
+            { title: "Risk Assessment",   desc: "Your portfolio risk is LOW. USDT staking provides stable, predictable monthly returns with no market volatility." },
           ].map(ins => (
             <div key={ins.title} className="p-4 rounded-xl bg-secondary border border-border hover:border-primary/30 hover:bg-primary/5 transition-all duration-200">
-              <div className="text-xl mb-2">{ins.icon}</div>
               <div className="font-semibold text-foreground text-sm mb-1">{ins.title}</div>
               <div className="text-xs text-muted-foreground leading-relaxed">{ins.desc}</div>
             </div>
