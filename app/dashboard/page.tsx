@@ -8128,7 +8128,7 @@ function StakingPlansTab() {
 
             {/* Icon + Name */}
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-2xl shadow-sm shadow-primary/20">
+              <div className="w-12 h-12 rounded-xl bg-white border border-border flex items-center justify-center text-2xl shadow-sm">
                 {plan.icon}
               </div>
               <div>
@@ -8629,7 +8629,6 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         {performanceMetrics.map(m => (
           <div key={m.label} className="glass-card p-4">
-            <div className="text-xl mb-2">{m.icon}</div>
             <div className="text-lg font-bold text-foreground">{m.value}</div>
             <div className="text-xs text-muted-foreground mt-0.5">{m.label}</div>
             {m.change && (
