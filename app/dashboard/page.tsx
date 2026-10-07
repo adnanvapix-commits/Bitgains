@@ -173,6 +173,13 @@ export default function DashboardPage() {
     Array<{ id: number; type: string; message: string; timestamp: Date }>
   >([]);
 
+  // Congrats modal state for staking success
+  const [showCongratsModal, setShowCongratsModal] = useState(false);
+  const [congratsData, setCongratsData] = useState<{
+    amount: number;
+    packageType: string;
+  } | null>(null);
+
   // Push notifications state
   const [pushNotifications, setPushNotifications] = useState<any[]>([]);
   const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
@@ -580,21 +587,31 @@ export default function DashboardPage() {
         // Refresh wallet data to get updated balances
         await fetchWalletData();
 
-        setNotifications((prev) => [
-          {
-            id: Date.now(),
-            type: "success",
-            message: `Successfully staked ${formatCurrency(
-              amount
-            )} for ${packageType}`,
-            timestamp: new Date(),
-          },
-          ...prev,
-        ]);
+        // Show congrats modal if backend indicates to do so
+        if (response.showCongratsMessage) {
+          setCongratsData({
+            amount: amount,
+            packageType: packageType,
+          });
+          setShowCongratsModal(true);
+        } else {
+          // Fallback to regular notification
+          setNotifications((prev) => [
+            {
+              id: Date.now(),
+              type: "success",
+              message: `Successfully staked ${formatCurrency(
+                amount
+              )} for ${packageType}`,
+              timestamp: new Date(),
+            },
+            ...prev,
+          ]);
 
-        setTimeout(() => {
-          setNotifications((prev) => prev.slice(1));
-        }, 5000);
+          setTimeout(() => {
+            setNotifications((prev) => prev.slice(1));
+          }, 5000);
+        }
       } else {
         throw new Error(response.message || "Staking failed");
       }
@@ -1278,6 +1295,70 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* Staking Congrats Modal */}
+      <AnimatePresence>
+        {showCongratsModal && congratsData && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowCongratsModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 30 }}
+              transition={{ type: "spring", damping: 20, stiffness: 300 }}
+              className="bg-card rounded-2xl p-8 max-w-md w-full border border-border shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="text-center mb-6">
+                <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-emerald-500 to-green-400 rounded-full flex items-center justify-center shadow-lg">
+                  <Award className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-foreground mb-2">🎉 Congratulations!</h3>
+                <p className="text-muted-foreground">Your funds have been successfully staked!</p>
+              </div>
+              <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 mb-5">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="text-muted-foreground block">Amount Staked</span>
+                    <div className="text-foreground font-bold text-lg">
+                      ${new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(congratsData.amount)} USDT
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground block">Package</span>
+                    <div className="text-foreground font-bold text-lg capitalize">{congratsData.packageType}</div>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 mb-6">
+                <div className="flex items-start space-x-3">
+                  <Bell className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <h4 className="text-blue-400 font-semibold text-sm mb-1">Monthly Payout Incoming! 💰</h4>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                      Once your staking period ends, admin will distribute your payout directly to your wallet. You&apos;ll receive a notification when your payout is credited!
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowCongratsModal(false)}
+                className="w-full py-3 px-4 bg-gradient-to-r from-emerald-500 to-green-400 text-white rounded-xl hover:from-emerald-600 hover:to-green-500 transition-all font-semibold text-lg shadow-lg"
+              >
+                Awesome, let&apos;s go! 🚀
+              </button>
+              <p className="text-muted-foreground text-xs text-center mt-4">
+                💡 Check your wallet and notifications for payout updates
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -1866,6 +1947,9 @@ function OverviewTab({
                           transaction.type === "first_deposit_bonus" ||
                           transaction.type === "referral_commission"
                         ? "bg-yellow-500/20 text-yellow-400"
+                        : transaction.type === "staking_payout" ||
+                          transaction.type === "reward"
+                        ? "bg-emerald-500/20 text-emerald-400"
                         : "bg-blue-500/20 text-blue-400"
                     }`}
                   >
@@ -1897,6 +1981,10 @@ function OverviewTab({
                         ? "First Deposit Bonus"
                         : transaction.type === "referral_commission"
                         ? "Referral Commission"
+                        : transaction.type === "staking_payout"
+                        ? "Staking Payout 🎉"
+                        : transaction.type === "reward"
+                        ? "Staking Reward"
                         : transaction.type}
                     </p>
                     {/* Show description for bonus/admin transactions */}
@@ -1934,7 +2022,9 @@ function OverviewTab({
                       transaction.type === "manual_bonus" ||
                       transaction.type === "manual_add" ||
                       transaction.type === "first_deposit_bonus" ||
-                      transaction.type === "referral_commission"
+                      transaction.type === "referral_commission" ||
+                      transaction.type === "staking_payout" ||
+                      transaction.type === "reward"
                         ? "text-emerald-400"
                         : transaction.type === "withdrawal" ||
                           transaction.type === "unstake" ||
@@ -4816,6 +4906,7 @@ function HistoryTab({
       case "unstake":
         return ArrowDownLeft;
       case "reward":
+      case "staking_payout":
         return DollarSign;
       default:
         return DollarSign;
@@ -4844,6 +4935,7 @@ function HistoryTab({
       case "stake":
         return "text-blue-400";
       case "reward":
+      case "staking_payout":
         return "text-green-400";
       default:
         return "text-white";
@@ -4859,6 +4951,7 @@ function HistoryTab({
       case "stake":
         return "+";
       case "reward":
+      case "staking_payout":
         return "+";
       default:
         return "";
@@ -8729,12 +8822,8 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
           ))}
         </div>
       </div>
+
+
     </div>
   );
 }
-
-
-
-
-
-

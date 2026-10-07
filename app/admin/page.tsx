@@ -26,6 +26,8 @@ import {
   ChevronRight,
   Trash2,
   Bell,
+  History,
+  DollarSign,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext.js";
 import { adminApi } from "../../lib/api/admin.js";
@@ -273,6 +275,15 @@ export default function AdminPage() {
   }>({ open: false, user: null, selectedStakeId: null });
   const [cancelStakeReason, setCancelStakeReason] = useState("");
   const [isCancellingStake, setIsCancellingStake] = useState(false);
+
+  // Payouts state
+  const [eligibleUsers, setEligibleUsers] = useState<any[]>([]);
+  const [payoutHistory, setPayoutHistory] = useState<any[]>([]);
+  const [isLoadingPayouts, setIsLoadingPayouts] = useState(false);
+  const [isDistributingPayouts, setIsDistributingPayouts] = useState(false);
+  const [payoutPercentage, setPayoutPercentage] = useState<string>("");
+  const [selectedPayoutUsers, setSelectedPayoutUsers] = useState<string[]>([]);
+  const [payoutSummary, setPayoutSummary] = useState<any>(null);
 
   const { user, isAuthenticated, logout } = useAuth();
   const router = useRouter();
@@ -586,7 +597,7 @@ export default function AdminPage() {
       const response = await adminApi.cancelStake(
         cancelStakeModal.user._id,
         cancelStakeReason,
-        targetStakeId // Pass specific stake ID or null to cancel all
+        (targetStakeId || undefined) as any
       );
 
       if (response.success) {
@@ -810,6 +821,101 @@ export default function AdminPage() {
     }
   };
 
+  // Payout handlers
+  const fetchEligibleUsers = async () => {
+    try {
+      setIsLoadingPayouts(true);
+      const response = await adminApi.getPayoutEligibleUsers();
+      if (response.success) {
+        setEligibleUsers(response.data.users);
+        setPayoutSummary(response.data.summary);
+      }
+    } catch (error: any) {
+      console.error("Error fetching eligible users:", error);
+      alert(error.message || "Failed to fetch eligible users");
+    } finally {
+      setIsLoadingPayouts(false);
+    }
+  };
+
+  const fetchPayoutHistory = async () => {
+    try {
+      const response = await adminApi.getPayoutHistory({ limit: 50 });
+      if (response.success) {
+        setPayoutHistory(response.data.payouts);
+      }
+    } catch (error: any) {
+      console.error("Error fetching payout history:", error);
+    }
+  };
+
+  const handleDistributePayouts = async () => {
+    if (!payoutPercentage || parseFloat(payoutPercentage) <= 0 || parseFloat(payoutPercentage) > 100) {
+      alert("Please enter a valid percentage between 0.01 and 100");
+      return;
+    }
+
+    const eligibleUserIds = eligibleUsers.filter(u => u.selectable).map(u => u.userId);
+    const targetUserIds = selectedPayoutUsers.length > 0 ? selectedPayoutUsers : eligibleUserIds;
+    
+    if (targetUserIds.length === 0) {
+      alert("No eligible users selected for payout");
+      return;
+    }
+
+    const confirm = window.confirm(
+      `Distribute ${payoutPercentage}% payout to ${targetUserIds.length} user(s)?\n\nThis action cannot be undone.`
+    );
+
+    if (!confirm) return;
+
+    try {
+      setIsDistributingPayouts(true);
+      const response = await adminApi.distributePayouts(
+        parseFloat(payoutPercentage),
+        (targetUserIds.length > 0 ? targetUserIds : undefined) as any
+      );
+
+      if (response.success) {
+        alert(
+          `✅ Payout distributed successfully!\n\n` +
+          `• Users processed: ${response.data.usersProcessed}\n` +
+          `• Total distributed: $${response.data.totalDistributed.toFixed(4)}\n` +
+          `• Percentage: ${response.data.percentage}%`
+        );
+        
+        // Reset form and refresh data
+        setPayoutPercentage("");
+        setSelectedPayoutUsers([]);
+        fetchEligibleUsers();
+        fetchPayoutHistory();
+        fetchPendingTransactions(); // Refresh stats
+      } else {
+        alert(response.message || "Payout distribution failed");
+      }
+    } catch (error: any) {
+      console.error("Error distributing payouts:", error);
+      alert(error.message || "Failed to distribute payouts");
+    } finally {
+      setIsDistributingPayouts(false);
+    }
+  };
+
+  const handleSelectAllEligible = () => {
+    const eligibleUserIds = eligibleUsers.filter(u => u.selectable).map(u => u.userId);
+    setSelectedPayoutUsers(prev => 
+      prev.length === eligibleUserIds.length ? [] : eligibleUserIds
+    );
+  };
+
+  const handleToggleUserSelection = (userId: string) => {
+    setSelectedPayoutUsers(prev => 
+      prev.includes(userId) 
+        ? prev.filter(id => id !== userId)
+        : [...prev, userId]
+    );
+  };
+
   useEffect(() => {
     if (user && user.role === "admin") {
       fetchPendingTransactions();
@@ -833,6 +939,10 @@ export default function AdminPage() {
       if (activeTab === "notifications") {
         fetchAllUsers();
         fetchSentNotifications();
+      }
+      if (activeTab === "payouts") {
+        fetchEligibleUsers();
+        fetchPayoutHistory();
       }
     }
   }, [
@@ -1344,6 +1454,20 @@ export default function AdminPage() {
             <div className="flex items-center justify-center space-x-2">
               <MessageSquare className="w-4 h-4" />
               <span>Push Notifications</span>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("payouts")}
+            className={`flex-shrink-0 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
+              activeTab === "payouts"
+                ? "bg-emerald-500 text-black shadow-lg"
+                : "text-stone-900/70 hover:text-stone-900 hover:bg-cream-200/60"
+            }`}
+          >
+            <div className="flex items-center justify-center space-x-2">
+              <Gift className="w-4 h-4" />
+              <span>Monthly Payouts</span>
             </div>
           </button>
         </div>
@@ -3405,6 +3529,298 @@ export default function AdminPage() {
                       </div>
                     </div>
                   ))}
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Monthly Payouts Tab */}
+        {activeTab === "payouts" && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-6"
+          >
+            {/* Payout Summary Stats */}
+            {payoutSummary && (
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-gradient-to-r from-emerald-500/20 to-green-400/20 border border-emerald-500/30 rounded-xl p-4">
+                  <p className="text-emerald-400 text-sm font-medium">Total Users</p>
+                  <p className="text-2xl font-bold text-stone-900">{payoutSummary.total}</p>
+                </div>
+                <div className="bg-gradient-to-r from-blue-500/20 to-cyan-400/20 border border-blue-500/30 rounded-xl p-4">
+                  <p className="text-blue-400 text-sm font-medium">Eligible for Payout</p>
+                  <p className="text-2xl font-bold text-stone-900">{payoutSummary.eligible}</p>
+                </div>
+                <div className="bg-gradient-to-r from-yellow-500/20 to-orange-400/20 border border-yellow-500/30 rounded-xl p-4">
+                  <p className="text-yellow-400 text-sm font-medium">Not Yet Eligible</p>
+                  <p className="text-2xl font-bold text-stone-900">{payoutSummary.notYetEligible}</p>
+                </div>
+                <div className="bg-gradient-to-r from-purple-500/20 to-pink-400/20 border border-purple-500/30 rounded-xl p-4">
+                  <p className="text-purple-400 text-sm font-medium">Total Matured Staked</p>
+                  <p className="text-2xl font-bold text-stone-900">${formatCurrency(payoutSummary.totalMaturedStaked)}</p>
+                </div>
+              </div>
+            )}
+
+            {/* Payout Distribution Form */}
+            <div className="bg-cream-100/80 border border-stone-300/50 rounded-2xl p-6">
+              <h3 className="text-xl font-bold text-stone-900 mb-6 flex items-center">
+                <Gift className="w-6 h-6 mr-3 text-emerald-400" />
+                Distribute Monthly Payout
+              </h3>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <div>
+                  <label className="block text-stone-900/80 text-sm mb-2">
+                    Payout Percentage (% of Staked Amount)
+                  </label>
+                  <input
+                    type="number"
+                    min="0.01"
+                    max="100"
+                    step="0.01"
+                    value={payoutPercentage}
+                    onChange={(e) => setPayoutPercentage(e.target.value)}
+                    placeholder="Enter percentage (e.g., 8.5)"
+                    className="w-full px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  />
+                  <p className="text-stone-900/60 text-xs mt-1">
+                    Range: 0.01% - 100%
+                  </p>
+                </div>
+                
+                <div>
+                  <label className="block text-stone-900/80 text-sm mb-2">
+                    Selected Users
+                  </label>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={handleSelectAllEligible}
+                      className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg hover:bg-emerald-500/30 transition-colors text-sm"
+                    >
+                      {selectedPayoutUsers.length === eligibleUsers.filter(u => u.selectable).length 
+                        ? "Deselect All" : "Select All Eligible"}
+                    </button>
+                    <span className="text-stone-900/60 text-sm">
+                      {selectedPayoutUsers.length} selected
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-end">
+                  <button
+                    onClick={handleDistributePayouts}
+                    disabled={isDistributingPayouts || !payoutPercentage || parseFloat(payoutPercentage) <= 0}
+                    className="w-full py-3 px-4 bg-emerald-500 text-black rounded-xl hover:bg-emerald-600 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  >
+                    {isDistributingPayouts ? (
+                      <>
+                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                        Distributing...
+                      </>
+                    ) : (
+                      <>
+                        <Gift className="w-5 h-5 mr-2" />
+                        Distribute Payout
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {payoutPercentage && parseFloat(payoutPercentage) > 0 && payoutSummary && (
+                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 mb-4">
+                  <h4 className="text-emerald-400 font-semibold mb-2">Payout Preview</h4>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-stone-900/60">Percentage:</span>
+                      <span className="text-stone-900 font-semibold ml-2">{payoutPercentage}%</span>
+                    </div>
+                    <div>
+                      <span className="text-stone-900/60">Total to Distribute:</span>
+                      <span className="text-stone-900 font-semibold ml-2">
+                        ${formatCurrency(payoutSummary.totalMaturedStaked * (parseFloat(payoutPercentage) / 100))}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Eligible Users Table */}
+            <div className="bg-cream-100/80 border border-stone-300/50 rounded-2xl overflow-hidden">
+              <div className="p-6 border-b border-stone-300/40">
+                <h3 className="text-lg font-bold text-stone-900 flex items-center">
+                  <Users className="w-5 h-5 mr-2" />
+                  Eligible Users for Payout
+                </h3>
+                <p className="text-stone-900/60 text-sm mt-1">
+                  Only users whose staking period has ended are selectable for payouts
+                </p>
+              </div>
+
+              {isLoadingPayouts ? (
+                <div className="p-8 text-center">
+                  <Loader2 className="w-8 h-8 text-emerald-400 animate-spin mx-auto mb-4" />
+                  <p className="text-stone-900/60">Loading eligible users...</p>
+                </div>
+              ) : eligibleUsers.length === 0 ? (
+                <div className="p-8 text-center">
+                  <Users className="w-12 h-12 text-stone-900/40 mx-auto mb-4" />
+                  <p className="text-stone-900/60">No users with active stakes found</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-cream-100/80">
+                      <tr>
+                        <th className="text-left p-4 text-stone-900/80 font-medium">
+                          <input
+                            type="checkbox"
+                            checked={selectedPayoutUsers.length === eligibleUsers.filter(u => u.selectable).length && eligibleUsers.filter(u => u.selectable).length > 0}
+                            onChange={handleSelectAllEligible}
+                            className="rounded border-stone-300"
+                          />
+                        </th>
+                        <th className="text-left p-4 text-stone-900/80 font-medium">User</th>
+                        <th className="text-left p-4 text-stone-900/80 font-medium">Total Staked</th>
+                        <th className="text-left p-4 text-stone-900/80 font-medium">Matured Amount</th>
+                        <th className="text-left p-4 text-stone-900/80 font-medium">Stakes Status</th>
+                        <th className="text-left p-4 text-stone-900/80 font-medium">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {eligibleUsers.map((user, index) => (
+                        <motion.tr
+                          key={user.userId}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.05 }}
+                          className={`border-b border-stone-300/40 transition-colors ${
+                            user.selectable 
+                              ? "hover:bg-cream-100/80" 
+                              : "bg-stone-100/50 opacity-60"
+                          }`}
+                        >
+                          <td className="p-4">
+                            <input
+                              type="checkbox"
+                              checked={selectedPayoutUsers.includes(user.userId)}
+                              onChange={() => handleToggleUserSelection(user.userId)}
+                              disabled={!user.selectable}
+                              className="rounded border-stone-300 disabled:opacity-30"
+                            />
+                          </td>
+                          <td className="p-4">
+                            <div>
+                              <p className="text-stone-900 font-medium">{user.name}</p>
+                              <p className="text-stone-900/60 text-sm">{user.email}</p>
+                            </div>
+                          </td>
+                          <td className="p-4">
+                            <span className="text-stone-900 font-semibold">
+                              ${formatCurrency(user.totalStakedAmount)}
+                            </span>
+                          </td>
+                          <td className="p-4">
+                            <span className="text-emerald-400 font-semibold">
+                              ${formatCurrency(user.maturedStakedAmount)}
+                            </span>
+                          </td>
+                          <td className="p-4">
+                            <div className="space-y-1">
+                              {user.stakes.map((stake: any) => (
+                                <div key={stake.stakeId} className="text-xs">
+                                  <span className={`px-2 py-1 rounded ${
+                                    stake.isMatured 
+                                      ? "bg-emerald-500/20 text-emerald-400" 
+                                      : "bg-yellow-500/20 text-yellow-300"
+                                  }`}>
+                                    ${formatCurrency(stake.amount)} - {stake.daysElapsed}/{stake.daysTotal} days
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </td>
+                          <td className="p-4">
+                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                              user.selectable 
+                                ? "bg-emerald-500/20 text-emerald-400" 
+                                : "bg-yellow-500/20 text-yellow-300"
+                            }`}>
+                              {user.selectable ? "Eligible" : "Not Yet Eligible"}
+                            </span>
+                          </td>
+                        </motion.tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+
+            {/* Payout History */}
+            <div className="bg-cream-100/80 border border-stone-300/50 rounded-2xl overflow-hidden">
+              <div className="p-6 border-b border-stone-300/40">
+                <h3 className="text-lg font-bold text-stone-900 flex items-center">
+                  <History className="w-5 h-5 mr-2" />
+                  Recent Payout History
+                </h3>
+              </div>
+
+              {payoutHistory.length === 0 ? (
+                <div className="p-8 text-center">
+                  <History className="w-12 h-12 text-stone-900/40 mx-auto mb-4" />
+                  <p className="text-stone-900/60">No payouts distributed yet</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-cream-100/80">
+                      <tr>
+                        <th className="text-left p-4 text-stone-900/80 font-medium">User</th>
+                        <th className="text-left p-4 text-stone-900/80 font-medium">Amount</th>
+                        <th className="text-left p-4 text-stone-900/80 font-medium">Percentage</th>
+                        <th className="text-left p-4 text-stone-900/80 font-medium">Date</th>
+                        <th className="text-left p-4 text-stone-900/80 font-medium">Admin</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {payoutHistory.slice(0, 20).map((payout, index) => (
+                        <tr key={payout.id} className="border-b border-stone-300/40 hover:bg-cream-100/80 transition-colors">
+                          <td className="p-4">
+                            <div>
+                              <p className="text-stone-900 font-medium">{payout.user?.name || "Unknown"}</p>
+                              <p className="text-stone-900/60 text-sm">{payout.user?.email}</p>
+                            </div>
+                          </td>
+                          <td className="p-4">
+                            <span className="text-emerald-400 font-semibold">
+                              ${formatCurrency(payout.amount)}
+                            </span>
+                          </td>
+                          <td className="p-4">
+                            <span className="text-stone-900 font-medium">
+                              {payout.metadata?.payoutPercentage || "N/A"}%
+                            </span>
+                          </td>
+                          <td className="p-4">
+                            <span className="text-stone-900/60 text-sm">
+                              {new Date(payout.completed_at).toLocaleString()}
+                            </span>
+                          </td>
+                          <td className="p-4">
+                            <span className="text-stone-900/60 text-sm">
+                              {payout.metadata?.adminEmail || "Admin"}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </div>
