@@ -2228,19 +2228,8 @@ function DepositTab({
   };
 
   const handleModalDone = async () => {
-    if (!uploadedScreenshot) {
-      setNotifications((prev) => [
-        {
-          id: Date.now(),
-          type: "error",
-          message: "Please upload a payment screenshot before submitting",
-          timestamp: new Date(),
-        },
-        ...prev,
-      ]);
-      setTimeout(() => setNotifications((prev) => prev.slice(1)), 5000);
-      return;
-    }
+    // Screenshot upload commented out - only transaction ID required for now
+    // if (!uploadedScreenshot) { ... }
 
     if (!userTransactionId.trim()) {
       setNotifications((prev) => [
@@ -3091,8 +3080,8 @@ function DepositTab({
                       <p className="text-muted-foreground/60 text-xs mt-2">This helps us verify your payment faster</p>
                     </div>
 
-                    {/* Screenshot Upload */}
-                    <div className="bg-secondary border border-border rounded-xl sm:rounded-2xl p-3 sm:p-6">
+                    {/* Screenshot Upload — commented out, only transaction ID required for now */}
+                    {/* <div className="bg-secondary border border-border rounded-xl sm:rounded-2xl p-3 sm:p-6">
                       <div className="flex items-center space-x-2 mb-2 sm:mb-3">
                         <div className="w-5 h-5 sm:w-6 sm:h-6 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
                           <Upload className="w-3 h-3 sm:w-4 sm:h-4 text-primary-foreground" />
@@ -3100,47 +3089,11 @@ function DepositTab({
                         <h4 className="text-foreground font-bold text-sm sm:text-lg">Payment Proof</h4>
                         <span className="px-2 py-0.5 bg-destructive/15 text-destructive rounded text-xs font-medium">Required</span>
                       </div>
-                      <p className="text-muted-foreground text-xs sm:text-sm mb-3">Upload transaction screenshot</p>
-
-                      {!uploadedScreenshot ? (
-                        <div className="border-2 border-dashed border-primary/30 hover:border-primary/60 rounded-lg p-4 sm:p-6 text-center transition-all duration-300 bg-primary/5">
-                          <label className="cursor-pointer block">
-                            <input type="file" accept="image/*" onChange={handleScreenshotUpload} className="hidden" />
-                            <div className="space-y-2">
-                              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/15 rounded-lg flex items-center justify-center mx-auto">
-                                <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-                              </div>
-                              <div>
-                                <p className="text-foreground font-medium text-xs sm:text-sm">Tap to Upload</p>
-                                <p className="text-muted-foreground text-xs">PNG, JPG up to 5MB</p>
-                              </div>
-                            </div>
-                          </label>
-                        </div>
-                      ) : (
-                        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-3 sm:p-4">
-                          <div className="flex items-center space-x-2 sm:space-x-3">
-                            <div className="relative flex-shrink-0">
-                              {screenshotPreview && (
-                                <img src={screenshotPreview} alt="Payment screenshot"
-                                  className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg border-2 border-emerald-500/40" />
-                              )}
-                              <div className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-emerald-500 rounded-full flex items-center justify-center">
-                                <Check className="w-2 h-2 sm:w-3 sm:h-3 text-white" />
-                              </div>
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-foreground font-semibold text-xs sm:text-sm truncate">{uploadedScreenshot.name}</p>
-                              <p className="text-muted-foreground text-xs">{(uploadedScreenshot.size / 1024 / 1024).toFixed(1)} MB • Ready</p>
-                            </div>
-                            <button onClick={removeScreenshot}
-                              className="w-7 h-7 sm:w-8 sm:h-8 bg-destructive/15 hover:bg-destructive/25 rounded-lg flex items-center justify-center transition-colors flex-shrink-0">
-                              <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 text-destructive" />
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                      Screenshot upload commented out - only transaction ID required for now
+                      <p>Upload transaction screenshot</p>
+                      Upload UI removed for now
+                    </div> */}
+                    <div className="hidden"></div>
 
                     {/* Steps */}
                     <div className="bg-primary/8 border border-primary/20 rounded-xl sm:rounded-2xl p-3 sm:p-6">
@@ -3154,7 +3107,7 @@ function DepositTab({
                         {[
                           <>Send <span className="font-bold text-primary">{formatCurrency(amount)} {selectedToken}</span></>,
                           "Use TRC-20 (faster) or BEP-20",
-                          "Upload screenshot proof",
+                          "Enter your Transaction ID below",
                           `Tap "Confirm Deposit"`,
                         ].map((step, i) => (
                           <div key={i} className="flex items-start space-x-2 sm:space-x-3">
@@ -3167,13 +3120,13 @@ function DepositTab({
                       </div>
                     </div>
 
-                    {/* Footer actions — part of the scrollable body so they're always reachable */}
+                    {/* Footer actions */}
                     <div className="border-t border-border pt-3 sm:pt-4 pb-safe-bottom space-y-2 sm:space-y-3">
                       <button
                         onClick={handleModalDone}
-                        disabled={isProcessing || !uploadedScreenshot || !userTransactionId.trim()}
+                        disabled={isProcessing || !userTransactionId.trim()}
                         className={`w-full py-3 sm:py-4 px-4 sm:px-6 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-lg transition-all duration-300 shadow-sm touch-manipulation ${
-                          !uploadedScreenshot || !userTransactionId.trim()
+                          !userTransactionId.trim()
                             ? "bg-muted text-muted-foreground cursor-not-allowed border border-border"
                             : "bg-gradient-to-r from-primary to-accent hover:opacity-90 active:scale-95 text-primary-foreground shadow-primary/20"
                         }`}
@@ -3182,11 +3135,6 @@ function DepositTab({
                           <div className="flex items-center justify-center space-x-2">
                             <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                             <span>Processing...</span>
-                          </div>
-                        ) : !uploadedScreenshot ? (
-                          <div className="flex items-center justify-center space-x-2">
-                            <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
-                            <span>Upload Screenshot</span>
                           </div>
                         ) : !userTransactionId.trim() ? (
                           <div className="flex items-center justify-center space-x-2">
@@ -3210,14 +3158,13 @@ function DepositTab({
 
                       {/* Progress dots */}
                       <div className="flex items-center justify-center space-x-2 pt-1">
-                        {[amount > 0, !!userTransactionId.trim(), !!uploadedScreenshot, isProcessing].map((done, i) => (
+                        {[amount > 0, !!userTransactionId.trim(), isProcessing].map((done, i) => (
                           <div key={i} className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full transition-colors ${done ? "bg-primary" : "bg-border"}`} />
                         ))}
                       </div>
                       <p className="text-center text-muted-foreground text-xs">
-                        {!userTransactionId.trim() ? "Step 2 of 4: Enter transaction ID"
-                          : !uploadedScreenshot ? "Step 3 of 4: Upload proof"
-                          : "Step 4 of 4: Ready to confirm"}
+                        {!userTransactionId.trim() ? "Step 2 of 3: Enter transaction ID"
+                          : "Step 3 of 3: Ready to confirm"}
                       </p>
                     </div>
                   </div>
