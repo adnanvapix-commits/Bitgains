@@ -325,7 +325,13 @@ export default function AdminPage() {
       ]);
 
       if (transactionsResponse.success) {
-        setPendingTransactions(transactionsResponse.data.transactions);
+        // Supabase returns `id`, but the UI uses `_id` — normalize here
+        setPendingTransactions(
+          (transactionsResponse.data.transactions || []).map((tx: any) => ({
+            ...tx,
+            _id: tx._id || tx.id,
+          }))
+        );
       }
 
       if (statsResponse.success) {
