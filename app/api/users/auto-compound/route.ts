@@ -47,8 +47,8 @@ export async function PUT(req: NextRequest) {
     if (percent !== undefined && (percent < 10 || percent > 100)) {
       return NextResponse.json({ success: false, message: 'percent must be between 10 and 100' }, { status: 400 });
     }
-    if (frequency !== undefined && !['daily', 'weekly', 'monthly'].includes(frequency)) {
-      return NextResponse.json({ success: false, message: 'frequency must be daily, weekly, or monthly' }, { status: 400 });
+    if (frequency !== undefined && !['30days', '90days'].includes(frequency)) {
+      return NextResponse.json({ success: false, message: 'frequency must be 30days or 90days' }, { status: 400 });
     }
     if (threshold !== undefined && threshold < 0) {
       return NextResponse.json({ success: false, message: 'threshold must be >= 0' }, { status: 400 });

@@ -8266,7 +8266,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
   const ac = walletData?.wallet?.autoCompound;
   const [globalEnabled, setGlobalEnabled] = useState<boolean>(ac?.enabled ?? false);
   const [threshold, setThreshold]         = useState<string>(String(ac?.threshold ?? "50"));
-  const [frequency, setFrequency]         = useState<string>(ac?.frequency ?? "monthly");
+  const [frequency, setFrequency]         = useState<string>(ac?.frequency ?? "30days");
   const [reinvestPercent, setReinvestPercent] = useState<number>(ac?.percent ?? 100);
   const [saving, setSaving]   = useState(false);
   const [saved, setSaved]     = useState(false);
@@ -8283,7 +8283,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
     if (ac) {
       setGlobalEnabled(ac.enabled ?? false);
       setThreshold(String(ac.threshold ?? 50));
-      setFrequency(ac.frequency ?? "monthly");
+      setFrequency(ac.frequency ?? "30days");
       setReinvestPercent(ac.percent ?? 100);
     }
   }, [walletData]);
@@ -8379,16 +8379,18 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
             <div className="glass-card p-5">
               <div className="font-semibold text-foreground mb-3">Compound Frequency</div>
               <div className="space-y-2">
-                {["daily", "weekly", "monthly"].map(f => (
-                  <button key={f} onClick={() => setFrequency(f)}
+                {[
+                  { value: "30days", label: "30 Days", note: "(default)" },
+                  { value: "90days", label: "90 Days", note: "" },
+                ].map(f => (
+                  <button key={f.value} onClick={() => setFrequency(f.value)}
                     className={`w-full py-2.5 px-4 rounded-xl text-sm font-medium text-left transition-all border ${
-                      frequency === f
+                      frequency === f.value
                         ? "bg-primary/15 border-primary/40 text-foreground"
                         : "bg-secondary border-border text-muted-foreground hover:bg-primary/10 hover:border-primary/25"
                     }`}>
-                    <span className="capitalize">{f}</span>
-                    {f === "monthly" && <span className="ml-2 text-xs text-muted-foreground">(default)</span>}
-                    {f === "daily" && <span className="ml-2 text-xs text-primary">Max growth</span>}
+                    <span>{f.label}</span>
+                    {f.note && <span className="ml-2 text-xs text-muted-foreground">{f.note}</span>}
                   </button>
                 ))}
               </div>
@@ -8412,7 +8414,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
               </div>
               <div className="mt-3 p-2 rounded-lg bg-secondary border border-border text-xs text-muted-foreground">
                 {walletData?.wallet?.stakedAmount > 0
-                  ? `Next ${frequency} compound cycle`
+                  ? `Next compound in ${frequency === "30days" ? "30" : "90"} days`
                   : "Stake funds to activate compounding schedule"}
               </div>
             </div>
