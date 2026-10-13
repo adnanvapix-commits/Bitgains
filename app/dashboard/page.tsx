@@ -1996,7 +1996,7 @@ function OverviewTab({
                       </p>
                     )}
                     <p className="text-slate-600 dark:text-slate-300 text-sm">
-                      {new Date(transaction.createdAt).toLocaleDateString(
+                      {new Date(transaction.createdAt || transaction.created_at).toLocaleDateString(
                         "en-US",
                         {
                           month: "short",
@@ -4868,8 +4868,10 @@ function HistoryTab({
         return "text-yellow-400";
       case "failed":
         return "text-red-400";
+      case "rejected":
+        return "text-red-400";
       default:
-        return "text-slate-600 dark:text-slate-300";
+        return "text-slate-400";
     }
   };
 
@@ -5129,7 +5131,7 @@ function HistoryTab({
                         <div className="flex justify-between items-center">
                           <span className="text-slate-600 dark:text-slate-300">Date:</span>
                           <span className="text-slate-600 dark:text-slate-300">
-                            {new Date(transaction.createdAt).toLocaleDateString(
+                            {new Date(transaction.createdAt || transaction.created_at).toLocaleDateString(
                               "en-US",
                               {
                                 month: "short",
@@ -5369,7 +5371,7 @@ function HistoryTab({
                       <td className="py-4 px-4">
                         <div>
                           <span className="text-slate-600 dark:text-slate-300 text-base">
-                            {new Date(transaction.createdAt).toLocaleDateString(
+                            {new Date(transaction.createdAt || transaction.created_at).toLocaleDateString(
                               "en-US",
                               {
                                 month: "short",
@@ -5379,7 +5381,7 @@ function HistoryTab({
                             )}
                           </span>
                           <p className="text-slate-600 dark:text-slate-300 text-sm">
-                            {new Date(transaction.createdAt).toLocaleTimeString(
+                            {new Date(transaction.createdAt || transaction.created_at).toLocaleTimeString(
                               "en-US",
                               {
                                 hour: "2-digit",
@@ -7710,8 +7712,10 @@ function TransactionPopup({
         return "text-yellow-400";
       case "failed":
         return "text-red-400";
+      case "rejected":
+        return "text-red-400";
       default:
-        return "text-slate-600 dark:text-slate-300";
+        return "text-slate-400";
     }
   };
 
