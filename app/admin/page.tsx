@@ -384,14 +384,16 @@ export default function AdminPage() {
   const handleApprove = async (txId: string, comment = "") => {
     try {
       setProcessingTx(txId);
+      // Close modal immediately for responsive UX
+      setCommentModal({ open: false, txId: null, action: null });
+      setComment("");
       const response = await adminApi.approveTransaction(txId, comment);
 
       if (response.success) {
         await fetchPendingTransactions();
-        setCommentModal({ open: false, txId: null, action: null });
-        setComment("");
       } else {
-        setError(response.message);
+        setError(response.message || "Failed to approve transaction");
+        await fetchPendingTransactions();
       }
     } catch (error) {
       console.error("Error approving transaction:", error);
@@ -411,14 +413,16 @@ export default function AdminPage() {
 
     try {
       setProcessingTx(txId);
+      // Close modal immediately for responsive UX
+      setCommentModal({ open: false, txId: null, action: null });
+      setComment("");
       const response = await adminApi.rejectTransaction(txId, comment);
 
       if (response.success) {
         await fetchPendingTransactions();
-        setCommentModal({ open: false, txId: null, action: null });
-        setComment("");
       } else {
-        setError(response.message);
+        setError(response.message || "Failed to reject transaction");
+        await fetchPendingTransactions();
       }
     } catch (error) {
       console.error("Error rejecting transaction:", error);
