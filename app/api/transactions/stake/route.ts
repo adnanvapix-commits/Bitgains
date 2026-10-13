@@ -25,6 +25,15 @@ export async function POST(req: NextRequest) {
     if (stakeErr) throw stakeErr;
     await sb.from('wallets').update({ staked_amount: wallet.staked_amount + num, staking_start_date: wallet.staking_start_date || startDate.toISOString(), last_staking_update: startDate.toISOString() }).eq('user_id', user!.id);
     const { data: tx } = await sb.from('transactions').insert({ user_id: user!.id, type: 'stake', amount: num, currency: 'USDT', status: 'completed', description: `Staked ${num} USDT (${packageType})`, completed_at: startDate.toISOString(), metadata: { stakeId, packageType, startDate, endDate, expectedRewards } }).select().single();
-    return NextResponse.json({ success: true, message: 'Funds staked successfully', data: { transaction: { id: tx!.id, type: tx!.type, amount: tx!.amount, status: tx!.status }, stake: { stakeId, amount: num, packageType, startDate, endDate, expectedRewards, status: 'active' }, wallet: { balance: wallet.balance, stakedAmount: wallet.staked_amount + num, availableBalance: wallet.balance - wallet.staked_amount - num } } });
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Funds staked successfully! 🎉 Congratulations on your staking! Admin will distribute monthly payouts to eligible users. Keep your funds staked to maximize your earnings!', 
+      showCongratsMessage: true,
+      data: { 
+        transaction: { id: tx!.id, type: tx!.type, amount: tx!.amount, status: tx!.status }, 
+        stake: { stakeId, amount: num, packageType, startDate, endDate, expectedRewards, status: 'active' }, 
+        wallet: { balance: wallet.balance, stakedAmount: wallet.staked_amount + num, availableBalance: wallet.balance - wallet.staked_amount - num } 
+      } 
+    });
   } catch (err: any) { return NextResponse.json({ success: false, message: err.message }, { status: 500 }); }
 }
