@@ -7,6 +7,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { ThemeToggle } from "../../components/ThemeToggle";
 import { walletApi } from "../../lib/api/transactions.js";
 import { notificationsApi } from "../../lib/api/notifications.js";
+import apiClient from "../../lib/api/client.js";
 import Image from "next/image";
 import {
   DollarSign,
@@ -8292,25 +8293,21 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
     setSaved(false);
     setSaveError(null);
     try {
-      const res = await fetch("/api/users/auto-compound", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          enabled:   globalEnabled,
-          percent:   reinvestPercent,
-          frequency,
-          threshold: parseFloat(threshold) || 0,
-        }),
+      // Use apiClient so the Bearer token is automatically included
+      const data = await apiClient.put("/users/auto-compound", {
+        enabled:   globalEnabled,
+        percent:   reinvestPercent,
+        frequency,
+        threshold: parseFloat(threshold) || 0,
       });
-      const data = await res.json();
       if (data.success) {
         setSaved(true);
         setTimeout(() => setSaved(false), 3000);
       } else {
         setSaveError(data.message || "Failed to save settings");
       }
-    } catch {
-      setSaveError("Network error — please try again");
+    } catch (err: any) {
+      setSaveError(err.message || "Network error — please try again");
     } finally {
       setSaving(false);
     }
