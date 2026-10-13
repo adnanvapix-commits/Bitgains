@@ -8262,10 +8262,53 @@ function StakingPlansTab() {
 // 3. AUTO-COMPOUND TAB
 // ─────────────────────────────────────────────────────────────
 function AutoCompoundTab({ walletData }: { walletData: any }) {
-  const [globalEnabled, setGlobalEnabled] = useState(false);
-  const [threshold, setThreshold] = useState("50");
-  const [frequency, setFrequency] = useState("monthly");
-  const [reinvestPercent, setReinvestPercent] = useState(100);
+  const ac = walletData?.wallet?.autoCompound;
+  const [globalEnabled, setGlobalEnabled] = useState<boolean>(ac?.enabled ?? false);
+  const [threshold, setThreshold]         = useState<string>(String(ac?.threshold ?? "50"));
+  const [frequency, setFrequency]         = useState<string>(ac?.frequency ?? "monthly");
+  const [reinvestPercent, setReinvestPercent] = useState<number>(ac?.percent ?? 100);
+  const [saving, setSaving]   = useState(false);
+  const [saved, setSaved]     = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  // Sync if walletData loads after mount
+  useEffect(() => {
+    if (ac) {
+      setGlobalEnabled(ac.enabled ?? false);
+      setThreshold(String(ac.threshold ?? 50));
+      setFrequency(ac.frequency ?? "monthly");
+      setReinvestPercent(ac.percent ?? 100);
+    }
+  }, [walletData]);
+
+  const handleSave = async () => {
+    setSaving(true);
+    setSaved(false);
+    setSaveError(null);
+    try {
+      const res = await fetch("/api/users/auto-compound", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          enabled:   globalEnabled,
+          percent:   reinvestPercent,
+          frequency,
+          threshold: parseFloat(threshold) || 0,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 3000);
+      } else {
+        setSaveError(data.message || "Failed to save settings");
+      }
+    } catch {
+      setSaveError("Network error — please try again");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   // Derive principal and monthly rate from wallet data
   const num = walletData?.wallet?.stakedAmount ?? 1000;
@@ -8316,8 +8359,8 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
                 : "bg-secondary border-border text-muted-foreground"
             }`}>
               {globalEnabled
-                ? "✓ Auto-compound is ACTIVE. Your rewards will be reinvested automatically."
-                : "○ Auto-compound is OFF. Enable to start growing faster."}
+                ? "Auto-compound is ACTIVE. Your rewards will be reinvested automatically."
+                : "Auto-compound is OFF. Enable to start growing faster."}
             </div>
           </div>
 
@@ -8349,7 +8392,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
                     }`}>
                     <span className="capitalize">{f}</span>
                     {f === "monthly" && <span className="ml-2 text-xs text-muted-foreground">(default)</span>}
-                    {f === "daily" && <span className="ml-2 text-xs text-primary">⚡ Max growth</span>}
+                    {f === "daily" && <span className="ml-2 text-xs text-primary">Max growth</span>}
                   </button>
                 ))}
               </div>
@@ -8370,9 +8413,13 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
             <div className="glass-card p-5">
               <div className="font-semibold text-foreground mb-3">Next Compound Event</div>
               <div className="text-2xl font-bold text-primary">—</div>
-              <div className="text-sm text-muted-foreground mt-1">No active stakes</div>
+              <div className="text-sm text-muted-foreground mt-1">
+                {walletData?.wallet?.stakedAmount > 0 ? `Active stake: $${walletData.wallet.stakedAmount.toLocaleString()}` : "No active stakes"}
+              </div>
               <div className="mt-3 p-2 rounded-lg bg-secondary border border-border text-xs text-muted-foreground">
-                Stake funds to activate compounding schedule
+                {walletData?.wallet?.stakedAmount > 0
+                  ? `Next ${frequency} compound cycle`
+                  : "Stake funds to activate compounding schedule"}
               </div>
             </div>
           </div>
@@ -8380,7 +8427,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
 
         {/* Compound vs Simple Projection */}
         <div className="glass-card p-6">
-          <h3 className="font-semibold text-foreground mb-1">📈 Compound vs Simple</h3>
+          <h3 className="font-semibold text-foreground mb-1">Compound vs Simple</h3>
           <p className="text-xs text-muted-foreground mb-4">
             Based on {num > 0 ? `$${num.toLocaleString()}` : "$1,000"} principal at 5%/month
           </p>
@@ -8398,7 +8445,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
                     <div className="h-full bg-primary/60 rounded-full" style={{ width: `${Math.min((p.simple / maxVal) * 100, 100)}%` }} />
                   </div>
                   <div className="flex justify-between text-xs mb-1">
-                    <span className="text-emerald-600 dark:text-emerald-400 font-medium">Compound ⚡</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-medium">Compound</span>
                     <span className="font-bold text-emerald-600 dark:text-emerald-400">+${p.compound.toFixed(1)}</span>
                   </div>
                   <div className="h-1.5 bg-border rounded-full">
@@ -8409,7 +8456,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
             })}
           </div>
           <div className="mt-4 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700/40 text-xs text-emerald-700 dark:text-emerald-400">
-            💡 Compound interest grows <strong>exponentially</strong> — the difference doubles every 12 months!
+            Compound interest grows <strong>exponentially</strong> — the difference doubles every 12 months!
           </div>
         </div>
       </div>
@@ -8417,9 +8464,21 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
       {/* Save Button */}
       <div className="glass-card p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="text-sm text-muted-foreground">Settings will apply to your next staking cycle</div>
-        <button className="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl font-semibold text-sm opacity-60 cursor-not-allowed">
-          Save Settings (Coming Soon)
-        </button>
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          {saveError && (
+            <span className="text-red-500 text-sm">{saveError}</span>
+          )}
+          {saved && (
+            <span className="text-emerald-600 text-sm font-medium">Settings saved!</span>
+          )}
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="w-full sm:w-auto px-6 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl font-semibold text-sm transition-all hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {saving ? "Saving..." : "Save Settings"}
+          </button>
+        </div>
       </div>
     </div>
   );

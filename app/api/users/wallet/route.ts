@@ -69,6 +69,12 @@ export async function GET(req: NextRequest) {
           maturedStakes,
           createdAt: w.created_at,
           updatedAt: w.updated_at,
+          autoCompound: {
+            enabled:   w.auto_compound_enabled   ?? false,
+            percent:   w.auto_compound_percent   ?? 100,
+            frequency: w.auto_compound_frequency ?? 'monthly',
+            threshold: w.auto_compound_threshold ?? 50,
+          },
         },
       },
     });
