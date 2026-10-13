@@ -1927,7 +1927,7 @@ function OverviewTab({
               <motion.div
                 key={transaction._id}
                 whileHover={{ scale: 1.02 }}
-                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-6 bg-slate-800/80 dark:bg-slate-700/60 rounded-xl sm:rounded-2xl hover:bg-warm-400/15 transition-all duration-300 cursor-pointer border border-warm-400/20 hover:border-warm-400/30 space-y-3 sm:space-y-0"
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-6 bg-white rounded-xl sm:rounded-2xl hover:bg-gray-50 transition-all duration-300 cursor-pointer border border-gray-200 hover:border-gray-300 shadow-sm space-y-3 sm:space-y-0"
               >
                 <div className="flex items-center space-x-3 sm:space-x-4">
                   <div
@@ -1968,7 +1968,7 @@ function OverviewTab({
                     )}
                   </div>
                   <div>
-                    <p className="text-white font-semibold capitalize text-lg">
+                    <p className="text-gray-900 font-semibold capitalize text-lg">
                       {transaction.type === "early_cancellation_penalty"
                         ? "Early Cancellation Penalty"
                         : transaction.type === "manual_bonus"
@@ -1989,13 +1989,13 @@ function OverviewTab({
                     </p>
                     {/* Show description for bonus/admin transactions */}
                     {transaction.description && (
-                      <p className="text-emerald-400/80 text-xs sm:text-sm mt-0.5 italic">
+                      <p className="text-emerald-600 text-xs sm:text-sm mt-0.5 italic">
                         {transaction.description
                           .replace(/^Admin bonus:\s*/i, "")
                           .replace(/^Manual (add|deduct|bonus):\s*/i, "")}
                       </p>
                     )}
-                    <p className="text-slate-600 dark:text-slate-300 text-sm">
+                    <p className="text-gray-500 text-sm">
                       {new Date(transaction.createdAt || transaction.created_at).toLocaleDateString(
                         "en-US",
                         {
@@ -2008,7 +2008,7 @@ function OverviewTab({
                       )}
                     </p>
                     {transaction.transactionHash && (
-                      <p className="text-white/50 text-xs font-mono break-all sm:break-normal">
+                      <p className="text-gray-400 text-xs font-mono break-all sm:break-normal">
                         {transaction.transactionHash.slice(0, 10)}...
                         {transaction.transactionHash.slice(-8)}
                       </p>
@@ -2048,12 +2048,13 @@ function OverviewTab({
                   <p
                     className={`text-sm font-medium capitalize ${
                       transaction.status === "completed"
-                        ? "text-emerald-400"
+                        ? "text-emerald-600"
                         : transaction.status === "pending"
-                        ? "text-yellow-400"
-                        : transaction.status === "failed"
-                        ? "text-red-400"
-                        : "text-gray-400"
+                        ? "text-yellow-600"
+                        : transaction.status === "failed" ||
+                          transaction.status === "rejected"
+                        ? "text-red-500"
+                        : "text-gray-500"
                     }`}
                   >
                     {transaction.status}
@@ -2067,7 +2068,7 @@ function OverviewTab({
                         ? transaction.fee
                         : 0;
                     return feeAmount > 0 ? (
-                      <p className="text-white/50 text-xs">
+                      <p className="text-gray-400 text-xs">
                         Fee: {feeAmount.toFixed(4)}{" "}
                         {transaction.currency || "USDT"}
                       </p>
