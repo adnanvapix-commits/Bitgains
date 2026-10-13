@@ -524,7 +524,13 @@ export default function AdminPage() {
     try {
       const response = await adminApi.getAllUsers({ limit: 100 });
       if (response.success) {
-        setAllUsers(response.data.users);
+        // Normalize Supabase 'id' -> '_id' so all UI references to user._id work
+        setAllUsers(
+          (response.data.users || []).map((u: any) => ({
+            ...u,
+            _id: u._id || u.id,
+          }))
+        );
       }
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -3999,6 +4005,7 @@ export default function AdminPage() {
                       <button
                         onClick={() => {
                           if (commentModal.txId) {
+                            closeCommentModal();
                             if (commentModal.action === "approve") {
                               handleApprove(commentModal.txId, comment);
                             } else {
