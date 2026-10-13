@@ -8271,6 +8271,12 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
   const [saved, setSaved]     = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
+  // User-controlled projection principal
+  const defaultPrincipal = walletData?.wallet?.stakedAmount > 0
+    ? String(Math.round(walletData.wallet.stakedAmount))
+    : "1000";
+  const [principalInput, setPrincipalInput] = useState<string>(defaultPrincipal);
+
   // Sync if walletData loads after mount
   useEffect(() => {
     if (ac) {
@@ -8310,8 +8316,8 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
     }
   };
 
-  // Derive principal and monthly rate from wallet data
-  const num = walletData?.wallet?.stakedAmount ?? 1000;
+  // Projection uses user-entered principal
+  const num = Math.max(parseFloat(principalInput) || 0, 0);
   const rate = 0.05;
 
   const projections = [
@@ -8418,9 +8424,23 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
 
         <div className="glass-card p-6">
           <h3 className="font-semibold text-foreground mb-1">Compound vs Simple</h3>
-          <p className="text-xs text-muted-foreground mb-4">
-            Based on {num > 0 ? `$${num.toLocaleString()}` : "$1,000"} principal at 5%/month
-          </p>
+          
+          {/* User-controlled principal input */}
+          <div className="mb-4">
+            <label className="text-xs text-muted-foreground block mb-1">Enter principal amount to compare</label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-semibold text-sm">$</span>
+              <input
+                type="number"
+                min="1"
+                value={principalInput}
+                onChange={e => setPrincipalInput(e.target.value)}
+                placeholder="1000"
+                className="w-full pl-7 pr-4 py-2 rounded-xl border border-border bg-card text-foreground text-sm outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">At 5%/month</p>
+          </div>
           <div className="space-y-3">
             {projections.map(p => {
               const maxVal = Math.max(p.simple, p.compound, 1);
