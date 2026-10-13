@@ -8263,7 +8263,7 @@ function StakingPlansTab() {
 // 3. AUTO-COMPOUND TAB
 // ─────────────────────────────────────────────────────────────
 function AutoCompoundTab({ walletData }: { walletData: any }) {
-  const ac = walletData?.wallet?.autoCompound;
+  const ac = walletData?.autoCompound;
   const [globalEnabled, setGlobalEnabled] = useState<boolean>(ac?.enabled ?? false);
   const [threshold, setThreshold]         = useState<string>(String(ac?.threshold ?? "50"));
   const [frequency, setFrequency]         = useState<string>(ac?.frequency ?? "30days");
@@ -8272,9 +8272,9 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
   const [saved, setSaved]     = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
-  // User-controlled projection principal
-  const defaultPrincipal = walletData?.wallet?.stakedAmount > 0
-    ? String(Math.round(walletData.wallet.stakedAmount))
+  // User-controlled projection principal — seed from actual staked amount
+  const defaultPrincipal = walletData?.stakedAmount > 0
+    ? String(Math.round(walletData.stakedAmount))
     : "1000";
   const [principalInput, setPrincipalInput] = useState<string>(defaultPrincipal);
 
@@ -8410,10 +8410,12 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
               <div className="font-semibold text-foreground mb-3">Next Compound Event</div>
               <div className="text-2xl font-bold text-primary">—</div>
               <div className="text-sm text-muted-foreground mt-1">
-                {walletData?.wallet?.stakedAmount > 0 ? `Active stake: $${walletData.wallet.stakedAmount.toLocaleString()}` : "No active stakes"}
+                {walletData?.stakedAmount > 0
+                  ? `Active stake: $${walletData.stakedAmount.toLocaleString()} USDT`
+                  : "No active stakes"}
               </div>
               <div className="mt-3 p-2 rounded-lg bg-secondary border border-border text-xs text-muted-foreground">
-                {walletData?.wallet?.stakedAmount > 0
+                {walletData?.stakedAmount > 0
                   ? `Next compound in ${frequency === "30days" ? "30" : "90"} days`
                   : "Stake funds to activate compounding schedule"}
               </div>
