@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   if (error) return error;
 
   try {
-    const { data: transactions, count } = await supabaseAdmin
+    const { data: transactions, count } = await getSupabaseAdmin()
       .from('transactions').select('*', { count: 'exact' })
       .eq('user_id', user!.id).eq('status', 'pending')
       .order('created_at', { ascending: false });
