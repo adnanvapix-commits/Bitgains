@@ -5074,36 +5074,36 @@ function HistoryTab({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="glass-card p-4 hover:bg-slate-800/80 dark:bg-slate-700/60 transition-all duration-300"
+                className="bg-white border border-gray-200 rounded-xl p-4 hover:bg-gray-50 hover:border-gray-300 transition-colors duration-200 shadow-sm"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-3 flex-1">
                     <div
                       className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${
                         transaction.type === "deposit"
-                          ? "bg-emerald-500/20"
+                          ? "bg-emerald-100"
                           : transaction.type === "withdraw"
-                          ? "bg-red-500/20"
+                          ? "bg-red-100"
                           : transaction.type === "stake"
-                          ? "bg-blue-500/20"
-                          : "bg-green-500/20"
+                          ? "bg-blue-100"
+                          : "bg-green-100"
                       }`}
                     >
                       <Icon
                         className={`w-6 h-6 ${
                           transaction.type === "deposit"
-                            ? "text-emerald-400"
+                            ? "text-emerald-600"
                             : transaction.type === "withdraw"
-                            ? "text-red-400"
+                            ? "text-red-600"
                             : transaction.type === "stake"
-                            ? "text-blue-400"
-                            : "text-green-400"
+                            ? "text-blue-600"
+                            : "text-green-600"
                         }`}
                       />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-white font-semibold capitalize text-lg">
+                        <h3 className="text-gray-900 font-semibold capitalize text-lg">
                           {transaction.type}
                         </h3>
                         <span
@@ -5119,7 +5119,7 @@ function HistoryTab({
 
                       <div className="space-y-1 text-sm">
                         <div className="flex justify-between items-center">
-                          <span className="text-slate-600 dark:text-slate-300">Status:</span>
+                          <span className="text-gray-500">Status:</span>
                           <span
                             className={`font-medium ${getStatusColor(
                               transaction.status
@@ -5130,8 +5130,8 @@ function HistoryTab({
                         </div>
 
                         <div className="flex justify-between items-center">
-                          <span className="text-slate-600 dark:text-slate-300">Date:</span>
-                          <span className="text-slate-600 dark:text-slate-300">
+                          <span className="text-gray-500">Date:</span>
+                          <span className="text-gray-600">
                             {new Date(transaction.createdAt || transaction.created_at).toLocaleDateString(
                               "en-US",
                               {
@@ -5145,8 +5145,8 @@ function HistoryTab({
 
                         {transaction.network && (
                           <div className="flex justify-between items-center">
-                            <span className="text-slate-600 dark:text-slate-300">Network:</span>
-                            <span className="text-slate-600 dark:text-slate-300">
+                            <span className="text-gray-500">Network:</span>
+                            <span className="text-gray-600">
                               {transaction.network}
                             </span>
                           </div>
@@ -5154,25 +5154,25 @@ function HistoryTab({
 
                         {transaction.fee && transaction.fee.amount > 0 && (
                           <div className="flex justify-between items-center">
-                            <span className="text-slate-600 dark:text-slate-300">Fee:</span>
-                            <span className="text-slate-600 dark:text-slate-300">
+                            <span className="text-gray-500">Fee:</span>
+                            <span className="text-gray-600">
                               {transaction.fee.amount} {transaction.currency}
                             </span>
                           </div>
                         )}
 
                         {transaction.description && (
-                          <div className="mt-2 pt-2 border-t border-warm-400/20">
-                            <p className="text-emerald-400 italic text-xs">
+                          <div className="mt-2 pt-2 border-t border-gray-100">
+                            <p className="text-emerald-600 italic text-xs">
                               {transaction.description}
                             </p>
                           </div>
                         )}
 
                         {transaction.txHash && (
-                          <div className="mt-2 pt-2 border-t border-warm-400/20">
+                          <div className="mt-2 pt-2 border-t border-gray-100">
                             <div className="flex items-center justify-between">
-                              <span className="text-slate-600 dark:text-slate-300 text-xs">
+                              <span className="text-gray-500 text-xs">
                                 Transaction:
                               </span>
                               <button
@@ -5181,7 +5181,7 @@ function HistoryTab({
                                     transaction.txHash || ""
                                   )
                                 }
-                                className="text-emerald-400 hover:text-emerald-300 text-xs font-mono transition-colors flex items-center space-x-1"
+                                className="text-emerald-600 hover:text-emerald-700 text-xs font-mono transition-colors flex items-center space-x-1"
                               >
                                 <span>
                                   {transaction.txHash?.slice(0, 6)}...
@@ -5281,38 +5281,38 @@ function HistoryTab({
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
-                      className="border-b border-white/5 hover:bg-slate-800/80 dark:bg-slate-700/60 transition-colors group"
+                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150 group"
                     >
                       <td className="py-4 px-4">
                         <div className="flex items-center space-x-4">
                           <div
                             className={`w-12 h-12 rounded-xl flex items-center justify-center ${
                               transaction.type === "deposit"
-                                ? "bg-emerald-500/20 group-hover:bg-emerald-500/30"
+                                ? "bg-emerald-100 group-hover:bg-emerald-200"
                                 : transaction.type === "withdraw"
-                                ? "bg-red-500/20 group-hover:bg-red-500/30"
+                                ? "bg-red-100 group-hover:bg-red-200"
                                 : transaction.type === "stake"
-                                ? "bg-blue-500/20 group-hover:bg-blue-500/30"
-                                : "bg-green-500/20 group-hover:bg-green-500/30"
-                            } transition-colors`}
+                                ? "bg-blue-100 group-hover:bg-blue-200"
+                                : "bg-green-100 group-hover:bg-green-200"
+                            } transition-colors duration-150`}
                           >
                             <Icon
                               className={`w-6 h-6 ${
                                 transaction.type === "deposit"
-                                  ? "text-emerald-400"
+                                  ? "text-emerald-600"
                                   : transaction.type === "withdraw"
-                                  ? "text-red-400"
+                                  ? "text-red-600"
                                   : transaction.type === "stake"
-                                  ? "text-blue-400"
-                                  : "text-green-400"
+                                  ? "text-blue-600"
+                                  : "text-green-600"
                               }`}
                             />
                           </div>
                           <div>
-                            <p className="text-white font-semibold capitalize text-lg">
+                            <p className="text-gray-900 font-semibold capitalize text-lg">
                               {transaction.type}
                             </p>
-                            <p className="text-slate-600 dark:text-slate-300 text-sm">
+                            <p className="text-gray-500 text-sm">
                               {transaction.currency}
                             </p>
                           </div>
@@ -5338,7 +5338,7 @@ function HistoryTab({
                                 ? transaction.fee
                                 : 0;
                             return feeAmount > 0 ? (
-                              <p className="text-slate-600 dark:text-slate-300 text-sm">
+                              <p className="text-gray-500 text-sm">
                                 Fee: {feeAmount.toFixed(4)}{" "}
                                 {transaction.currency}
                               </p>
@@ -5349,29 +5349,29 @@ function HistoryTab({
                       <td className="py-4 px-4 max-w-xs">
                         {transaction.description ? (
                           <div className="group relative">
-                            <p className="text-emerald-400 italic text-sm truncate">
+                            <p className="text-emerald-600 italic text-sm truncate">
                               {transaction.description}
                             </p>
                             {transaction.description.length > 50 && (
-                              <div className="absolute left-0 top-full mt-2 hidden group-hover:block z-50 bg-gray-900 border border-emerald-500/30 rounded-lg p-3 shadow-xl max-w-sm">
-                                <p className="text-emerald-400 italic text-sm whitespace-normal">
+                              <div className="absolute left-0 top-full mt-2 hidden group-hover:block z-50 bg-white border border-gray-200 rounded-lg p-3 shadow-xl max-w-sm">
+                                <p className="text-emerald-700 italic text-sm whitespace-normal">
                                   {transaction.description}
                                 </p>
                               </div>
                             )}
                           </div>
                         ) : (
-                          <span className="text-white/40 text-sm">-</span>
+                          <span className="text-gray-400 text-sm">-</span>
                         )}
                       </td>
                       <td className="py-4 px-4">
-                        <span className="text-slate-600 dark:text-slate-300 bg-warm-400/15 px-3 py-1 rounded-lg text-sm">
+                        <span className="text-gray-600 bg-gray-100 px-3 py-1 rounded-lg text-sm">
                           {transaction.network || "N/A"}
                         </span>
                       </td>
                       <td className="py-4 px-4">
                         <div>
-                          <span className="text-slate-600 dark:text-slate-300 text-base">
+                          <span className="text-gray-700 text-base">
                             {new Date(transaction.createdAt || transaction.created_at).toLocaleDateString(
                               "en-US",
                               {
@@ -5381,7 +5381,7 @@ function HistoryTab({
                               }
                             )}
                           </span>
-                          <p className="text-slate-600 dark:text-slate-300 text-sm">
+                          <p className="text-gray-500 text-sm">
                             {new Date(transaction.createdAt || transaction.created_at).toLocaleTimeString(
                               "en-US",
                               {
@@ -5396,10 +5396,10 @@ function HistoryTab({
                         <span
                           className={`px-3 py-1 rounded-lg text-sm font-semibold ${
                             transaction.status === "completed"
-                              ? "bg-emerald-500/20 text-emerald-400"
+                              ? "bg-emerald-100 text-emerald-700"
                               : transaction.status === "pending"
-                              ? "bg-yellow-500/20 text-yellow-400"
-                              : "bg-red-500/20 text-red-400"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-red-100 text-red-600"
                           }`}
                         >
                           {transaction.status}
@@ -5413,7 +5413,7 @@ function HistoryTab({
                                 transaction.txHash || ""
                               )
                             }
-                            className="text-emerald-400 hover:text-emerald-300 font-mono transition-colors flex items-center space-x-2 bg-slate-800/80 dark:bg-slate-700/60 hover:bg-warm-400/15 px-3 py-2 rounded-lg"
+                            className="text-emerald-600 hover:text-emerald-700 font-mono transition-colors flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-lg"
                           >
                             <span>
                               {transaction.txHash.slice(0, 8)}...
@@ -5422,7 +5422,7 @@ function HistoryTab({
                             <Copy className="w-4 h-4" />
                           </button>
                         ) : (
-                          <span className="text-white/40">N/A</span>
+                          <span className="text-gray-400">N/A</span>
                         )}
                       </td>
                     </motion.tr>
