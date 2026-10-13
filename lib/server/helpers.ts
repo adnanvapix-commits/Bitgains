@@ -31,7 +31,14 @@ export const sanitizeTransactionId = (id: string): { isValid: boolean; sanitized
   
   const trimmedId = id.trim();
   
-  if (!isValidUUID(trimmedId)) {
+  if (!trimmedId) return { isValid: false, sanitizedId: '', error: 'ID cannot be empty' };
+
+  // Accept standard UUIDs (v1-v5) as well as Supabase gen_random_uuid() output
+  // Supabase uses v4 but gen_random_uuid() is fully RFC-4122 compliant
+  const uuidV4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  const uuidAnyVersionRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  if (!uuidAnyVersionRegex.test(trimmedId)) {
     return { isValid: false, sanitizedId: trimmedId, error: 'Invalid UUID format' };
   }
   
