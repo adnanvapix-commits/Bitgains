@@ -8468,7 +8468,6 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
     </div>
   );
 }
-}
 
 // ─────────────────────────────────────────────────────────────
 // 4. ADDRESS BOOK TAB
