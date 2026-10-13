@@ -429,6 +429,7 @@ export default function AdminPage() {
       setError(
         error instanceof Error ? error.message : "Failed to reject transaction"
       );
+      await fetchPendingTransactions();
     } finally {
       setProcessingTx(null);
     }
