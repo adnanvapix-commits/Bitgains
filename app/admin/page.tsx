@@ -3901,66 +3901,120 @@ export default function AdminPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-stone-900/40  z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={closeCommentModal}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-cream-100 border border-stone-300/50 rounded-2xl p-6 max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white border border-gray-200 rounded-2xl p-6 max-w-lg w-full shadow-2xl"
             >
-              <h3 className="text-xl font-bold text-stone-900 mb-4">
-                {commentModal.action === "approve"
-                  ? "Approve Transaction"
-                  : "Reject Transaction"}
-              </h3>
+              {(() => {
+                // Find the transaction being processed
+                const currentTransaction = pendingTransactions.find(
+                  tx => tx._id === commentModal.txId
+                );
+                
+                return (
+                  <>
+                    <div className="text-center mb-6">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        {commentModal.action === "approve"
+                          ? "Approve Transaction"
+                          : "Reject Transaction"}
+                      </h3>
+                      
+                      {/* Transaction Details */}
+                      {currentTransaction && (
+                        <div className="bg-gray-50 rounded-xl p-4 space-y-2 text-sm">
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-600">Amount:</span>
+                            <span className="font-bold text-gray-900">
+                              {currentTransaction.amount?.toLocaleString()} {currentTransaction.currency || 'USDT'}
+                            </span>
+                          </div>
+                          {currentTransaction.network && (
+                            <div className="flex justify-between items-center">
+                              <span className="text-gray-600">Network:</span>
+                              <span className="text-blue-600 font-medium">
+                                {currentTransaction.network}
+                              </span>
+                            </div>
+                          )}
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-600">Type:</span>
+                            <span className="uppercase font-medium text-gray-900">
+                              {currentTransaction.type}
+                            </span>
+                          </div>
+                          {currentTransaction.userId?.name && (
+                            <div className="flex justify-between items-center">
+                              <span className="text-gray-600">User:</span>
+                              <span className="font-medium text-gray-900">
+                                {currentTransaction.userId.name}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
 
-              <div className="mb-4">
-                <label className="block text-stone-900/80 text-sm mb-2">
-                  {commentModal.action === "reject"
-                    ? "Rejection Reason (Required)"
-                    : "Comment (Optional)"}
-                </label>
-                <textarea
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  className="w-full h-24 px-4 py-2 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-                  placeholder={
-                    commentModal.action === "reject"
-                      ? "Please provide a reason for rejection..."
-                      : "Optional comment..."
-                  }
-                />
-              </div>
+                    <div className="mb-6">
+                      <label className="block text-gray-700 text-sm font-medium mb-2">
+                        {commentModal.action === "reject"
+                          ? "Rejection Reason (Required)"
+                          : "Comment (Optional)"}
+                      </label>
+                      <textarea
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        className="w-full h-28 px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                        placeholder={
+                          commentModal.action === "reject"
+                            ? "Please provide a clear reason for rejection..."
+                            : "Optional comment..."
+                        }
+                      />
+                      {commentModal.action === "reject" && !comment.trim() && (
+                        <p className="text-red-500 text-xs mt-1">
+                          Rejection reason is required
+                        </p>
+                      )}
+                    </div>
 
-              <div className="flex items-center space-x-3">
-                <button
-                  onClick={() => {
-                    if (commentModal.txId) {
-                      if (commentModal.action === "approve") {
-                        handleApprove(commentModal.txId, comment);
-                      } else {
-                        handleReject(commentModal.txId, comment);
-                      }
-                    }
-                  }}
-                  disabled={commentModal.action === "reject" && !comment.trim()}
-                  className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-colors ${
-                    commentModal.action === "approve"
-                      ? "bg-emerald-500 text-black hover:bg-emerald-600"
-                      : "bg-red-500 text-stone-900 hover:bg-red-600"
-                  } disabled:opacity-50 disabled:cursor-not-allowed`}
-                >
-                  {commentModal.action === "approve" ? "Approve" : "Reject"}
-                </button>
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => {
+                          if (commentModal.txId) {
+                            if (commentModal.action === "approve") {
+                              handleApprove(commentModal.txId, comment);
+                            } else {
+                              handleReject(commentModal.txId, comment);
+                            }
+                          }
+                        }}
+                        disabled={commentModal.action === "reject" && !comment.trim()}
+                        className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all duration-200 ${
+                          commentModal.action === "approve"
+                            ? "bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-green-500/25"
+                            : "bg-red-500 hover:bg-red-600 text-white shadow-lg hover:shadow-red-500/25"
+                        } disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none`}
+                      >
+                        {commentModal.action === "approve" ? "Approve" : "Reject"}
+                      </button>
 
-                <button
-                  onClick={closeCommentModal}
-                  className="flex-1 py-3 px-4 bg-cream-200/60 text-stone-900 rounded-xl hover:bg-cream-300/60 transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
+                      <button
+                        onClick={closeCommentModal}
+                        className="flex-1 py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-all duration-200"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </>
+                );
+              })()}
             </motion.div>
           </motion.div>
         )}
