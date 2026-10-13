@@ -15,9 +15,56 @@ export async function POST(req: NextRequest) {
     const { data: wallet } = await sb.from('wallets').select('id').eq('user_id', user!.id).single();
     if (!wallet) return NextResponse.json({ success: false, message: 'Wallet not found' }, { status: 404 });
     const feePct = parseFloat(process.env.TRANSACTION_FEE_PERCENTAGE || '0');
-    const { data: tx, error: txErr } = await sb.from('transactions').insert({ user_id: user!.id, type: 'deposit', amount: num, currency, network, from_address: fromAddress, user_transaction_id: userTransactionId || null, description: description || `Deposit of ${amount} ${currency}`, fee_amount: calculateFee(num, feePct), fee_percentage: feePct, status: 'pending', metadata: { ipAddress: getClientIP(req), userAgent: getUserAgent(req) } }).select().single();
-    if (txErr) throw txErr;
-    await sb.from('wallet_pending_transactions').insert({ wallet_id: wallet.id, transaction_id: tx.id }).catch(() => {});
-    return NextResponse.json({ success: true, message: 'Deposit request submitted. Awaiting admin approval.', data: { transaction: { id: tx.id, type: tx.type, amount: tx.amount, currency: tx.currency, network: tx.network, status: tx.status, submittedAt: tx.submitted_at } } }, { status: 201 });
-  } catch (err: any) { return NextResponse.json({ success: false, message: err.message }, { status: 500 }); }
+    
+    console.log('Creating deposit transaction for user:', user!.id);
+    
+    const { data: tx, error: txErr } = await sb.from('transactions').insert({ 
+      user_id: user!.id, 
+      type: 'deposit', 
+      amount: num, 
+      currency, 
+      network, 
+      from_address: fromAddress, 
+      user_transaction_id: userTransactionId || null, 
+      description: description || `Deposit of ${amount} ${currency}`, 
+      fee_amount: calculateFee(num, feePct), 
+      fee_percentage: feePct, 
+      status: 'pending', 
+      metadata: { 
+        ipAddress: getClientIP(req), 
+        userAgent: getUserAgent(req) 
+      } 
+    }).select().single();
+    
+    if (txErr) {
+      console.error('Transaction creation error:', txErr);
+      throw txErr;
+    }
+    
+    console.log('Transaction created successfully:', tx.id, 'Type:', typeof tx.id);
+    
+    const { error: pendingErr } = await sb.from('wallet_pending_transactions').insert({ wallet_id: wallet.id, transaction_id: tx.id });
+    if (pendingErr) {
+      console.error('Pending transaction error:', pendingErr);
+    }
+    
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Deposit request submitted. Awaiting admin approval.', 
+      data: { 
+        transaction: { 
+          id: tx.id, 
+          type: tx.type, 
+          amount: tx.amount, 
+          currency: tx.currency, 
+          network: tx.network, 
+          status: tx.status, 
+          submittedAt: tx.submitted_at 
+        } 
+      } 
+    }, { status: 201 });
+  } catch (err: any) { 
+    console.error('Deposit endpoint error:', err);
+    return NextResponse.json({ success: false, message: err.message }, { status: 500 }); 
+  }
 }

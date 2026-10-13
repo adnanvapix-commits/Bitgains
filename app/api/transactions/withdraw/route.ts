@@ -27,7 +27,10 @@ export async function POST(req: NextRequest) {
     const feePct = parseFloat(process.env.TRANSACTION_FEE_PERCENTAGE || '0.5');
     const { data: tx, error: txErr } = await sb.from('transactions').insert({ user_id: user!.id, type: 'withdrawal', amount: num, currency, network, to_address: toAddress.toLowerCase(), description: description || `Withdrawal of ${amount} ${currency}`, fee_amount: calculateFee(num, feePct), fee_percentage: feePct, status: 'pending', metadata: { ipAddress: getClientIP(req), userAgent: getUserAgent(req) } }).select().single();
     if (txErr) throw txErr;
-    await sb.from('wallet_pending_transactions').insert({ wallet_id: wallet.id, transaction_id: tx.id }).catch(() => {});
+    const { error: pendingErr } = await sb.from('wallet_pending_transactions').insert({ wallet_id: wallet.id, transaction_id: tx.id });
+    if (pendingErr) {
+      console.error('Pending transaction error:', pendingErr);
+    }
     return NextResponse.json({ success: true, message: 'Withdrawal request submitted. Awaiting admin approval.', data: { transaction: { id: tx.id, type: tx.type, amount: tx.amount, currency: tx.currency, network: tx.network, toAddress: tx.to_address, status: tx.status, submittedAt: tx.submitted_at } } }, { status: 201 });
   } catch (err: any) { return NextResponse.json({ success: false, message: err.message }, { status: 500 }); }
 }
