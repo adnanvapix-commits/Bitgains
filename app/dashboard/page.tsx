@@ -334,7 +334,15 @@ export default function DashboardPage() {
       setLoadingNotifications(true);
       const response = await notificationsApi.getNotifications();
       if (response.success) {
-        setPushNotifications(response.data.notifications || []);
+        // Normalize Supabase id -> _id for notifications
+        setPushNotifications(
+          (response.data.notifications || []).map((n: any) => ({
+            ...n,
+            _id: n._id || n.id,
+            read: n.read ?? n.isRead ?? n.is_read ?? false,
+            createdAt: n.createdAt || n.created_at,
+          }))
+        );
         setUnreadNotificationCount(response.data.unreadCount || 0);
       }
     } catch (error) {
@@ -3201,28 +3209,17 @@ function StakingTab({
   walletData: any;
 }) {
   const [stakingAmount, setStakingAmount] = useState("");
-  const [selectedPackage, setSelectedPackage] = useState("locked30");
+  const [selectedPackage, setSelectedPackage] = useState("locked90");
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Display ranges for users (actual calculation uses backend variable rates)
+  // Only 90-day staking with dynamic 5–15% monthly rates
   const stakingPackages = [
-    {
-      id: "locked30",
-      label: "30-Day Stake",
-      apr: "5-10%",
-      description: "Variable monthly returns",
-      minStake: 100,
-      lockPeriod: "30 days",
-      icon: Clock,
-      color: "blue",
-      packageType: "30-day",
-    },
     {
       id: "locked90",
       label: "90-Day Stake",
-      apr: "6-15%",
-      description: "Higher commitment rewards",
-      minStake: 500,
+      apr: "5-15%",
+      description: "Dynamic monthly returns up to 15%",
+      minStake: 100,
       lockPeriod: "90 days",
       icon: Award,
       color: "purple",
@@ -4788,7 +4785,16 @@ function HistoryTab({
       const response = await transactionApi.getHistory(params);
 
       if (response.success) {
-        setTransactions(response.data.transactions || []);
+        // Normalize Supabase snake_case fields -> camelCase
+        setTransactions(
+          (response.data.transactions || []).map((t: any) => ({
+            ...t,
+            _id: t._id || t.id,
+            createdAt: t.createdAt || t.created_at,
+            submittedAt: t.submittedAt || t.submitted_at,
+            completedAt: t.completedAt || t.completed_at,
+          }))
+        );
         setPagination((prev) => ({
           ...prev,
           totalCount: response.data.pagination?.totalCount || 0,
@@ -8080,11 +8086,11 @@ function StakingPlansTab() {
       name: "Bronze",
       icon: "🥉",
       min: 100, max: 999,
-      rate: "5%",
-      duration: "30 days",
+      rate: "5–9%",
+      duration: "90 days",
       features: [
-        "5% monthly return",
-        "30-day lock period",
+        "5–9% dynamic monthly return",
+        "90-day lock period",
         "Manual withdrawal",
         "Basic dashboard access",
         "Email notifications",
@@ -8096,11 +8102,11 @@ function StakingPlansTab() {
       name: "Silver",
       icon: "🥈",
       min: 1000, max: 4999,
-      rate: "8%",
-      duration: "30 days",
+      rate: "8–12%",
+      duration: "90 days",
       features: [
-        "8% monthly return",
-        "30-day lock period",
+        "8–12% dynamic monthly return",
+        "90-day lock period",
         "Priority withdrawals",
         "Advanced analytics",
         "SMS + email alerts",
@@ -8113,11 +8119,11 @@ function StakingPlansTab() {
       name: "Gold",
       icon: "🥇",
       min: 5000, max: 24999,
-      rate: "12%",
-      duration: "30 days",
+      rate: "10–15%",
+      duration: "90 days",
       features: [
-        "12% monthly return",
-        "30-day lock period",
+        "10–15% dynamic monthly return",
+        "90-day lock period",
         "Instant withdrawals",
         "Full portfolio analytics",
         "Dedicated support",
@@ -8131,17 +8137,16 @@ function StakingPlansTab() {
       name: "Platinum",
       icon: "💎",
       min: 25000, max: Infinity,
-      rate: "15%",
-      duration: "30 days",
+      rate: "Up to 15%",
+      duration: "90 days",
       features: [
-        "15% monthly return",
-        "30-day lock period",
+        "Up to 15% dynamic monthly return",
+        "90-day lock period",
         "Instant withdrawals",
         "VIP dashboard & analytics",
         "24/7 private support",
         "Maximum referral commissions",
         "Exclusive investment insights",
-        "Custom lock duration options",
         "Auto-compound enabled",
       ],
       badge_label: "VIP Elite",

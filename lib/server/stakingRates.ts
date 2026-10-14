@@ -1,5 +1,6 @@
-const MONTHLY_RATES = [0.09, 0.10, 0.08, 0.07, 0.08, 0.06, 0.06, 0.07, 0.06];
-const ALTERNATING = [0.06, 0.07];
+// Staking rates: dynamic, capped at 15% monthly
+const MONTHLY_RATES = [0.09, 0.10, 0.11, 0.10, 0.12, 0.11, 0.13, 0.12, 0.15];
+const ALTERNATING  = [0.12, 0.13, 0.14, 0.15];
 
 export const getMonthlyRate = (month: number) => {
   const m = Math.max(1, Math.floor(month));
