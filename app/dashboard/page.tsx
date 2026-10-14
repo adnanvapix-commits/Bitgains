@@ -2429,10 +2429,10 @@ function DepositTab({
             <ArrowUpRight className="w-6 h-6 sm:w-8 sm:h-8 text-black font-bold" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
               Deposit Funds
             </h1>
-            <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base">
+            <p className="text-gray-600 text-sm sm:text-base">
               Add funds to your staking wallet and start earning
             </p>
           </div>
@@ -2443,10 +2443,10 @@ function DepositTab({
           <div className="flex items-center space-x-2 sm:space-x-3 bg-warm-400/15 rounded-xl sm:rounded-2xl p-3 sm:p-4">
             <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />
             <div>
-              <p className="text-white font-medium text-sm sm:text-base">
+              <p className="text-gray-900 font-medium text-sm sm:text-base">
                 Secure
               </p>
-              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
+              <p className="text-gray-600 text-xs sm:text-sm">
                 Bank-grade encryption
               </p>
             </div>
@@ -2454,10 +2454,10 @@ function DepositTab({
           <div className="flex items-center space-x-2 sm:space-x-3 bg-warm-400/15 rounded-xl sm:rounded-2xl p-3 sm:p-4">
             <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400" />
             <div>
-              <p className="text-white font-medium text-sm sm:text-base">
+              <p className="text-gray-900 font-medium text-sm sm:text-base">
                 Instant
               </p>
-              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
+              <p className="text-gray-600 text-xs sm:text-sm">
                 Start earning immediately
               </p>
             </div>
@@ -2465,10 +2465,10 @@ function DepositTab({
           <div className="flex items-center space-x-2 sm:space-x-3 bg-warm-400/15 rounded-xl sm:rounded-2xl p-3 sm:p-4">
             <Award className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
             <div>
-              <p className="text-white font-medium text-sm sm:text-base">
+              <p className="text-gray-900 font-medium text-sm sm:text-base">
                 Up to 15% Monthly
               </p>
-              <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
+              <p className="text-gray-600 text-xs sm:text-sm">
                 Variable staking returns
               </p>
             </div>
@@ -2487,7 +2487,7 @@ function DepositTab({
         <form onSubmit={handleDeposit} className="space-y-8">
           {/* Mobile-First Token Selection */}
           <div className="space-y-4">
-            <label className="block text-lg sm:text-xl font-bold text-white text-center sm:text-left">
+            <label className="block text-lg sm:text-xl font-bold text-gray-900 text-center sm:text-left">
               Select Cryptocurrency
             </label>
 
@@ -2519,7 +2519,7 @@ function DepositTab({
                     {/* Token Info */}
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-1">
-                        <h3 className="text-white font-bold text-lg sm:text-xl">
+                        <h3 className="text-gray-900 font-bold text-lg sm:text-xl">
                           {token.symbol}
                         </h3>
                         <span
@@ -2529,11 +2529,11 @@ function DepositTab({
                           Selected
                         </span>
                       </div>
-                      <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base mb-2">
+                      <p className="text-gray-600 text-sm sm:text-base mb-2">
                         {token.name}
                       </p>
                       <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
-                        <span className="px-2 py-1 bg-warm-400/15 rounded-lg text-slate-600 dark:text-slate-300">
+                        <span className="px-2 py-1 bg-warm-400/15 rounded-lg text-gray-600">
                           {token.network}
                         </span>
                         <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-lg">
@@ -2544,7 +2544,7 @@ function DepositTab({
 
                     {/* Checkmark */}
                     <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
-                      <Check className="w-5 h-5 text-white" />
+                      <Check className="w-5 h-5 text-gray-900" />
                     </div>
                   </div>
 
@@ -2552,14 +2552,14 @@ function DepositTab({
                   <div className="mt-4 pt-3 border-t border-warm-400/20">
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div className="text-center sm:text-left">
-                        <p className="text-slate-600 dark:text-slate-300">Minimum Deposit</p>
+                        <p className="text-gray-600">Minimum Deposit</p>
                         <p className="text-emerald-400 font-semibold">
                           {formatCurrency(token.minDeposit)}
                         </p>
                       </div>
                       <div className="text-center sm:text-left">
-                        <p className="text-slate-600 dark:text-slate-300">Processing Time</p>
-                        <p className="text-slate-900 dark:text-white font-semibold">1-5 minutes</p>
+                        <p className="text-gray-600">Processing Time</p>
+                        <p className="text-slate-900 dark:text-gray-900 font-semibold">1-5 minutes</p>
                       </div>
                     </div>
                   </div>
@@ -2595,7 +2595,7 @@ function DepositTab({
 
           {/* Mobile-Optimized Amount Input */}
           <div className="space-y-4">
-            <label className="block text-lg sm:text-xl font-bold text-white text-center sm:text-left">
+            <label className="block text-lg sm:text-xl font-bold text-gray-900 text-center sm:text-left">
               Enter Deposit Amount
             </label>
 
@@ -2606,7 +2606,7 @@ function DepositTab({
                 value={depositAmount}
                 onChange={(e) => setDepositAmount(e.target.value)}
                 className="w-full px-4 sm:px-6 py-4 sm:py-5 text-xl sm:text-2xl text-center sm:text-left
-                         bg-warm-400/15 border-2 border-warm-400/30 rounded-2xl text-white placeholder-white/50 
+                         bg-warm-400/15 border-2 border-warm-400/30 rounded-2xl text-gray-900 placeholder-gray-400 
                          focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500/60 
                          transition-all duration-300 touch-manipulation font-bold"
                 placeholder="0.00"
@@ -2615,7 +2615,7 @@ function DepositTab({
                 inputMode="decimal"
               />
               <div className="absolute right-4 sm:right-6 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                <span className="text-slate-600 dark:text-slate-300 text-lg sm:text-xl font-semibold">
+                <span className="text-gray-600 text-lg sm:text-xl font-semibold">
                   {selectedToken}
                 </span>
                 <div className="w-8 h-8 sm:w-10 sm:h-10">
