@@ -578,7 +578,7 @@ export default function DashboardPage() {
 
   const handleStake = async (
     amount: number,
-    packageType: string = "30-day"
+    packageType: string = "90-day"
   ) => {
     try {
       const { transactionApi } = await import("../../lib/api/transactions.js");
@@ -989,7 +989,7 @@ export default function DashboardPage() {
                 <div className="hidden xl:flex items-center space-x-4 lg:space-x-6 bg-secondary border border-border rounded-xl lg:rounded-2xl px-3 lg:px-6 py-2 lg:py-3">
                   <div className="text-center">
                     <p className="text-xs text-muted-foreground">Monthly Rate</p>
-                    <p className="text-lg font-bold text-primary">5-12%</p>
+                    <p className="text-lg font-bold text-primary">Up to 15%</p>
                   </div>
                   <div className="w-px h-8 bg-border"></div>
                   <div className="text-center">
@@ -1625,7 +1625,7 @@ function OverviewTab({
                 <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 text-primary-foreground font-bold" />
               </div>
               <div className="px-3 py-1 bg-primary/15 rounded-full border border-primary/25">
-                <span className="text-primary text-sm font-medium">5-15% Monthly</span>
+                <span className="text-primary text-sm font-medium">Up to 15% Monthly</span>
               </div>
             </div>
             <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-1 sm:mb-2">
@@ -1634,7 +1634,7 @@ function OverviewTab({
             <p className="text-muted-foreground text-xs sm:text-sm mb-1">Staked Amount (USDT)</p>
             <div className="flex items-center space-x-2 text-xs">
               <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-              <span className="text-primary">Earning: 5%-15% monthly</span>
+              <span className="text-primary">Earning: up to 15% monthly</span>
             </div>
           </div>
         </motion.div>
@@ -2466,7 +2466,7 @@ function DepositTab({
             <Award className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
             <div>
               <p className="text-white font-medium text-sm sm:text-base">
-                6-10% Monthly
+                Up to 15% Monthly
               </p>
               <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
                 Variable staking returns
@@ -3217,7 +3217,7 @@ function StakingTab({
     {
       id: "locked90",
       label: "90-Day Stake",
-      apr: "5-15%",
+      apr: "Up to 15%",
       description: "Dynamic monthly returns up to 15%",
       minStake: 100,
       lockPeriod: "90 days",
@@ -3736,7 +3736,7 @@ function StakingTab({
                 </div>
                 <div className="text-right">
                   <p className="text-2xl font-bold text-foreground">{formatCurrency(stakedBalance)}</p>
-                  <p className="text-primary text-sm">Earning 5-10% monthly</p>
+                  <p className="text-primary text-sm">Earning Up to 15% monthly</p>
                 </div>
               </div>
             </div>
@@ -6020,7 +6020,7 @@ function AnalyticsTab() {
             </div>
             <div className="text-center">
               <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">Monthly Rate</p>
-              <p className="text-2xl font-bold text-emerald-400">5-12%</p>
+              <p className="text-2xl font-bold text-emerald-400">Up to 15%</p>
               <p className="text-slate-600 dark:text-slate-300 text-sm">Variable</p>
             </div>
             <div className="text-center">
@@ -7876,25 +7876,23 @@ function TransactionPopup({
 // ─────────────────────────────────────────────────────────────
 function StakingCalculatorTab({ walletData }: { walletData: any }) {
   const [amount, setAmount] = useState("1000");
-  const [duration, setDuration] = useState("30");
   const [compoundEnabled, setCompoundEnabled] = useState(false);
 
-  const RATES: Record<string, number> = {
-    "30": 0.05, "60": 0.08, "90": 0.12, "180": 0.15,
-  };
-  const rate = RATES[duration] ?? 0.05;
+  // Fixed 90-day staking only, rate up to 15%
+  const duration = "90";
+  const rate = 0.15; // up to 15% per month
   const num = parseFloat(amount) || 0;
-  const months = parseInt(duration) / 30;
+  const months = 3; // 90 days = 3 months
   const simpleEarning = num * rate * months;
   const compoundEarning = num * (Math.pow(1 + rate, months) - 1);
   const earning = compoundEnabled ? compoundEarning : simpleEarning;
   const total = num + earning;
 
   const tiers = [
-    { label: "Bronze",   min: 100,   max: 999,      rate: "5%",  icon: "🥉" },
-    { label: "Silver",   min: 1000,  max: 4999,     rate: "8%",  icon: "🥈" },
-    { label: "Gold",     min: 5000,  max: 24999,    rate: "12%", icon: "🥇" },
-    { label: "Platinum", min: 25000, max: Infinity,  rate: "15%", icon: "💎" },
+    { label: "Bronze",   min: 100,   max: 999,      rate: "Up to 15%", icon: "🥉" },
+    { label: "Silver",   min: 1000,  max: 4999,     rate: "Up to 15%", icon: "🥈" },
+    { label: "Gold",     min: 5000,  max: 24999,    rate: "Up to 15%", icon: "🥇" },
+    { label: "Platinum", min: 25000, max: Infinity,  rate: "Up to 15%", icon: "💎" },
   ];
   const currentTier = tiers.find(t => num >= t.min && num <= t.max) ?? tiers[0];
 
@@ -7937,26 +7935,12 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
             </div>
           </div>
 
-          {/* Duration */}
+          {/* Duration — fixed 90 days */}
           <div>
             <label className="block text-sm font-medium text-muted-foreground mb-2">Lock Duration</label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {[
-                { days: "30",  label: "1 Month",  rate: "5% APM"  },
-                { days: "60",  label: "2 Months", rate: "8% APM"  },
-                { days: "90",  label: "3 Months", rate: "12% APM" },
-                { days: "180", label: "6 Months", rate: "15% APM" },
-              ].map(opt => (
-                <button key={opt.days} onClick={() => setDuration(opt.days)}
-                  className={`p-3 rounded-xl border-2 text-center transition-all duration-200 ${
-                    duration === opt.days
-                      ? "border-primary bg-primary/10 text-foreground shadow-sm scale-[1.03]"
-                      : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:bg-primary/5"
-                  }`}>
-                  <div className="font-bold text-sm">{opt.label}</div>
-                  <div className={`text-xs ${duration === opt.days ? "text-primary font-medium" : "text-muted-foreground"}`}>{opt.rate}</div>
-                </button>
-              ))}
+            <div className="p-4 rounded-xl border-2 border-primary bg-primary/10 text-center">
+              <div className="font-bold text-foreground text-lg">90 Days</div>
+              <div className="text-sm text-primary font-medium">Up to 15% APM</div>
             </div>
           </div>
 
@@ -7984,7 +7968,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
               <div>
                 <div className="text-sm font-medium text-muted-foreground">Your Tier</div>
                 <div className="text-2xl font-bold text-foreground">{currentTier.label} Member</div>
-                <div className="text-sm text-muted-foreground">{currentTier.rate} monthly rate · ${currentTier.min.toLocaleString()}–{currentTier.max === Infinity ? "∞" : `$${currentTier.max.toLocaleString()}`}</div>
+                <div className="text-sm text-muted-foreground">{currentTier.rate} · 90-day lock · ${currentTier.min.toLocaleString()}–{currentTier.max === Infinity ? "∞" : `$${currentTier.max.toLocaleString()}`}</div>
               </div>
             </div>
           </div>
@@ -7992,8 +7976,8 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
           {/* Result Cards */}
           <div className="grid grid-cols-2 gap-4">
             {[
-              { label: "Monthly Rate",   value: `${(rate * 100).toFixed(0)}% APM`,                                 sub: "Per month return" },
-              { label: "Total Earnings", value: `$${earning.toFixed(2)}`,                                         sub: `Over ${months} month${months > 1 ? "s" : ""}` },
+              { label: "Monthly Rate",   value: `Up to 15% APM`,                                              sub: "Dynamic per month" },
+              { label: "Total Earnings", value: `$${earning.toFixed(2)}`,                                         sub: `Over 3 months (90 days)` },
               { label: "Total Return",   value: `$${total.toFixed(2)}`,                                            sub: "Principal + rewards" },
               { label: "ROI",            value: `${num > 0 ? ((earning / num) * 100).toFixed(1) : "0"}%`,         sub: "Return on investment" },
             ].map(item => (
@@ -8237,8 +8221,8 @@ function StakingPlansTab() {
             <tbody>
               {[
                 ["Min. Stake",        "$100",     "$1,000",   "$5,000",   "$25,000"],
-                ["Monthly Rate",      "5%",       "8%",       "12%",      "15%"],
-                ["Lock Period",       "30 days",  "30 days",  "30 days",  "30 days"],
+                ["Monthly Rate",      "Up to 15%", "Up to 15%", "Up to 15%", "Up to 15%"],
+                ["Lock Period",       "90 days",   "90 days",   "90 days",   "90 days"],
                 ["Withdrawal Speed",  "Manual",   "Priority", "Instant",  "Instant"],
                 ["Analytics",         "Basic",    "Advanced", "Full",     "VIP"],
                 ["Support",           "Email",    "Email+SMS","Dedicated","24/7 VIP"],
