@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     const sb = getSupabaseAdmin();
     const { data: profile } = await sb.from('profiles').select('id, name').eq('email', email.trim().toLowerCase()).single();
     if (profile) {
-      sb.auth.admin.generateLink({ type: 'recovery', email: email.trim().toLowerCase(), options: { redirectTo: `${process.env.FRONTEND_URL || 'https://bitgains.co'}/reset-password` } })
+      sb.auth.admin.generateLink({ type: 'recovery', email: email.trim().toLowerCase(), options: { redirectTo: `${process.env.FRONTEND_URL || 'https://bitgains.cc'}/reset-password` } })
         .then(({ data }) => { if (data?.properties?.hashed_token) sendPasswordResetEmail(email, data.properties.hashed_token, profile.name).catch(() => {}); })
         .catch(() => {});
     }

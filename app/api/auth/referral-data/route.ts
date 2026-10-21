@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
       const { data: r } = await sb.from('profiles').select('id, name, email, referral_code').eq('id', profile.referred_by).single();
       referrer = r;
     }
-    const SITE = process.env.FRONTEND_URL || 'https://bitgains.co';
+    const SITE = process.env.FRONTEND_URL || 'https://bitgains.cc';
     return NextResponse.json({
       success: true,
       data: {

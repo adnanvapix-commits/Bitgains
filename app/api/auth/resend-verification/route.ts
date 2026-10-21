@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     const { data: linkData } = await getSupabaseAdmin().auth.admin.generateLink({
       type: 'signup',
       email: user!.email,
-      options: { redirectTo: `${process.env.FRONTEND_URL || 'https://bitgains.co'}/verify-email` },
+      options: { redirectTo: `${process.env.FRONTEND_URL || 'https://bitgains.cc'}/verify-email` },
     });
     if (linkData?.properties?.hashed_token) {
       await sendEmailVerificationEmail(user!.email, linkData.properties.hashed_token, user!.name);

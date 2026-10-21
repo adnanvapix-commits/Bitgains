@@ -7,7 +7,7 @@ const getClient = () => {
 };
 
 const FROM = () => `${process.env.EMAIL_FROM_NAME || 'BitGains'} <${process.env.FROM_EMAIL || 'onboarding@resend.dev'}>`;
-const SITE = () => process.env.FRONTEND_URL || 'https://bitgains.co';
+const SITE = () => process.env.FRONTEND_URL || 'https://bitgains.cc';
 
 const send = async (to: string, subject: string, html: string) => {
   try {
