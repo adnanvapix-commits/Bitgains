@@ -6431,9 +6431,15 @@ function AffiliateTab({
   const getDefaultReferralLink = () =>
     typeof window !== "undefined"
       ? `${window.location.origin}/signup?ref=${actualReferralCode}`
-      : "";
+      : `https://bitgains.cc/signup?ref=${actualReferralCode}`;
 
-  const referralLink = referralData?.referralLink || getDefaultReferralLink();
+  // Always build from current origin so the domain is always correct
+  // regardless of what FRONTEND_URL env var is set to on the server
+  const referralLink = actualReferralCode
+    ? (typeof window !== "undefined"
+        ? `${window.location.origin}/signup?ref=${actualReferralCode}`
+        : (referralData?.referralLink?.replace('bitgains.co', 'bitgains.cc') || getDefaultReferralLink()))
+    : referralData?.referralLink?.replace('bitgains.co', 'bitgains.cc') || getDefaultReferralLink();
 
   const referredUsersList = referralData?.referredUsersList || [];
   const level1Count =
