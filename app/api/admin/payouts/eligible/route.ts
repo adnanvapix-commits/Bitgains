@@ -10,9 +10,9 @@ export async function GET(req: NextRequest) {
 
   try {
     const sb = getSupabaseAdmin();
-    const now = new Date().toISOString();
+    const now = new Date();
 
-    // Fetch all active stakes with user + wallet info
+    // Fetch all active stakes
     const { data: stakes, error: stakeErr } = await sb
       .from('stakes')
       .select(`
@@ -25,21 +25,47 @@ export async function GET(req: NextRequest) {
 
     if (stakeErr) throw stakeErr;
 
-    // Group stakes by user and compute maturity
+    // For each stake, count how many 30-day payouts have already been distributed
+    // We check transactions of type 'staking_payout' linked to each stake via metadata
+    const stakeIds = (stakes || []).map((s: any) => s.stake_id);
+    let payoutCountMap = new Map<string, number>(); // stakeId -> payouts already given
+
+    if (stakeIds.length > 0) {
+      // Get all staking_payout transactions and count per stake
+      const { data: payoutTxs } = await sb
+        .from('transactions')
+        .select('metadata')
+        .eq('type', 'staking_payout');
+
+      for (const tx of (payoutTxs || [])) {
+        const stakePayouts = tx.metadata?.stakePayouts || [];
+        for (const sp of stakePayouts) {
+          if (sp.stakeId) {
+            payoutCountMap.set(sp.stakeId, (payoutCountMap.get(sp.stakeId) || 0) + 1);
+          }
+        }
+      }
+    }
+
     const userMap = new Map<string, any>();
 
     for (const stake of (stakes || [])) {
       const uid = stake.user_id;
-      const isMatured = stake.end_date <= now;
-      const daysTotal = Math.round(
-        (new Date(stake.end_date).getTime() - new Date(stake.start_date).getTime()) / (1000 * 60 * 60 * 24)
-      );
-      const daysElapsed = Math.max(0, Math.round(
-        (Date.now() - new Date(stake.start_date).getTime()) / (1000 * 60 * 60 * 24)
-      ));
-      const daysRemaining = Math.max(0, Math.round(
-        (new Date(stake.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-      ));
+      const startDate = new Date(stake.start_date);
+      const endDate = new Date(stake.end_date);
+
+      const daysTotal = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+      const daysElapsed = Math.max(0, Math.round((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
+      const daysRemaining = Math.max(0, Math.round((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
+
+      // Total payout slots: 3 (every 30 days in 90-day stake)
+      const totalPayoutSlots = 3;
+      const payoutsGiven = payoutCountMap.get(stake.stake_id) || 0;
+      const payoutsRemaining = Math.max(0, totalPayoutSlots - payoutsGiven);
+
+      // A payout slot is due if 30 * (payoutsGiven + 1) days have elapsed
+      const nextPayoutDueAtDay = (payoutsGiven + 1) * 30;
+      const isEligibleForPayout = daysElapsed >= nextPayoutDueAtDay && payoutsRemaining > 0;
 
       if (!userMap.has(uid)) {
         userMap.set(uid, {
@@ -49,7 +75,7 @@ export async function GET(req: NextRequest) {
           walletBalance: (stake as any).wallets?.balance || 0,
           totalStakedAmount: 0,
           stakes: [],
-          hasMaturedStake: false,
+          hasEligibleStake: false,
           selectable: false,
         });
       }
@@ -65,24 +91,27 @@ export async function GET(req: NextRequest) {
         daysTotal,
         daysElapsed,
         daysRemaining,
-        isMatured,
-        status: isMatured ? 'matured' : 'active',
+        totalPayoutSlots,
+        payoutsGiven,
+        payoutsRemaining,
+        nextPayoutDueAtDay,
+        isEligibleForPayout,
+        status: now >= endDate ? 'matured' : 'active',
       });
 
-      if (isMatured) {
-        entry.hasMaturedStake = true;
+      if (isEligibleForPayout) {
+        entry.hasEligibleStake = true;
         entry.selectable = true;
       }
     }
 
     const users = Array.from(userMap.values()).map(u => ({
       ...u,
-      maturedStakedAmount: u.stakes
-        .filter((s: any) => s.isMatured)
+      eligibleStakedAmount: u.stakes
+        .filter((s: any) => s.isEligibleForPayout)
         .reduce((sum: number, s: any) => sum + s.amount, 0),
     }));
 
-    // Sort: eligible (matured) first
     users.sort((a, b) => Number(b.selectable) - Number(a.selectable));
 
     return NextResponse.json({
@@ -93,7 +122,7 @@ export async function GET(req: NextRequest) {
           total: users.length,
           eligible: users.filter(u => u.selectable).length,
           notYetEligible: users.filter(u => !u.selectable).length,
-          totalMaturedStaked: users.reduce((s, u) => s + u.maturedStakedAmount, 0),
+          totalEligibleStaked: users.reduce((s, u) => s + u.eligibleStakedAmount, 0),
         },
       },
     });

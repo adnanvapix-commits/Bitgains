@@ -17,42 +17,66 @@ export async function POST(req: NextRequest) {
     }
 
     const pct = parseFloat(percentage);
-    const now = new Date().toISOString();
+    const now = new Date();
+    const nowISO = now.toISOString();
     const sb = getSupabaseAdmin();
 
-    // Find all active matured stakes
+    // Fetch all active stakes
     let stakeQuery = sb
       .from('stakes')
       .select(`
         id, stake_id, user_id, wallet_id, amount, package_type, start_date, end_date,
         profiles!stakes_user_id_fkey(id, name, email)
       `)
-      .eq('status', 'active')
-      .lte('end_date', now); // only matured stakes
+      .eq('status', 'active');
 
     if (userIds && userIds.length > 0) {
       stakeQuery = stakeQuery.in('user_id', userIds);
     }
 
-    const { data: maturedStakes, error: stakeErr } = await stakeQuery;
+    const { data: allStakes, error: stakeErr } = await stakeQuery;
     if (stakeErr) throw stakeErr;
 
-    if (!maturedStakes || maturedStakes.length === 0) {
+    // Count existing payouts per stake from transaction metadata
+    const { data: payoutTxs } = await sb
+      .from('transactions')
+      .select('metadata')
+      .eq('type', 'staking_payout');
+
+    const payoutCountMap = new Map<string, number>(); // stakeId -> payouts already given
+    for (const tx of (payoutTxs || [])) {
+      const stakePayouts = tx.metadata?.stakePayouts || [];
+      for (const sp of stakePayouts) {
+        if (sp.stakeId) {
+          payoutCountMap.set(sp.stakeId, (payoutCountMap.get(sp.stakeId) || 0) + 1);
+        }
+      }
+    }
+
+    // Filter to only stakes that are eligible for a 30-day interval payout
+    const eligibleStakes = (allStakes || []).filter((stake: any) => {
+      const startDate = new Date(stake.start_date);
+      const daysElapsed = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+      const payoutsGiven = payoutCountMap.get(stake.stake_id) || 0;
+      const totalPayoutSlots = 3; // 3 payouts per 90-day stake
+      const nextPayoutDueAtDay = (payoutsGiven + 1) * 30;
+      return daysElapsed >= nextPayoutDueAtDay && payoutsGiven < totalPayoutSlots;
+    });
+
+    if (eligibleStakes.length === 0) {
       return NextResponse.json({
         success: false,
-        message: 'No matured stakes found for the selected users',
+        message: 'No stakes are due for a 30-day interval payout. Stakes become eligible every 30 days (3 payouts per 90-day stake).',
       }, { status: 400 });
     }
 
     const results: any[] = [];
     const failedUsers: any[] = [];
 
-    // Group stakes by user
+    // Group eligible stakes by user
     const stakesByUser = new Map<string, any[]>();
-    for (const stake of maturedStakes) {
-      if (!stakesByUser.has(stake.user_id)) {
-        stakesByUser.set(stake.user_id, []);
-      }
+    for (const stake of eligibleStakes) {
+      if (!stakesByUser.has(stake.user_id)) stakesByUser.set(stake.user_id, []);
       stakesByUser.get(stake.user_id)!.push(stake);
     }
 
@@ -69,14 +93,27 @@ export async function POST(req: NextRequest) {
         const stakePayouts: any[] = [];
 
         for (const stake of userStakes) {
-          const payoutAmount = Math.round(Number(stake.amount) * (pct / 100) * 100000000) / 100000000;
+          const payoutsGiven = payoutCountMap.get(stake.stake_id) || 0;
+          const payoutNumber = payoutsGiven + 1; // this is payout #1, #2, or #3
+          const payoutAmount = Math.round(Number(stake.amount) * (pct / 100) * 1e8) / 1e8;
           totalPayout += payoutAmount;
           stakePayouts.push({
             stakeId: stake.stake_id,
             stakedAmount: Number(stake.amount),
             payoutAmount,
+            payoutNumber,       // which 30-day interval (1, 2, or 3)
+            totalPayoutSlots: 3,
             packageType: stake.package_type,
           });
+
+          // If this is the 3rd (final) payout, mark stake as matured
+          if (payoutNumber === 3) {
+            await sb.from('stakes').update({
+              status: 'matured',
+              actual_rewards: payoutAmount,
+              matured_at: nowISO,
+            }).eq('id', stake.id);
+          }
         }
 
         const previousBalance = wallet.balance;
@@ -85,45 +122,42 @@ export async function POST(req: NextRequest) {
         await sb.from('wallets').update({
           balance: wallet.balance + totalPayout,
           total_earnings: wallet.total_earnings + totalPayout,
-          last_staking_update: now,
+          last_staking_update: nowISO,
         }).eq('user_id', userId);
 
-        // Mark stakes as matured
-        for (const stake of userStakes) {
-          const actualReward = Math.round(Number(stake.amount) * (pct / 100) * 100000000) / 100000000;
-          await sb.from('stakes').update({
-            status: 'matured',
-            actual_rewards: actualReward,
-            matured_at: now,
-          }).eq('id', stake.id);
-        }
-
         // Create payout transaction
+        const payoutNumbers = stakePayouts.map(s => s.payoutNumber);
+        const payoutLabel = payoutNumbers.length === 1
+          ? `Payout ${payoutNumbers[0]} of 3`
+          : `Payouts ${payoutNumbers.join(', ')} of 3`;
+
         await sb.from('transactions').insert({
           user_id: userId,
           type: 'staking_payout',
           amount: totalPayout,
           currency: 'USDT',
           status: 'completed',
-          description: `Admin staking payout – ${pct}% of staked amount`,
-          completed_at: now,
+          description: `30-day staking payout (${payoutLabel}) – ${pct}% of staked amount`,
+          completed_at: nowISO,
           reviewed_by: user!.id,
-          reviewed_at: now,
+          reviewed_at: nowISO,
           metadata: {
             adminId: user!.id,
             adminEmail: user!.email,
             payoutPercentage: pct,
+            payoutInterval: '30days',
             stakePayouts,
             previousBalance,
             newBalance: previousBalance + totalPayout,
           },
         });
 
-        // Send in-app notification
+        // Send notification
+        const payoutNum = stakePayouts[0]?.payoutNumber || 1;
         await sb.from('notifications').insert({
           user_id: userId,
-          title: '🎉 Staking Payout Received!',
-          message: `Your staking payout of ${totalPayout.toFixed(4)} USDT (${pct}% of your staked amount) has been credited to your wallet. Keep staking to earn more!`,
+          title: `Staking Payout ${payoutNum}/3 Received!`,
+          message: `Your 30-day staking payout of ${totalPayout.toFixed(4)} USDT (${pct}% of your staked amount) has been credited. ${payoutNum < 3 ? `Next payout in 30 days (${payoutNum + 1}/3).` : 'This was your final payout for this stake.'}`,
           type: 'success',
           is_broadcast: false,
           sent_by: user!.id,
@@ -137,10 +171,10 @@ export async function POST(req: NextRequest) {
           target_user_email: userProfile?.email || '',
           action: 'STAKING_PAYOUT',
           amount: totalPayout,
-          reason: `Staking payout at ${pct}%`,
+          reason: `30-day interval staking payout at ${pct}%`,
           previous_balance: previousBalance,
           new_balance: previousBalance + totalPayout,
-          metadata: { payoutPercentage: pct, stakePayouts },
+          metadata: { payoutPercentage: pct, payoutInterval: '30days', stakePayouts },
         });
 
         results.push({
@@ -159,7 +193,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: `Payout of ${pct}% distributed to ${results.length} user(s)`,
+      message: `30-day interval payout of ${pct}% distributed to ${results.length} user(s)`,
       data: {
         percentage: pct,
         usersProcessed: results.length,

@@ -1484,7 +1484,7 @@ export default function AdminPage() {
           >
             <div className="flex items-center justify-center space-x-2">
               <Gift className="w-4 h-4" />
-              <span>Monthly Payouts</span>
+              <span>30-Day Payouts</span>
             </div>
           </button>
         </div>
@@ -3576,8 +3576,8 @@ export default function AdminPage() {
                   <p className="text-2xl font-bold text-stone-900">{payoutSummary.notYetEligible}</p>
                 </div>
                 <div className="bg-gradient-to-r from-purple-500/20 to-pink-400/20 border border-purple-500/30 rounded-xl p-4">
-                  <p className="text-purple-400 text-sm font-medium">Total Matured Staked</p>
-                  <p className="text-2xl font-bold text-stone-900">${formatCurrency(payoutSummary.totalMaturedStaked)}</p>
+                  <p className="text-purple-400 text-sm font-medium">Eligible Staked Amount</p>
+                  <p className="text-2xl font-bold text-stone-900">${formatCurrency(payoutSummary.totalEligibleStaked ?? payoutSummary.totalMaturedStaked ?? 0)}</p>
                 </div>
               </div>
             )}
@@ -3586,8 +3586,12 @@ export default function AdminPage() {
             <div className="bg-cream-100/80 border border-stone-300/50 rounded-2xl p-6">
               <h3 className="text-xl font-bold text-stone-900 mb-6 flex items-center">
                 <Gift className="w-6 h-6 mr-3 text-emerald-400" />
-                Distribute Monthly Payout
+                Distribute 30-Day Interval Payout
               </h3>
+              <p className="text-stone-900/60 text-sm mb-4">
+                Each 90-day stake receives <strong>3 payouts</strong> — one every 30 days. 
+                Only stakes that have passed their next 30-day interval are shown as eligible.
+              </p>
               
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                 <div>
@@ -3744,7 +3748,7 @@ export default function AdminPage() {
                           </td>
                           <td className="p-4">
                             <span className="text-emerald-400 font-semibold">
-                              ${formatCurrency(user.maturedStakedAmount)}
+                              ${formatCurrency(user.eligibleStakedAmount || user.maturedStakedAmount || 0)}
                             </span>
                           </td>
                           <td className="p-4">
@@ -3752,11 +3756,11 @@ export default function AdminPage() {
                               {user.stakes.map((stake: any) => (
                                 <div key={stake.stakeId} className="text-xs">
                                   <span className={`px-2 py-1 rounded ${
-                                    stake.isMatured 
-                                      ? "bg-emerald-500/20 text-emerald-400" 
+                                    stake.isEligibleForPayout
+                                      ? "bg-emerald-500/20 text-emerald-400"
                                       : "bg-yellow-500/20 text-yellow-300"
                                   }`}>
-                                    ${formatCurrency(stake.amount)} - {stake.daysElapsed}/{stake.daysTotal} days
+                                    ${formatCurrency(stake.amount)} — Payout {stake.payoutsGiven ?? 0}/{stake.totalPayoutSlots ?? 3} · {stake.daysElapsed}d elapsed
                                   </span>
                                 </div>
                               ))}

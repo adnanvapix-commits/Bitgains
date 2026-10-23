@@ -244,7 +244,6 @@ export default function DashboardPage() {
       description: "Project your earnings",
     },
     {
-    {
       id: "auto-compound",
       label: "Auto-Compound",
       icon: RefreshCw,
@@ -982,7 +981,7 @@ export default function DashboardPage() {
                 {/* Quick Stats */}
                 <div className="hidden xl:flex items-center space-x-4 lg:space-x-6 bg-secondary border border-border rounded-xl lg:rounded-2xl px-3 lg:px-6 py-2 lg:py-3">
                   <div className="text-center">
-                    <p className="text-xs text-muted-foreground">Rate (per 90 days)</p>
+                    <p className="text-xs text-muted-foreground">Rate</p>
                     <p className="text-lg font-bold text-primary">Up to 15%</p>
                   </div>
                   <div className="w-px h-8 bg-border"></div>
@@ -1618,7 +1617,7 @@ function OverviewTab({
                 <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 text-primary-foreground font-bold" />
               </div>
               <div className="px-3 py-1 bg-primary/15 rounded-full border border-primary/25">
-                <span className="text-primary text-sm font-medium">Up to 15% per 90 days</span>
+                <span className="text-primary text-sm font-medium">Up to 15%</span>
               </div>
             </div>
             <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-1 sm:mb-2">
@@ -1627,7 +1626,7 @@ function OverviewTab({
             <p className="text-muted-foreground text-xs sm:text-sm mb-1">Staked Amount (USDT)</p>
             <div className="flex items-center space-x-2 text-xs">
               <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-              <span className="text-primary">Earning: Up to 15% per 90 days</span>
+              <span className="text-primary">Earning: Up to 15%</span>
             </div>
           </div>
         </motion.div>
@@ -2459,7 +2458,7 @@ function DepositTab({
             <Award className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
             <div>
               <p className="text-gray-900 font-medium text-sm sm:text-base">
-                Up to 15% per 90 days
+                Up to 15%
               </p>
               <p className="text-gray-600 text-xs sm:text-sm">
                 Variable staking returns
@@ -2797,7 +2796,7 @@ function DepositTab({
                 <div className="bg-emerald-500/20 rounded-xl p-4 mt-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-slate-900 dark:text-white font-medium">Returns (90 days)</p>
+                      <p className="text-slate-900 dark:text-white font-medium">Returns</p>
                       <p className="text-slate-600 dark:text-slate-300 text-sm">
                         Variable staking rates
                       </p>
@@ -2806,7 +2805,7 @@ function DepositTab({
                       <p className="text-2xl font-bold text-emerald-400">
                         6-10%
                       </p>
-                      <p className="text-slate-600 dark:text-slate-300 text-sm">Per 90 days</p>
+                      <p className="text-slate-600 dark:text-slate-300 text-sm">Per period</p>
                     </div>
                   </div>
                 </div>
@@ -3729,7 +3728,7 @@ function StakingTab({
                 </div>
                 <div className="text-right">
                   <p className="text-2xl font-bold text-foreground">{formatCurrency(stakedBalance)}</p>
-                  <p className="text-primary text-sm">Earning Up to 15% per 90 days</p>
+                  <p className="text-primary text-sm">Earning Up to 15%</p>
                 </div>
               </div>
             </div>
@@ -6012,7 +6011,7 @@ function AnalyticsTab() {
               </p>
             </div>
             <div className="text-center">
-              <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">Rate (per 90 days)</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">Rate</p>
               <p className="text-2xl font-bold text-emerald-400">Up to 15%</p>
               <p className="text-slate-600 dark:text-slate-300 text-sm">Variable</p>
             </div>
@@ -7363,16 +7362,16 @@ function DepositPopup({
             </div>
           </div>
 
-          {/* Returns (90 days) */}
+          {/* Returns */}
           <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-4">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-slate-900 dark:text-white font-medium">Returns (90 days)</p>
+                <p className="text-slate-900 dark:text-white font-medium">Returns</p>
                 <p className="text-slate-600 dark:text-slate-300 text-sm">Variable staking rates</p>
               </div>
               <div className="text-right">
                 <p className="text-2xl font-bold text-emerald-400">6-10%</p>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">Per 90 days</p>
+                <p className="text-slate-600 dark:text-slate-300 text-sm">Per period</p>
               </div>
             </div>
           </div>
@@ -7939,7 +7938,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
             <label className="block text-sm font-medium text-muted-foreground mb-2">Lock Duration</label>
             <div className="p-4 rounded-xl border-2 border-primary bg-primary/10 text-center">
               <div className="font-bold text-foreground text-lg">90 Days</div>
-              <div className="text-sm text-primary font-medium">Up to 15% per 90 days</div>
+              <div className="text-sm text-primary font-medium">Up to 15%</div>
             </div>
           </div>
 
@@ -7975,7 +7974,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
           {/* Result Cards */}
           <div className="grid grid-cols-2 gap-4">
             {[
-              { label: "Rate (per 90 days)",   value: `Up to 15% per 90 days`,                                              sub: "Dynamic per 90 days" },
+              { label: "Rate",   value: `Up to 15%`,                                              sub: "Dynamic" },
               { label: "Total Earnings", value: `$${earning.toFixed(2)}`,                                         sub: `Over 3 months (90 days)` },
               { label: "Total Return",   value: `$${total.toFixed(2)}`,                                            sub: "Principal + rewards" },
               { label: "ROI",            value: `${num > 0 ? ((earning / num) * 100).toFixed(1) : "0"}%`,         sub: "Return on investment" },
@@ -8020,7 +8019,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
         </div>
       </div>
 
-      {/* 90-Day Projection Table */}
+      {/* Projection Table */}
       <div className="glass-card p-6">
         <h3 className="text-lg font-semibold text-foreground mb-4">Month-by-Month Projection</h3>
         <div className="overflow-x-auto">
@@ -8236,7 +8235,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
                 className="w-full pl-7 pr-4 py-2 rounded-xl border border-border bg-card text-foreground text-sm outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
               />
             </div>
-            <p className="text-xs text-muted-foreground mt-1">At 5% per 90 days</p>
+            <p className="text-xs text-muted-foreground mt-1">At 5% Per period</p>
           </div>
           <div className="space-y-3">
             {projections.map(p => {
@@ -8597,9 +8596,9 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
           </div>
         </div>
 
-        {/* 90-Day Summary */}
+        {/* Summary */}
         <div className="glass-card p-6">
-          <h3 className="font-semibold text-foreground mb-4">90-Day Summary</h3>
+          <h3 className="font-semibold text-foreground mb-4">Summary</h3>
           <div className="space-y-3">
             {[
               { label: "Stake Events",    value: walletData?.wallet?.stakes?.length ?? 0 },
@@ -8621,12 +8620,12 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
         <h3 className="font-semibold text-foreground mb-4">📊 Portfolio Insights</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
-            { title: "Optimization Tip",  desc: bal < 1000 ? `Add $${(1000 - bal).toFixed(2)} to reach Silver tier (8% per 90 days).` : bal < 5000 ? `Add $${(5000 - bal).toFixed(2)} to reach Gold tier (12% per 90 days).` : "You're at a great tier! Keep compounding." },
+            { title: "Optimization Tip",  desc: bal < 1000 ? `Add $${(1000 - bal).toFixed(2)} to reach Silver tier (8% Per period).` : bal < 5000 ? `Add $${(5000 - bal).toFixed(2)} to reach Gold tier (12% Per period).` : "You're at a great tier! Keep compounding." },
             { title: "Compounding Boost", desc: earned > 0 ? `You've earned $${earned.toFixed(2)} so far. Auto-compound could boost this by ~33% over 12 months.` : "Enable auto-compound after your first stake to maximize growth." },
             { title: "Active Stakes",     desc: (walletData?.wallet?.stakes?.filter((s: any) => s.status === "active")?.length ?? 0) > 0 ? `${walletData.wallet.stakes.filter((s: any) => s.status === "active").length} active stake(s) currently running.` : "No active stakes. Deposit and stake USDT to start earning." },
-            { title: "Tier Status",       desc: bal >= 25000 ? "Platinum tier — earning maximum 15% per 90 days!" : bal >= 5000 ? `Gold tier. Add $${(25000 - bal).toFixed(2)} for Platinum.` : bal >= 1000 ? `Silver tier. Add $${(5000 - bal).toFixed(2)} for Gold.` : `Add $${(1000 - bal).toFixed(2)} for Silver tier.` },
+            { title: "Tier Status",       desc: bal >= 25000 ? "Platinum tier — earning maximum 15% Per period!" : bal >= 5000 ? `Gold tier. Add $${(25000 - bal).toFixed(2)} for Platinum.` : bal >= 1000 ? `Silver tier. Add $${(5000 - bal).toFixed(2)} for Gold.` : `Add $${(1000 - bal).toFixed(2)} for Silver tier.` },
             { title: "Monthly Potential", desc: bal > 0 ? `Staking $${bal.toFixed(2)} could earn ~$${(bal * 0.05).toFixed(2)}–$${(bal * 0.15).toFixed(2)}/month.` : "Deposit USDT to see your earning potential." },
-            { title: "Risk Assessment",   desc: "Your portfolio risk is LOW. USDT staking provides stable, predictable Returns (90 days) with no market volatility." },
+            { title: "Risk Assessment",   desc: "Your portfolio risk is LOW. USDT staking provides stable, predictable Returns with no market volatility." },
           ].map(ins => (
             <div key={ins.title} className="p-4 rounded-xl bg-secondary border border-border hover:border-primary/30 hover:bg-primary/5 transition-all duration-200">
               <div className="font-semibold text-foreground text-sm mb-1">{ins.title}</div>
