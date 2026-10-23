@@ -3787,8 +3787,6 @@ export default function AdminPage() {
                               {user.selectable ? "Eligible" : "Not Yet Eligible"}
                             </span>
                           </td>
-                            </span>
-                          </td>
                         </motion.tr>
                       ))}
                     </tbody>
