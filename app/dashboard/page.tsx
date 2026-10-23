@@ -244,11 +244,6 @@ export default function DashboardPage() {
       description: "Project your earnings",
     },
     {
-      id: "plans",
-      label: "Staking Plans",
-      icon: Award,
-      description: "Bronze to Platinum tiers",
-    },
     {
       id: "auto-compound",
       label: "Auto-Compound",
@@ -976,7 +971,6 @@ export default function DashboardPage() {
                     {activeTab === "settings" &&
                       "Configure your account preferences"}
                     {activeTab === "calculator" && "Project your staking returns"}
-                    {activeTab === "plans" && "Choose your staking tier"}
                     {activeTab === "auto-compound" && "Manage your auto-compounding preferences"}
                     {activeTab === "address-book" && "Manage your trusted withdrawal addresses"}
                     {activeTab === "portfolio" && "Deep portfolio insights & analytics"}
@@ -1295,7 +1289,6 @@ export default function DashboardPage() {
                 )}
                 {activeTab === "settings" && <SettingsTab />}
                 {activeTab === "calculator" && <StakingCalculatorTab walletData={walletData} />}
-                {activeTab === "plans" && <StakingPlansTab />}
                 {activeTab === "auto-compound" && <AutoCompoundTab walletData={walletData} />}
                 {activeTab === "address-book" && <AddressBookTab />}
                 {activeTab === "portfolio" && <PortfolioAnalyticsTab walletData={walletData} />}
@@ -8064,198 +8057,6 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
-// 2. STAKING PLANS / TIERS TAB
-// ─────────────────────────────────────────────────────────────
-function StakingPlansTab() {
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-
-  const plans = [
-    {
-      id: "bronze",
-      name: "Bronze",
-      icon: "🥉",
-      min: 100, max: 999,
-      rate: "5–9%",
-      duration: "90 days",
-      features: [
-        "5–9% dynamic 90-Day Return",
-        "90-day lock period",
-        "Manual withdrawal",
-        "Basic dashboard access",
-        "Email notifications",
-      ],
-      badge_label: "Starter",
-    },
-    {
-      id: "silver",
-      name: "Silver",
-      icon: "🥈",
-      min: 1000, max: 4999,
-      rate: "8–12%",
-      duration: "90 days",
-      features: [
-        "8–12% dynamic 90-Day Return",
-        "90-day lock period",
-        "Priority withdrawals",
-        "Advanced analytics",
-        "SMS + email alerts",
-        "Referral bonuses",
-      ],
-      badge_label: "Popular",
-    },
-    {
-      id: "gold",
-      name: "Gold",
-      icon: "🥇",
-      min: 5000, max: 24999,
-      rate: "10–15%",
-      duration: "90 days",
-      features: [
-        "10–15% dynamic 90-Day Return",
-        "90-day lock period",
-        "Instant withdrawals",
-        "Full portfolio analytics",
-        "Dedicated support",
-        "Enhanced referral rates",
-        "Early access to features",
-      ],
-      badge_label: "Recommended",
-    },
-    {
-      id: "platinum",
-      name: "Platinum",
-      icon: "💎",
-      min: 25000, max: Infinity,
-      rate: "Up to 15%",
-      duration: "90 days",
-      features: [
-        "Up to 15% dynamic 90-Day Return",
-        "90-day lock period",
-        "Instant withdrawals",
-        "VIP dashboard & analytics",
-        "24/7 private support",
-        "Maximum referral commissions",
-        "Exclusive investment insights",
-        "Auto-compound enabled",
-      ],
-      badge_label: "VIP Elite",
-    },
-  ];
-
-  return (
-    <div className="space-y-6">
-      <div className="glass-card p-6">
-        <h2 className="text-2xl font-bold text-foreground mb-1">Staking Plans &amp; Tiers</h2>
-        <p className="text-muted-foreground">Higher stakes unlock better rates and exclusive benefits</p>
-      </div>
-
-      {/* Tier Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {plans.map(plan => (
-          <div
-            key={plan.id}
-            onClick={() => setSelectedPlan(plan.id === selectedPlan ? null : plan.id)}
-            className={`glass-card p-6 cursor-pointer transition-all duration-200 hover:-translate-y-1 ${
-              selectedPlan === plan.id
-                ? "border-2 border-primary shadow-lg shadow-primary/10"
-                : "border border-border hover:border-primary/40"
-            }`}
-          >
-            {/* Badge */}
-            <div className="inline-block px-2.5 py-0.5 text-xs font-semibold rounded-full mb-4 bg-primary/10 border border-primary/20 text-primary">
-              {plan.badge_label}
-            </div>
-
-            {/* Icon + Name */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-white border border-border flex items-center justify-center text-2xl shadow-sm">
-                {plan.icon}
-              </div>
-              <div>
-                <div className="text-xl font-bold text-foreground">{plan.name}</div>
-                <div className="text-xs text-muted-foreground">
-                  ${plan.min.toLocaleString()}–{plan.max === Infinity ? "∞" : `$${plan.max.toLocaleString()}`}
-                </div>
-              </div>
-            </div>
-
-            {/* Rate */}
-            <div className="p-3 rounded-xl bg-primary/10 border border-primary/20 text-center mb-4">
-              <div className="text-3xl font-black text-primary">{plan.rate}</div>
-              <div className="text-xs text-muted-foreground">Per 90 days</div>
-            </div>
-
-            {/* Duration */}
-            <div className="text-center text-sm text-muted-foreground mb-4">
-              🔒 {plan.duration} lock period
-            </div>
-
-            {/* Features */}
-            <ul className="space-y-2">
-              {plan.features.map(f => (
-                <li key={f} className="flex items-center gap-2 text-sm text-foreground">
-                  <span className="w-4 h-4 rounded-full bg-primary/10 border border-primary/20 text-primary flex items-center justify-center text-xs flex-shrink-0">✓</span>
-                  {f}
-                </li>
-              ))}
-            </ul>
-
-            {/* CTA placeholder */}
-            <div className="mt-5 w-full py-2.5 rounded-xl text-center text-sm font-semibold bg-secondary border border-border text-muted-foreground opacity-70 cursor-not-allowed">
-              Coming Soon
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Rate Comparison Table */}
-      <div className="glass-card p-6">
-        <h3 className="text-lg font-semibold text-foreground mb-4">Rate Comparison</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr>
-                <th className="text-left pb-3 text-muted-foreground font-semibold">Feature</th>
-                {plans.map(p => (
-                  <th key={p.id} className="text-center pb-3 text-muted-foreground font-semibold">
-                    {p.icon} {p.name}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ["Min. Stake",        "$100",     "$1,000",   "$5,000",   "$25,000"],
-                ["Rate (per 90 days)",      "Up to 15%", "Up to 15%", "Up to 15%", "Up to 15%"],
-                ["Lock Period",       "90 days",   "90 days",   "90 days",   "90 days"],
-                ["Withdrawal Speed",  "Manual",   "Priority", "Instant",  "Instant"],
-                ["Analytics",         "Basic",    "Advanced", "Full",     "VIP"],
-                ["Support",           "Email",    "Email+SMS","Dedicated","24/7 VIP"],
-                ["Auto-Compound",     "✗",        "✗",        "✓",        "✓"],
-                ["Referral Bonus",    "Standard", "Enhanced", "Enhanced+","Maximum"],
-              ].map(([feat, ...vals]) => (
-                <tr key={feat} className="border-t border-border">
-                  <td className="py-3 font-medium text-foreground">{feat}</td>
-                  {vals.map((v, i) => (
-                    <td key={i} className={`py-3 text-center ${
-                      v === "✓" ? "text-primary font-bold" :
-                      v === "✗" ? "text-muted-foreground/50" :
-                      "text-muted-foreground"
-                    }`}>{v}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────
-// 3. AUTO-COMPOUND TAB
 // ─────────────────────────────────────────────────────────────
 function AutoCompoundTab({ walletData }: { walletData: any }) {
   const ac = walletData?.autoCompound;
