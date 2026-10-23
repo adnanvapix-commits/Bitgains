@@ -3752,27 +3752,41 @@ export default function AdminPage() {
                             </span>
                           </td>
                           <td className="p-4">
-                            <div className="space-y-1">
-                              {user.stakes.map((stake: any) => (
-                                <div key={stake.stakeId} className="text-xs">
-                                  <span className={`px-2 py-1 rounded ${
-                                    stake.isEligibleForPayout
-                                      ? "bg-emerald-500/20 text-emerald-400"
-                                      : "bg-yellow-500/20 text-yellow-300"
-                                  }`}>
-                                    ${formatCurrency(stake.amount)} — Payout {stake.payoutsGiven ?? 0}/{stake.totalPayoutSlots ?? 3} · {stake.daysElapsed}d elapsed
-                                  </span>
-                                </div>
-                              ))}
+                            <div className="space-y-2">
+                              {user.stakes.map((stake: any) => {
+                                const payoutsGiven = stake.payoutsGiven ?? 0;
+                                const totalSlots = stake.totalPayoutSlots ?? 3;
+                                const daysElapsed = stake.daysElapsed ?? 0;
+                                const nextPayoutDay = (payoutsGiven + 1) * 30;
+                                const daysUntilNext = Math.max(0, nextPayoutDay - daysElapsed);
+                                const eligible = stake.isEligibleForPayout;
+                                const done = payoutsGiven >= totalSlots;
+                                return (
+                                  <div key={stake.stakeId} className={`rounded-lg border p-2.5 text-xs ${done ? "bg-gray-100 border-gray-300" : eligible ? "bg-emerald-50 border-emerald-400" : "bg-amber-50 border-amber-400"}`}>
+                                    <div className="flex items-center justify-between mb-1.5">
+                                      <span className="font-bold text-gray-900 text-sm">${formatCurrency(stake.amount)} USDT</span>
+                                      <span className={`font-semibold text-xs px-2 py-0.5 rounded-full ${done ? "bg-gray-200 text-gray-600" : eligible ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
+                                        Payout {payoutsGiven}/{totalSlots}
+                                      </span>
+                                    </div>
+                                    <div className="h-1.5 bg-gray-200 rounded-full mb-2">
+                                      <div className={`h-full rounded-full ${eligible ? "bg-emerald-500" : "bg-amber-400"}`} style={{ width: `${Math.min((daysElapsed / 90) * 100, 100)}%` }} />
+                                    </div>
+                                    <div className="flex justify-between text-gray-700">
+                                      <span>{daysElapsed} days old</span>
+                                      {!done && <span className={eligible ? "text-emerald-700 font-semibold" : "text-amber-700"}>{eligible ? "Ready for payout" : `${daysUntilNext}d until next payout`}</span>}
+                                      {done && <span className="text-gray-500">All payouts done</span>}
+                                    </div>
+                                  </div>
+                                );
+                              })}
                             </div>
                           </td>
                           <td className="p-4">
-                            <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                              user.selectable 
-                                ? "bg-emerald-500/20 text-emerald-400" 
-                                : "bg-yellow-500/20 text-yellow-300"
-                            }`}>
+                            <span className={`px-3 py-1 rounded-full text-sm font-semibold ${user.selectable ? "bg-emerald-100 text-emerald-700 border border-emerald-400" : "bg-amber-100 text-amber-700 border border-amber-400"}`}>
                               {user.selectable ? "Eligible" : "Not Yet Eligible"}
+                            </span>
+                          </td>
                             </span>
                           </td>
                         </motion.tr>
