@@ -7796,9 +7796,9 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
               <input
                 type="number"
                 value={amount}
+                inputMode="decimal"
                 onChange={e => setAmount(e.target.value)}
-                className="w-full pl-8 pr-4 py-3 rounded-xl border border-border bg-card text-foreground focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none text-lg font-semibold transition-all"
-                className="w-full pl-8 pr-4 py-3 rounded-xl border border-border bg-card text-foreground focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none text-base font-semibold transition-all"
+                className="w-full pl-8 pr-4 py-3 rounded-xl border border-border bg-card text-foreground focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none text-base font-semibold transition-all touch-manipulation"
               />
             </div>
             <div className="flex flex-wrap gap-2 mt-2">
