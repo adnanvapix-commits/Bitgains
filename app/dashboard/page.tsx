@@ -3813,7 +3813,7 @@ function WithdrawTab({
       label: "Crypto Wallet",
       icon: Wallet,
       description: "Send to external wallet",
-      fee: "2 USDT",
+      fee: "5%",
       time: "Up to 24 hours",
     },
   ];
@@ -4125,7 +4125,7 @@ function WithdrawTab({
             <Clock className="w-6 h-6 text-primary" />
             <div>
               <p className="text-foreground font-medium">Fast Transfer</p>
-              <p className="text-muted-foreground text-sm">5 min-4 hours to wallets</p>
+              <p className="text-muted-foreground text-sm">Up to 24 hours to wallets</p>
             </div>
           </div>
         </div>
@@ -6729,35 +6729,6 @@ function AffiliateTab({
           </div>
           <div className="bg-card border border-border rounded-xl sm:rounded-2xl p-3 sm:p-4">
             <div className="flex items-center space-x-2 sm:space-x-3">
-              <Award className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-              <div>
-                <p className="text-foreground font-semibold text-sm sm:text-base">Multi-level rewards</p>
-                <p className="text-muted-foreground text-xs sm:text-sm">
-                  Level 1 · 8%&nbsp;&nbsp;|&nbsp;&nbsp;Level 2 · 4%&nbsp;&nbsp;|&nbsp;&nbsp;Level 3 · 3%
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 gap-2 mt-3">
-              {[1, 2, 3].map((level) => (
-                <div key={level} className="bg-secondary border border-border rounded-lg p-2">
-                  <p className="text-foreground text-xs font-semibold">L{level}</p>
-                  <p className="text-muted-foreground text-[11px]">
-                    {level === 1 ? `${level1Count} refs` : level === 2 ? `${level2Count} refs` : `${level3Count} refs`}
-                  </p>
-                  <p className="text-primary text-xs font-semibold">
-                    ${level === 1 ? earningsByLevel.level1.toFixed(2) : level === 2 ? earningsByLevel.level2.toFixed(2) : earningsByLevel.level3.toFixed(2)}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center space-x-2 sm:space-x-3 bg-primary/10 border border-primary/25 rounded-xl sm:rounded-2xl p-3 sm:p-4">
-            <Copy className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-            <div>
-              <p className="text-foreground font-semibold text-sm sm:text-base font-mono">{actualReferralCode}</p>
-              <p className="text-muted-foreground text-xs sm:text-sm">Your code</p>
-            </div>
-          </div>
         </div>
 
         {referrer && (

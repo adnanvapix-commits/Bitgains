@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '../../../../../lib/supabase-server';
 import { getAuthUser, requireAdmin } from '../../../../../lib/api-auth';
+import { distributeReferralRewards } from '../../../../../lib/server/referralRewards';
 
 export async function POST(req: NextRequest) {
   const { user, error } = await getAuthUser(req);
@@ -122,6 +123,13 @@ export async function POST(req: NextRequest) {
         await sb.from('wallets').update({
           balance: wallet.balance + totalPayout,
           total_earnings: wallet.total_earnings + totalPayout,
+
+        // Distribute referral commissions on staking profit
+        await distributeReferralRewards({
+          userId,
+          depositAmount: totalPayout,
+          sourceTransactionId: null,
+        }).catch(e => console.error('Referral reward distribution error:', e));
           last_staking_update: nowISO,
         }).eq('user_id', userId);
 
