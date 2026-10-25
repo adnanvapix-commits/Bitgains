@@ -1584,7 +1584,6 @@ function OverviewTab({
               <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-primary to-accent rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
                 <DollarSign className="w-6 h-6 sm:w-7 sm:h-7 text-primary-foreground font-bold" />
               </div>
-              <div className="px-3 py-1 bg-primary/15 rounded-full border border-primary/25">
             </div>
             <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-1 sm:mb-2">
               {showBalance ? data.totalBalance.toLocaleString() : "••••••"}
