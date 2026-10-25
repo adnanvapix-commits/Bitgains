@@ -6392,7 +6392,7 @@ function AffiliateTab({
 
   const normalizeReferralData = (data: any) => {
     if (!data) return null;
-    const commissionByLevel: Record<number, number> = { 1: 8, 2: 4, 3: 2 };
+
     // Build flat list from downline structure (API returns downline.level1.users etc.)
     const fromDownline = [
       ...(data.downline?.level1?.users || []).map((u: any) => ({ ...u, level: 1, commissionRate: 8, createdAt: u.createdAt || u.created_at })),
@@ -6852,7 +6852,7 @@ function AffiliateTab({
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div>
                   <p className="text-foreground font-semibold">Keep sharing your referral code!</p>
-                  <p className="text-muted-foreground text-sm">Earn 10% commission on every successful referral</p>
+                  <p className="text-muted-foreground text-sm">Earn 1% first deposit bonus + level commissions on your referrals' staking profits</p>
                 </div>
                 <button
                   onClick={shareReferralLink}
@@ -6893,7 +6893,7 @@ function AffiliateTab({
           {[
             { icon: Copy,        step: "1", title: "Share Your Link",  desc: "Copy your unique referral link and share it with friends via social media, email, or messaging apps." },
             { icon: User,        step: "2", title: "Friends Sign Up",  desc: "When someone uses your link to register, they automatically become your referral and you both get benefits." },
-            { icon: DollarSign,  step: "3", title: "Earn Rewards",     desc: "Get 10% commission on your referrals' staking rewards and track your earnings in real-time." },
+            { icon: DollarSign,  step: "3", title: "Earn Rewards",     desc: "Get a 1% first deposit bonus when your referral deposits, then earn level commissions (L1: 8%, L2: 4%, L3: 2%) on their monthly staking profits." },
           ].map(({ icon: Icon, step, title, desc }) => (
             <div key={step} className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm shadow-primary/20">
