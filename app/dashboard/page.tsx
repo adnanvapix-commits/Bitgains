@@ -3806,6 +3806,24 @@ function WithdrawTab({
   const [otpLoading, setOtpLoading] = useState(false);
   const [otpTimer, setOtpTimer] = useState(0);
   const [emailHint, setEmailHint] = useState("");
+  const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
+
+  useEffect(() => {
+    const loadSavedAddresses = async () => {
+      try {
+        const { supabase: sb } = await import("../../lib/supabase");
+        const { data: { session } } = await sb.auth.getSession();
+        if (!session?.access_token) return;
+        const res = await fetch("/api/auth/address-book", {
+          headers: { "Authorization": `Bearer ${session.access_token}` },
+        });
+        const json = await res.json();
+        if (json.success) setSavedAddresses(json.data.addresses);
+      } catch {}
+    };
+    loadSavedAddresses();
+  }, []);
+
 
   const withdrawMethods = [
     {
@@ -4329,6 +4347,32 @@ function WithdrawTab({
                 ? "Bank Account Details"
                 : "Destination Address"}
             </label>
+            {/* Saved Address Quick-Select */}
+            {savedAddresses.length > 0 && withdrawMethod !== "bank" && (
+              <div className="mb-3">
+                <p className="text-xs text-muted-foreground mb-2 font-medium">Saved Addresses</p>
+                <div className="flex flex-wrap gap-2">
+                  {savedAddresses.map((addr: any) => (
+                    <button
+                      key={addr.id}
+                      type="button"
+                      onClick={() => setWithdrawAddress(addr.address)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all touch-manipulation ${
+                        withdrawAddress === addr.address
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-secondary border-border text-foreground hover:bg-primary/10 hover:border-primary/40 hover:text-primary"
+                      }`}
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <span>{addr.label}</span>
+                        <span className="opacity-60 text-[10px]">{addr.network}</span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="relative">
               <input
                 type="text"
