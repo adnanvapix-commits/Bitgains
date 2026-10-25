@@ -7857,11 +7857,11 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
               { label: "Total Return",   value: `$${total.toFixed(2)}`,                                   sub: "Principal + rewards" },
               { label: "ROI",            value: `${num > 0 ? ((earning / num) * 100).toFixed(1) : "0"}%`, sub: "Return on investment" },
             ].map(item => (
-              <div key={item.label} className="glass-card p-3 sm:p-4 text-center">
               <div key={item.label} className="glass-card p-3 text-center overflow-hidden">
                 <div className="text-[11px] text-muted-foreground mb-1 truncate">{item.label}</div>
                 <div className="text-base font-bold text-foreground truncate">{item.value}</div>
                 <div className="text-[10px] text-muted-foreground leading-tight truncate">{item.sub}</div>
+              </div>
             ))}
           </div>
 
