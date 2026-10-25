@@ -104,8 +104,6 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
         // Update transaction status using helper function
         await updateTransactionStatus(sb, sanitizedId, 'completed', user!.id, comment, txHash);
 
-        // Distribute multi-level referral commissions to referrers
-        await distributeReferralRewards({
         const { data: userProfile } = await sb.from('profiles')
           .select('referred_by, has_received_first_deposit_bonus, name, email')
           .eq('id', tx.user_id)

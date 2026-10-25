@@ -123,6 +123,9 @@ export async function POST(req: NextRequest) {
         await sb.from('wallets').update({
           balance: wallet.balance + totalPayout,
           total_earnings: wallet.total_earnings + totalPayout,
+        }).catch(e => console.error('Referral reward distribution error:', e));
+          last_staking_update: nowISO,
+        }).eq('user_id', userId);
 
         // Distribute referral commissions on staking profit
         await distributeReferralRewards({
@@ -130,8 +133,6 @@ export async function POST(req: NextRequest) {
           depositAmount: totalPayout,
           sourceTransactionId: null,
         }).catch(e => console.error('Referral reward distribution error:', e));
-          last_staking_update: nowISO,
-        }).eq('user_id', userId);
 
         // Create payout transaction
         const payoutNumbers = stakePayouts.map(s => s.payoutNumber);
