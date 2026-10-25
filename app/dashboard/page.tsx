@@ -6392,20 +6392,24 @@ function AffiliateTab({
 
   const normalizeReferralData = (data: any) => {
     if (!data) return null;
+    const commissionByLevel: Record<number, number> = { 1: 8, 2: 4, 3: 2 };
+    // Build flat list from downline structure (API returns downline.level1.users etc.)
+    const fromDownline = [
+      ...(data.downline?.level1?.users || []).map((u: any) => ({ ...u, level: 1, commissionRate: 8, createdAt: u.createdAt || u.created_at })),
+      ...(data.downline?.level2?.users || []).map((u: any) => ({ ...u, level: 2, commissionRate: 4, createdAt: u.createdAt || u.created_at })),
+      ...(data.downline?.level3?.users || []).map((u: any) => ({ ...u, level: 3, commissionRate: 2, createdAt: u.createdAt || u.created_at })),
+    ];
     const flattened =
+      (fromDownline.length > 0 ? fromDownline : null) ||
       data.referredUsersList ||
-      data.referredUsersFlat ||
-      flattenLegacyReferredUsers(data.referredUsers);
-
+      flattenLegacyReferredUsers(data.referredUsers) ||
+      [];
     return {
       ...data,
       referralCode: data.referralCode || dummyReferralCode,
-      referredUsersList: flattened || [],
+      referredUsersList: flattened,
     };
   };
-
-  const getDefaultReferralLink = () =>
-    typeof window !== "undefined"
       ? `${window.location.origin}/signup?ref=${actualReferralCode}`
       : `https://bitgains.cc/signup?ref=${actualReferralCode}`;
 

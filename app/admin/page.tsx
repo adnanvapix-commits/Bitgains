@@ -3163,12 +3163,12 @@ export default function AdminPage() {
                     {referralHierarchy.downline.level1.users.map(
                       (level1User: any) => (
                         <div
-                          key={level1User._id}
+                          key={level1User.id || level1User._id}
                           className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4"
                         >
                           <div
                             className="flex items-center justify-between cursor-pointer"
-                            onClick={() => toggleNodeExpand(level1User._id)}
+                            onClick={() => toggleNodeExpand(level1User.id || level1User._id)}
                           >
                             <div className="flex items-center gap-3">
                               <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
@@ -3194,7 +3194,7 @@ export default function AdminPage() {
                                   u.referredBy?.toString() ===
                                   level1User._id?.toString()
                               ).length > 0 &&
-                                (expandedNodes.has(level1User._id) ? (
+                                (expandedNodes.has(level1User.id || level1User._id) ? (
                                   <ChevronDown className="w-5 h-5 text-stone-900/60" />
                                 ) : (
                                   <ChevronRight className="w-5 h-5 text-stone-900/60" />
@@ -3203,7 +3203,7 @@ export default function AdminPage() {
                           </div>
 
                           {/* Level 2 Children */}
-                          {expandedNodes.has(level1User._id) && (
+                          {expandedNodes.has(level1User.id || level1User._id) && (
                             <div className="mt-3 ml-8 space-y-2">
                               {referralHierarchy.downline?.level2?.users
                                 ?.filter(
@@ -3213,13 +3213,13 @@ export default function AdminPage() {
                                 )
                                 .map((level2User: any) => (
                                   <div
-                                    key={level2User._id}
+                                    key={level2User.id || level2User._id}
                                     className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3"
                                   >
                                     <div
                                       className="flex items-center justify-between cursor-pointer"
                                       onClick={() =>
-                                        toggleNodeExpand(level2User._id)
+                                        toggleNodeExpand(level2User.id || level2User._id)
                                       }
                                     >
                                       <div className="flex items-center gap-2">
@@ -3246,7 +3246,7 @@ export default function AdminPage() {
                                             u.referredBy?.toString() ===
                                             level2User._id?.toString()
                                         ).length > 0 &&
-                                          (expandedNodes.has(level2User._id) ? (
+                                          (expandedNodes.has(level2User.id || level2User._id) ? (
                                             <ChevronDown className="w-4 h-4 text-stone-900/60" />
                                           ) : (
                                             <ChevronRight className="w-4 h-4 text-stone-900/60" />
@@ -3255,7 +3255,7 @@ export default function AdminPage() {
                                     </div>
 
                                     {/* Level 3 Children */}
-                                    {expandedNodes.has(level2User._id) && (
+                                    {expandedNodes.has(level2User.id || level2User._id) && (
                                       <div className="mt-2 ml-6 space-y-1">
                                         {referralHierarchy.downline?.level3?.users
                                           ?.filter(
@@ -3265,7 +3265,7 @@ export default function AdminPage() {
                                           )
                                           .map((level3User: any) => (
                                             <div
-                                              key={level3User._id}
+                                              key={level3User.id || level3User._id}
                                               className="bg-cyan-500/10 border border-cyan-500/30 rounded p-2 flex items-center justify-between"
                                             >
                                               <div className="flex items-center gap-2">
