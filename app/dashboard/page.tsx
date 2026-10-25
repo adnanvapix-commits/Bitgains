@@ -3544,7 +3544,6 @@ function StakingTab({
                   <span>Min: {formatCurrency(selectedPackageData.minStake)}</span>
                 </div>
 
-                {/* Debug Information */}
 
               {/* Action Button */}
               <motion.button
@@ -3574,9 +3573,10 @@ function StakingTab({
                 ) : availableBalance <= 0 ? (
                   "Deposit Funds to Start Staking"
                 ) : (
-                  `Stake ${amount > 0 ? formatCurrency(amount) : "$0.00"}`
+                  `Stake ${amount > 0 ? formatCurrency(amount) : "0.00 USDT"}`
                 )}
               </motion.button>
+              </div>
             </>
           )}
         </form>
