@@ -1203,8 +1203,8 @@ export default function DashboardPage() {
           </AnimatePresence>
 
           {/* Content Area */}
-          {/* Content Area */}
           <div className="p-3 sm:p-4 md:p-6 lg:p-8 overflow-x-hidden w-full min-w-0">
+            {loadingWallet ? (
               <div className="flex items-center justify-center min-h-[400px]">
                 <div className="text-center">
                   <div className="w-16 h-16 border-4 border-warm-400/30 border-t-warm-600 rounded-full animate-spin mx-auto mb-4"></div>
