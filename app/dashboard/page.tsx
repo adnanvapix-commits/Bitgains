@@ -639,7 +639,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-dvh bg-background">
+    <div className="min-h-dvh bg-background overflow-x-hidden w-full">
       <div className="flex">
         {/* Mobile Overlay */}
         <AnimatePresence>

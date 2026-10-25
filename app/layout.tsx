@@ -16,12 +16,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Prevent iOS Safari from zooming on input focus
+// Prevent iOS Safari from zooming on input focus, no horizontal overflow
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  userScalable: false,
   viewportFit: "cover",
 };
 
