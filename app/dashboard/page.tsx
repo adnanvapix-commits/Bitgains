@@ -2578,7 +2578,7 @@ function DepositTab({
               <div className="flex items-center space-x-2 bg-secondary border border-border rounded-xl p-3">
                 <Award className="w-5 h-5 text-primary flex-shrink-0" />
                 <div>
-                  <p className="text-foreground font-medium text-sm">Earn 12.5%</p>
+                  <p className="text-foreground font-medium text-sm">Earn up to 15%</p>
                   <p className="text-muted-foreground text-xs">Start immediately</p>
                 </div>
               </div>
