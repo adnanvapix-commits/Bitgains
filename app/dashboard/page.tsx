@@ -639,7 +639,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       <div className="flex">
         {/* Mobile Overlay */}
         <AnimatePresence>
@@ -667,7 +667,7 @@ export default function DashboardPage() {
                 : -320,
           }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className={`fixed left-0 top-0 h-screen ${
+          className={`fixed left-0 top-0 h-dvh ${
             sidebarCollapsed && isClient && screenWidth >= 1024
               ? "w-20"
               : "w-80"
@@ -919,7 +919,7 @@ export default function DashboardPage() {
 
         {/* Main Content Area */}
         <div
-          className={`flex-1 min-h-screen transition-all duration-300 ${
+          className={`flex-1 min-h-dvh transition-all duration-300 ${
             isClient && screenWidth >= 1024
               ? sidebarCollapsed
                 ? "lg:ml-20"
