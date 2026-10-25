@@ -6834,11 +6834,11 @@ function AffiliateTab({
                 </div>
                 <div className="text-right">
                   <p className="text-primary font-semibold">
-                    ${(referredUser.earnings ?? referredUser.totalReward ?? referredUser.bonus ?? 0).toFixed(2)}
-                  </p>
+                  <p className={`font-semibold text-sm ${(referredUser.earnings ?? 0) > 0 ? "text-primary" : "text-muted-foreground"}`}>
+                    ${(referredUser.earnings ?? referredUser.totalReward ?? referredUser.bonus ?? 0).toFixed(2)} earned
                   <p className="text-muted-foreground text-sm">
                     Level {referredUser.level || 1} Â· {referredUser.commissionRate ? `${referredUser.commissionRate}%` : "Referral bonus"}
-                  </p>
+                     Level {referredUser.level || 1} · {referredUser.commissionRate ? `${referredUser.commissionRate}% on staking profits` : "Referral"}
                   <div className="flex items-center justify-end space-x-1 mt-1">
                     <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
                     <span className="text-emerald-600 text-xs">Active</span>
