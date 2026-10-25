@@ -919,7 +919,7 @@ export default function DashboardPage() {
 
         {/* Main Content Area */}
         <div
-          className={`flex-1 min-h-dvh transition-all duration-300 ${
+          className={`flex-1 min-h-dvh min-w-0 overflow-x-hidden transition-all duration-300 ${`
             isClient && screenWidth >= 1024
               ? sidebarCollapsed
                 ? "lg:ml-20"
@@ -1203,8 +1203,8 @@ export default function DashboardPage() {
           </AnimatePresence>
 
           {/* Content Area */}
-          <div className="p-3 sm:p-4 md:p-6 lg:p-8">
-            {loadingWallet ? (
+          {/* Content Area */}
+          <div className="p-3 sm:p-4 md:p-6 lg:p-8 overflow-x-hidden w-full min-w-0">
               <div className="flex items-center justify-center min-h-[400px]">
                 <div className="text-center">
                   <div className="w-16 h-16 border-4 border-warm-400/30 border-t-warm-600 rounded-full animate-spin mx-auto mb-4"></div>
@@ -7781,9 +7781,9 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        {/* Input Panel */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 min-w-0">
         <div className="glass-card p-4 sm:p-6 space-y-5">
-          <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+        <div className="glass-card p-4 sm:p-6 space-y-5 min-w-0 overflow-hidden">
             <span className="w-8 h-8 bg-primary/10 border border-primary/20 rounded-lg flex items-center justify-center text-primary text-sm">⚙</span>
             Configure Your Stake
           </h3>
@@ -7801,7 +7801,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
                 className="w-full pl-8 pr-4 py-3 rounded-xl border border-border bg-card text-foreground focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none text-base font-semibold transition-all touch-manipulation"
               />
             </div>
-            <div className="flex flex-wrap gap-2 mt-2">
+            <div className="flex flex-wrap gap-2 mt-2 overflow-x-hidden">
               {[100, 500, 1000, 5000, 25000].map(v => (
                 <button key={v} onClick={() => setAmount(String(v))}
                   className="px-2 py-1 text-xs rounded-lg bg-secondary border border-border text-muted-foreground hover:bg-primary/10 hover:border-primary/30 hover:text-foreground transition-all font-medium">
@@ -7814,7 +7814,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
           {/* Duration — fixed 90 days */}
           <div>
             <label className="block text-sm font-medium text-muted-foreground mb-2">Lock Duration</label>
-            <div className="p-4 rounded-xl border-2 border-primary bg-primary/10 text-center">
+            <div className="p-4 rounded-xl border-2 border-primary bg-primary/10 text-center overflow-hidden">
               <div className="font-bold text-foreground text-lg">90 Days</div>
               <div className="text-sm text-primary font-medium">Up to 15%</div>
             </div>
@@ -7839,7 +7839,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
         <div className="space-y-4">
           {/* Tier Badge */}
           <div className="glass-card p-5 bg-primary/8 border border-primary/25">
-          <div className="glass-card p-4 bg-primary/8 border border-primary/25">
+          <div className="glass-card p-4 bg-primary/8 border border-primary/25 overflow-hidden">
               <span className="text-3xl">{currentTier.icon}</span>
               <div>
                 <div className="text-sm font-medium text-muted-foreground">Your Tier</div>
@@ -8167,18 +8167,63 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
 // 4. ADDRESS BOOK TAB
 // ─────────────────────────────────────────────────────────────
 function AddressBookTab() {
+  const MAX = 5;
+  const [addresses, setAddresses] = useState<any[]>([]);
+  const [loading, setLoading]     = useState(true);
+  const [saving, setSaving]       = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newLabel, setNewLabel] = useState("");
+  const [newLabel, setNewLabel]   = useState("");
   const [newAddress, setNewAddress] = useState("");
-  const [newNetwork, setNewNetwork] = useState("ERC-20");
-  const [addresses, setAddresses] = useState<{ id: number; label: string; address: string; network: string; verified: boolean; lastUsed: string }[]>([]);
-  const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [newNetwork, setNewNetwork] = useState("TRC-20");
+  const [copiedId, setCopiedId]   = useState<string | null>(null);
+  const [errorMsg, setErrorMsg]   = useState("");
 
-  const networks = ["ERC-20", "TRC-20", "BEP-20"];
+  const networks = ["TRC-20", "ERC-20", "BEP-20"];
+  const maskAddress = (addr: string) => addr.length > 16 ? `${addr.slice(0, 8)}...${addr.slice(-8)}` : addr;
 
-  const maskAddress = (addr: string) => `${addr.slice(0, 8)}...${addr.slice(-8)}`;
+  const fetchAddresses = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/auth/address-book", { credentials: "include" });
+      const json = await res.json();
+      if (json.success) setAddresses(json.data.addresses);
+    } catch {}
+    finally { setLoading(false); }
+  };
 
-  const handleCopy = (addr: { id: number; address: string }) => {
+  useEffect(() => { fetchAddresses(); }, []);
+
+  const handleSave = async () => {
+    setErrorMsg("");
+    if (!newLabel.trim() || !newAddress.trim()) { setErrorMsg("Label and address are required."); return; }
+    if (addresses.length >= MAX) { setErrorMsg(`Maximum ${MAX} addresses allowed. Delete one first.`); return; }
+    setSaving(true);
+    try {
+      const res = await fetch("/api/auth/address-book", {
+        method: "POST", credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ label: newLabel.trim(), address: newAddress.trim(), network: newNetwork }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setNewLabel(""); setNewAddress(""); setShowAddForm(false);
+        fetchAddresses();
+      } else {
+        setErrorMsg(json.message || "Failed to save address.");
+      }
+    } catch { setErrorMsg("Network error. Please try again."); }
+    finally { setSaving(false); }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch(`/api/auth/address-book?id=${id}`, { method: "DELETE", credentials: "include" });
+      const json = await res.json();
+      if (json.success) setAddresses(prev => prev.filter(a => a.id !== id));
+    } catch {}
+  };
+
+  const handleCopy = (addr: any) => {
     navigator.clipboard.writeText(addr.address);
     setCopiedId(addr.id);
     setTimeout(() => setCopiedId(null), 2000);
@@ -8190,75 +8235,60 @@ function AddressBookTab() {
       <div className="glass-card p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-1">Address Book</h2>
-          <p className="text-muted-foreground text-sm">Save and manage trusted withdrawal addresses</p>
+          <p className="text-muted-foreground text-sm">
+            Save up to {MAX} trusted withdrawal addresses
+            {addresses.length > 0 && <span className="ml-2 text-primary font-semibold">({addresses.length}/{MAX} used)</span>}
+          </p>
         </div>
         <button
-          onClick={() => setShowAddForm(!showAddForm)}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl font-semibold text-sm hover:opacity-90 transition-all w-full sm:w-auto"
+          onClick={() => { setShowAddForm(!showAddForm); setErrorMsg(""); }}
+          disabled={addresses.length >= MAX}
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl font-semibold text-sm hover:opacity-90 transition-all w-full sm:w-auto disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <Plus className="w-4 h-4" />
-          Add Address
+          {addresses.length >= MAX ? `Max ${MAX} reached` : "Add Address"}
         </button>
       </div>
 
       {/* Add Form */}
-      {showAddForm && (
+      {showAddForm && addresses.length < MAX && (
         <div className="glass-card p-4 sm:p-6 border-2 border-primary/30">
           <h3 className="font-semibold text-foreground mb-4">Add New Address</h3>
+          {errorMsg && (
+            <div className="mb-3 p-3 rounded-xl bg-destructive/10 border border-destructive/25 text-destructive text-sm">{errorMsg}</div>
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
             <div>
               <label className="block text-xs text-muted-foreground mb-1.5 font-medium">Label</label>
               <input
-                value={newLabel}
-                onChange={e => setNewLabel(e.target.value)}
+                value={newLabel} onChange={e => setNewLabel(e.target.value)}
                 placeholder="e.g. My Binance Wallet"
                 className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary text-sm transition-all"
               />
             </div>
             <div>
               <label className="block text-xs text-muted-foreground mb-1.5 font-medium">Network</label>
-              <select
-                value={newNetwork}
-                onChange={e => setNewNetwork(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none text-sm"
-              >
+              <select value={newNetwork} onChange={e => setNewNetwork(e.target.value)}
+                className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none text-sm">
                 {networks.map(n => <option key={n}>{n}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-xs text-muted-foreground mb-1.5 font-medium">Wallet Address</label>
               <input
-                value={newAddress}
-                onChange={e => setNewAddress(e.target.value)}
-                placeholder="0x..."
+                value={newAddress} onChange={e => setNewAddress(e.target.value)}
+                placeholder="Paste wallet address..."
                 className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary text-sm transition-all"
               />
             </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={() => {
-                if (newLabel.trim() && newAddress.trim()) {
-                  setAddresses(prev => [...prev, {
-                    id: Date.now(),
-                    label: newLabel.trim(),
-                    address: newAddress.trim(),
-                    network: newNetwork,
-                    verified: false,
-                    lastUsed: "—"
-                  }]);
-                  setNewLabel(""); setNewAddress(""); setShowAddForm(false);
-                }
-              }}
-              disabled={!newLabel.trim() || !newAddress.trim()}
-              className="flex-1 sm:flex-none px-5 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl text-sm font-semibold hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              Save Address
+            <button onClick={handleSave} disabled={saving || !newLabel.trim() || !newAddress.trim()}
+              className="flex-1 sm:flex-none px-5 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl text-sm font-semibold hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+              {saving ? "Saving..." : "Save Address"}
             </button>
-            <button
-              onClick={() => { setShowAddForm(false); setNewLabel(""); setNewAddress(""); }}
-              className="flex-1 sm:flex-none px-5 py-2.5 border border-border text-muted-foreground rounded-xl text-sm hover:bg-primary/10 hover:text-foreground hover:border-primary/30 transition-all"
-            >
+            <button onClick={() => { setShowAddForm(false); setNewLabel(""); setNewAddress(""); setErrorMsg(""); }}
+              className="flex-1 sm:flex-none px-5 py-2.5 border border-border text-muted-foreground rounded-xl text-sm hover:bg-primary/10 hover:text-foreground transition-all">
               Cancel
             </button>
           </div>
@@ -8276,59 +8306,49 @@ function AddressBookTab() {
 
       {/* Address List */}
       <div className="space-y-3">
-        {addresses.length === 0 ? (
+        {loading ? (
+          <div className="glass-card p-10 text-center">
+            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-muted-foreground text-sm">Loading saved addresses...</p>
+          </div>
+        ) : addresses.length === 0 ? (
           <div className="glass-card p-10 sm:p-12 text-center">
             <div className="text-4xl mb-3">📋</div>
             <div className="text-lg font-semibold text-foreground mb-1">No addresses saved</div>
             <div className="text-muted-foreground text-sm mb-4">Add trusted wallets for faster withdrawals</div>
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/25 text-primary rounded-xl text-sm font-medium hover:bg-primary/20 transition-all"
-            >
-              <Plus className="w-4 h-4" />
-              Add your first address
+            <button onClick={() => setShowAddForm(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 border border-primary/25 text-primary rounded-xl text-sm font-medium hover:bg-primary/20 transition-all">
+              <Plus className="w-4 h-4" />Add your first address
             </button>
           </div>
         ) : (
           addresses.map(addr => (
-            <div
-              key={addr.id}
-              className="glass-card p-4 sm:p-5 flex items-start sm:items-center justify-between gap-3 hover:-translate-y-0.5 transition-all"
-            >
+            <div key={addr.id} className="glass-card p-4 sm:p-5 flex items-start sm:items-center justify-between gap-3 hover:-translate-y-0.5 transition-all">
               <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary/15 border border-primary/20 flex items-center justify-center text-primary font-bold text-sm flex-shrink-0 mt-0.5 sm:mt-0">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary/15 border border-primary/20 flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">
                   {addr.label.charAt(0).toUpperCase()}
                 </div>
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
                     <span className="font-semibold text-foreground text-sm sm:text-base">{addr.label}</span>
-                    {addr.verified && (
-                      <span className="text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full font-medium border border-emerald-200 dark:border-emerald-700/40">✓ Verified</span>
+                    {addr.is_verified && (
+                      <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium border border-emerald-200">Verified</span>
                     )}
                     <span className="text-xs bg-secondary border border-border text-muted-foreground px-2 py-0.5 rounded-full">{addr.network}</span>
                   </div>
                   <div className="text-sm text-primary font-mono truncate max-w-[200px] sm:max-w-xs">{maskAddress(addr.address)}</div>
-                  <div className="text-xs text-muted-foreground mt-0.5">Last used: {addr.lastUsed}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    {addr.last_used_at ? `Last used: ${new Date(addr.last_used_at).toLocaleDateString()}` : "Never used"}
+                  </div>
                 </div>
               </div>
-
-              {/* Action buttons — always visible on mobile, no group-hover needed */}
               <div className="flex items-center gap-1.5 flex-shrink-0">
-                <button
-                  onClick={() => handleCopy(addr)}
-                  className="p-2 sm:p-2.5 rounded-lg bg-secondary border border-border hover:bg-primary/10 hover:border-primary/30 text-muted-foreground hover:text-primary transition-all"
-                  title="Copy address"
-                >
-                  {copiedId === addr.id
-                    ? <Check className="w-4 h-4 text-primary" />
-                    : <Copy className="w-4 h-4" />
-                  }
+                <button onClick={() => handleCopy(addr)} title="Copy address"
+                  className="p-2 sm:p-2.5 rounded-lg bg-secondary border border-border hover:bg-primary/10 hover:border-primary/30 text-muted-foreground hover:text-primary transition-all">
+                  {copiedId === addr.id ? <Check className="w-4 h-4 text-primary" /> : <Copy className="w-4 h-4" />}
                 </button>
-                <button
-                  onClick={() => setAddresses(prev => prev.filter(a => a.id !== addr.id))}
-                  className="p-2 sm:p-2.5 rounded-lg bg-destructive/10 border border-destructive/20 hover:bg-destructive/20 text-destructive transition-all"
-                  title="Delete address"
-                >
+                <button onClick={() => handleDelete(addr.id)} title="Delete address"
+                  className="p-2 sm:p-2.5 rounded-lg bg-destructive/10 border border-destructive/20 hover:bg-destructive/20 text-destructive transition-all">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
@@ -8341,8 +8361,8 @@ function AddressBookTab() {
       {addresses.length > 0 && (
         <div className="grid grid-cols-3 gap-3 sm:gap-4">
           {[
-            { label: "Saved", value: addresses.length },
-            { label: "Verified", value: addresses.filter(a => a.verified).length },
+            { label: "Saved", value: `${addresses.length}/${MAX}` },
+            { label: "Verified", value: addresses.filter(a => a.is_verified).length },
             { label: "Networks", value: [...new Set(addresses.map(a => a.network))].length },
           ].map(s => (
             <div key={s.label} className="glass-card p-3 sm:p-4 text-center">
@@ -8355,10 +8375,6 @@ function AddressBookTab() {
     </div>
   );
 }
-
-// ─────────────────────────────────────────────────────────────
-// 5. PORTFOLIO ANALYTICS TAB
-// ─────────────────────────────────────────────────────────────
 function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
   const [period, setPeriod] = useState("30d");
   const [metric, setMetric] = useState("balance");
