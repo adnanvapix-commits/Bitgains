@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
       .select('metadata')
       .eq('type', 'staking_payout');
 
-    const payoutCountMap = new Map<string, number>(); // stakeId -> payouts already given
+    const payoutCountMap = new Map<string, number>();
     for (const tx of (payoutTxs || [])) {
       const stakePayouts = tx.metadata?.stakePayouts || [];
       for (const sp of stakePayouts) {
@@ -54,14 +54,13 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Filter to only stakes that are eligible for a 30-day interval payout
+    // Filter to only stakes eligible for next 30-day interval payout
     const eligibleStakes = (allStakes || []).filter((stake: any) => {
       const startDate = new Date(stake.start_date);
       const daysElapsed = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
       const payoutsGiven = payoutCountMap.get(stake.stake_id) || 0;
-      const totalPayoutSlots = 3; // 3 payouts per 90-day stake
       const nextPayoutDueAtDay = (payoutsGiven + 1) * 30;
-      return daysElapsed >= nextPayoutDueAtDay && payoutsGiven < totalPayoutSlots;
+      return daysElapsed >= nextPayoutDueAtDay && payoutsGiven < 3;
     });
 
     if (eligibleStakes.length === 0) {
@@ -95,19 +94,19 @@ export async function POST(req: NextRequest) {
 
         for (const stake of userStakes) {
           const payoutsGiven = payoutCountMap.get(stake.stake_id) || 0;
-          const payoutNumber = payoutsGiven + 1; // this is payout #1, #2, or #3
+          const payoutNumber = payoutsGiven + 1;
           const payoutAmount = Math.round(Number(stake.amount) * (pct / 100) * 1e8) / 1e8;
           totalPayout += payoutAmount;
           stakePayouts.push({
             stakeId: stake.stake_id,
             stakedAmount: Number(stake.amount),
             payoutAmount,
-            payoutNumber,       // which 30-day interval (1, 2, or 3)
+            payoutNumber,
             totalPayoutSlots: 3,
             packageType: stake.package_type,
           });
 
-          // If this is the 3rd (final) payout, mark stake as matured
+          // Final payout — mark stake as matured
           if (payoutNumber === 3) {
             await sb.from('stakes').update({
               status: 'matured',
@@ -123,16 +122,15 @@ export async function POST(req: NextRequest) {
         await sb.from('wallets').update({
           balance: wallet.balance + totalPayout,
           total_earnings: wallet.total_earnings + totalPayout,
-        }).catch(e => console.error('Referral reward distribution error:', e));
           last_staking_update: nowISO,
         }).eq('user_id', userId);
 
-        // Distribute referral commissions on staking profit
+        // Distribute referral commissions on staking profit to referrers
         await distributeReferralRewards({
           userId,
           depositAmount: totalPayout,
           sourceTransactionId: null,
-        }).catch(e => console.error('Referral reward distribution error:', e));
+        }).catch((e) => console.error('Referral reward distribution error:', e));
 
         // Create payout transaction
         const payoutNumbers = stakePayouts.map(s => s.payoutNumber);
@@ -194,7 +192,7 @@ export async function POST(req: NextRequest) {
           stakePayouts,
         });
       } catch (userErr: any) {
-        failedUsers.push({ userId, reason: userErr.message });
+        failedUsers.push({ userId, reason: (userErr as any).message });
       }
     }
 

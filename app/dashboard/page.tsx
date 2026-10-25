@@ -6727,6 +6727,7 @@ function AffiliateTab({
               )}
             </div>
           </div>
+        </div>
 
         {referrer && (
           <div className="mt-6 bg-secondary border border-border rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
