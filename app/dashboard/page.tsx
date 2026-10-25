@@ -6410,8 +6410,6 @@ function AffiliateTab({
       referredUsersList: flattened,
     };
   };
-      ? `${window.location.origin}/signup?ref=${actualReferralCode}`
-      : `https://bitgains.cc/signup?ref=${actualReferralCode}`;
 
   // Always build from current origin so the domain is always correct
   // regardless of what FRONTEND_URL env var is set to on the server
@@ -7784,7 +7782,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Input Panel */}
-        <div className="glass-card p-6 space-y-6">
+        <div className="glass-card p-4 sm:p-6 space-y-5">
           <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
             <span className="w-8 h-8 bg-primary/10 border border-primary/20 rounded-lg flex items-center justify-center text-primary text-sm">⚙</span>
             Configure Your Stake
@@ -7800,7 +7798,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
                 value={amount}
                 onChange={e => setAmount(e.target.value)}
                 className="w-full pl-8 pr-4 py-3 rounded-xl border border-border bg-card text-foreground focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none text-lg font-semibold transition-all"
-                placeholder="1000"
+                className="w-full pl-8 pr-4 py-3 rounded-xl border border-border bg-card text-foreground focus:ring-2 focus:ring-primary/40 focus:border-primary outline-none text-base font-semibold transition-all"
               />
             </div>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -7841,12 +7839,12 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
         <div className="space-y-4">
           {/* Tier Badge */}
           <div className="glass-card p-5 bg-primary/8 border border-primary/25">
-            <div className="flex items-center gap-3">
+          <div className="glass-card p-4 bg-primary/8 border border-primary/25">
               <span className="text-3xl">{currentTier.icon}</span>
               <div>
                 <div className="text-sm font-medium text-muted-foreground">Your Tier</div>
                 <div className="text-2xl font-bold text-foreground">{currentTier.label} Member</div>
-                <div className="text-sm text-muted-foreground">{currentTier.rate} · 90-day lock · ${currentTier.min.toLocaleString()}–{currentTier.max === Infinity ? "∞" : `$${currentTier.max.toLocaleString()}`}</div>
+                <div className="text-lg sm:text-2xl font-bold text-foreground">{currentTier.label} Member</div>
               </div>
             </div>
           </div>
@@ -7860,10 +7858,10 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
               { label: "ROI",            value: `${num > 0 ? ((earning / num) * 100).toFixed(1) : "0"}%`, sub: "Return on investment" },
             ].map(item => (
               <div key={item.label} className="glass-card p-3 sm:p-4 text-center">
-                <div className="text-xs text-muted-foreground mb-1 truncate">{item.label}</div>
-                <div className="text-lg sm:text-xl font-bold text-foreground break-words">{item.value}</div>
-                <div className="text-[11px] sm:text-xs text-muted-foreground leading-tight">{item.sub}</div>
-              </div>
+              <div key={item.label} className="glass-card p-3 text-center overflow-hidden">
+                <div className="text-[11px] text-muted-foreground mb-1 truncate">{item.label}</div>
+                <div className="text-base font-bold text-foreground truncate">{item.value}</div>
+                <div className="text-[10px] text-muted-foreground leading-tight truncate">{item.sub}</div>
             ))}
           </div>
 
