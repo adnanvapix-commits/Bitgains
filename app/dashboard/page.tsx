@@ -4423,7 +4423,7 @@ function WithdrawTab({
                   <span className="text-foreground font-semibold">
                     {amount.toLocaleString()} {selectedToken}
                   </span>
-                </div>
+                     -{feeAmount.toFixed(4)} {selectedToken} (5%)
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Network Fee:</span>
                   <span className="text-destructive">
