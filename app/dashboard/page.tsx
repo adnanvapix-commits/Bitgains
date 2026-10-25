@@ -2142,7 +2142,7 @@ function DepositTab({
       icon: Wallet,
       description: "Connect your crypto wallet",
       fee: "0%",
-      time: "Instant",
+      time: "1-2 hours",
     },
   ];
 
@@ -2551,7 +2551,7 @@ function DepositTab({
                       </div>
                       <div className="text-center sm:text-left">
                         <p className="text-gray-600">Processing Time</p>
-                        <p className="text-slate-900 dark:text-gray-900 font-semibold">1-5 minutes</p>
+                    <p className="text-gray-900 dark:text-gray-900 font-semibold">1-2 hours</p>
                       </div>
                     </div>
                   </div>
@@ -2722,17 +2722,17 @@ function DepositTab({
                   onClick={() => setDepositMethod(method.id)}
                   className={`p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 text-left ${
                     depositMethod === method.id
-                      ? "border-emerald-500 bg-emerald-500/10 shadow-lg shadow-emerald-500/20"
-                      : "border-warm-400/30 bg-slate-800/80 dark:bg-slate-700/60 hover:border-emerald-500/50 hover:bg-warm-400/15"
+                      ? "border-emerald-500 bg-emerald-50 shadow-lg shadow-emerald-500/20"
+                      : "border-gray-200 bg-white hover:border-emerald-400 hover:bg-emerald-50/50"
                   }`}
                 >
                   <div className="flex items-start space-x-4">
-                    <method.icon className="w-8 h-8 text-emerald-400 mt-1" />
+                    <method.icon className="w-8 h-8 text-emerald-500 mt-1" />
                     <div className="flex-1">
-                      <div className="text-white font-semibold text-lg">
+                      <div className="text-gray-900 font-semibold text-lg">
                         {method.label}
                       </div>
-                      <div className="text-slate-600 dark:text-slate-300 text-sm mb-2">
+                      <div className="text-gray-600 text-sm mb-2">
                         {method.description}
                       </div>
                       <div className="flex justify-between items-center">
@@ -2755,59 +2755,43 @@ function DepositTab({
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
-              className="bg-gradient-to-r from-emerald-500/10 to-green-400/10 border border-emerald-500/20 rounded-2xl p-6"
+              className="bg-white border border-emerald-200 rounded-2xl p-6"
             >
-              <h3 className="text-lg font-semibold text-white mb-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Transaction Summary
               </h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-300">Deposit Amount:</span>
-                  <span className="text-slate-900 dark:text-white font-semibold">
+                  <span className="text-gray-600">Deposit Amount:</span>
+                  <span className="text-gray-900 font-semibold">
                     {amount.toLocaleString()} {selectedToken}
                   </span>
                 </div>
                 {fee > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-slate-600 dark:text-slate-300">
+                    <span className="text-gray-600">
                       Processing Fee ({selectedMethodData.fee}):
                     </span>
-                    <span className="text-red-400">
+                    <span className="text-red-500">
                       -{fee.toFixed(4)} {selectedToken}
                     </span>
                   </div>
                 )}
-                <div className="border-t border-warm-400/30 pt-3">
+                <div className="border-t border-emerald-200 pt-3">
                   <div className="flex justify-between">
-                    <span className="text-slate-900 dark:text-white font-semibold">
+                    <span className="text-gray-900 font-semibold">
                       You will receive:
                     </span>
-                    <span className="text-emerald-400 font-bold text-lg">
+                    <span className="text-emerald-600 font-bold text-lg">
                       {finalAmount.toFixed(4)} {selectedToken}
                     </span>
                   </div>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-600 dark:text-slate-300">Processing Time:</span>
-                  <span className="text-slate-600 dark:text-slate-300">
-                    {selectedMethodData.time}
+                  <span className="text-gray-600">Processing Time:</span>
+                  <span className="text-gray-700 font-medium">
+                    1-2 hours
                   </span>
-                </div>
-                <div className="bg-emerald-500/20 rounded-xl p-4 mt-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-slate-900 dark:text-white font-medium">Returns</p>
-                      <p className="text-slate-600 dark:text-slate-300 text-sm">
-                        Variable staking rates
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-2xl font-bold text-emerald-400">
-                        6-10%
-                      </p>
-                      <p className="text-slate-600 dark:text-slate-300 text-sm">Per period</p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </motion.div>
@@ -2897,7 +2881,7 @@ function DepositTab({
               onClick={() => setShowQRModal(false)}
             >
               {/* Inner wrapper: centres modal, min-height forces scroll room */}
-              <div className="min-h-full flex items-start sm:items-center justify-center p-0 sm:p-4 sm:py-8">
+              <div className="min-h-full flex items-center justify-center p-0 sm:p-4 sm:py-8">
                 <motion.div
                   initial={{ scale: 0.95, opacity: 0, y: 40 }}
                   animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -3056,7 +3040,7 @@ function DepositTab({
                           <p className="text-foreground font-bold text-sm sm:text-base">{selectedToken}</p>
                         </div>
                       </div>
-                      <p className="text-muted-foreground text-xs sm:text-sm text-center">Processing: 1-5 minutes</p>
+                      <p className="text-muted-foreground text-xs sm:text-sm text-center">Processing: 1-2 hours</p>
                     </div>
 
                     {/* Transaction ID */}
