@@ -7780,11 +7780,11 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
         <p className="text-muted-foreground">Simulate your potential returns before you stake</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 min-w-0">
-        <div className="glass-card p-4 sm:p-6 space-y-5">
+        {/* Input Panel */}
         <div className="glass-card p-4 sm:p-6 space-y-5 min-w-0 overflow-hidden">
-            <span className="w-8 h-8 bg-primary/10 border border-primary/20 rounded-lg flex items-center justify-center text-primary text-sm">⚙</span>
+          <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <span className="w-8 h-8 bg-primary/10 border border-primary/20 rounded-lg flex items-center justify-center text-primary text-sm">&#9881;</span>
             Configure Your Stake
           </h3>
 
