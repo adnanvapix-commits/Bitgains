@@ -919,7 +919,7 @@ export default function DashboardPage() {
 
         {/* Main Content Area */}
         <div
-          className={`flex-1 min-h-dvh min-w-0 overflow-x-hidden transition-all duration-300 ${`
+          className={`flex-1 min-h-dvh min-w-0 overflow-x-hidden transition-all duration-300 ${
             isClient && screenWidth >= 1024
               ? sidebarCollapsed
                 ? "lg:ml-20"
