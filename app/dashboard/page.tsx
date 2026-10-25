@@ -1585,8 +1585,6 @@ function OverviewTab({
                 <DollarSign className="w-6 h-6 sm:w-7 sm:h-7 text-primary-foreground font-bold" />
               </div>
               <div className="px-3 py-1 bg-primary/15 rounded-full border border-primary/25">
-                <span className="text-primary text-sm font-medium">+2.5%</span>
-              </div>
             </div>
             <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-1 sm:mb-2">
               {showBalance ? data.totalBalance.toLocaleString() : "••••••"}
@@ -1598,9 +1596,6 @@ function OverviewTab({
               </p>
             )}
             <div className="flex items-center space-x-2 text-xs">
-              <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-              <span className="text-primary">Daily: +{data.dailyEarnings} USDT</span>
-            </div>
           </div>
         </motion.div>
 
@@ -3552,14 +3547,6 @@ function StakingTab({
                 </div>
 
                 {/* Debug Information */}
-                {stakingAmount && (
-                  <div className="mt-2 p-2 bg-secondary border border-border rounded text-xs text-muted-foreground">
-                    Debug: Amount={amount}, Available={availableBalance}, Min=
-                    {selectedPackageData.minStake}, Valid=
-                    {amount > 0 && amount >= selectedPackageData.minStake && amount <= availableBalance}
-                  </div>
-                )}
-              </div>
 
               {/* Action Button */}
               <motion.button
@@ -3853,11 +3840,11 @@ function WithdrawTab({
   const selectedMethodData =
     withdrawMethods.find((m) => m.id === withdrawMethod) || withdrawMethods[0];
   const amount = parseFloat(withdrawAmount) || 0;
-  const feeAmount =
-    selectedMethodData.id === "bank"
-      ? 5
-      : parseFloat(selectedMethodData.fee.split(" ")[0]);
-  const finalAmount = amount - feeAmount;
+  const feeAmount = amount * 0.05;
+  const finalAmount = Math.max(0, amount - feeAmount);
+
+
+
 
   // Add wallet address validation function
   const isValidWalletAddress = (address: string) => {
@@ -4427,7 +4414,7 @@ function WithdrawTab({
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Network Fee:</span>
                   <span className="text-destructive">
-                    -{selectedMethodData.fee}
+                     -{feeAmount.toFixed(4)} {selectedToken} (5%)
                   </span>
                 </div>
                 <div className="border-t border-border pt-3">
