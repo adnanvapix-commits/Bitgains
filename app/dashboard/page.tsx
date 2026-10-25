@@ -8181,13 +8181,26 @@ function AddressBookTab() {
   const networks = ["TRC-20", "ERC-20", "BEP-20"];
   const maskAddress = (addr: string) => addr.length > 16 ? `${addr.slice(0, 8)}...${addr.slice(-8)}` : addr;
 
+  // Helper: get auth headers from Supabase session
+  const getAuthHeaders = async (): Promise<HeadersInit> => {
+    const { createClient } = await import("../../lib/supabase");
+    const sb = createClient();
+    const { data: { session } } = await sb.auth.getSession();
+    const token = session?.access_token;
+    return token
+      ? { "Content-Type": "application/json", "Authorization": `Bearer ${token}` }
+      : { "Content-Type": "application/json" };
+  };
+
   const fetchAddresses = async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/auth/address-book", { credentials: "include" });
+      const headers = await getAuthHeaders();
+      const res = await fetch("/api/auth/address-book", { headers });
       const json = await res.json();
       if (json.success) setAddresses(json.data.addresses);
-    } catch {}
+      else setErrorMsg(json.message || "Failed to load addresses.");
+    } catch { setErrorMsg("Network error loading addresses."); }
     finally { setLoading(false); }
   };
 
@@ -8199,9 +8212,10 @@ function AddressBookTab() {
     if (addresses.length >= MAX) { setErrorMsg(`Maximum ${MAX} addresses allowed. Delete one first.`); return; }
     setSaving(true);
     try {
+      const headers = await getAuthHeaders();
       const res = await fetch("/api/auth/address-book", {
-        method: "POST", credentials: "include",
-        headers: { "Content-Type": "application/json" },
+        method: "POST",
+        headers,
         body: JSON.stringify({ label: newLabel.trim(), address: newAddress.trim(), network: newNetwork }),
       });
       const json = await res.json();
@@ -8217,9 +8231,10 @@ function AddressBookTab() {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await fetch(`/api/auth/address-book?id=${id}`, { method: "DELETE", credentials: "include" });
+      const headers = await getAuthHeaders();
+      const res = await fetch(`/api/auth/address-book?id=${id}`, { method: "DELETE", headers });
       const json = await res.json();
-      if (json.success) setAddresses(prev => prev.filter(a => a.id !== id));
+      if (json.success) setAddresses(prev => prev.filter((a: any) => a.id !== id));
     } catch {}
   };
 
@@ -8260,11 +8275,8 @@ function AddressBookTab() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
             <div>
               <label className="block text-xs text-muted-foreground mb-1.5 font-medium">Label</label>
-              <input
-                value={newLabel} onChange={e => setNewLabel(e.target.value)}
-                placeholder="e.g. My Binance Wallet"
-                className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary text-sm transition-all"
-              />
+              <input value={newLabel} onChange={e => setNewLabel(e.target.value)} placeholder="e.g. My Binance Wallet"
+                className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary text-sm transition-all" />
             </div>
             <div>
               <label className="block text-xs text-muted-foreground mb-1.5 font-medium">Network</label>
@@ -8275,11 +8287,8 @@ function AddressBookTab() {
             </div>
             <div>
               <label className="block text-xs text-muted-foreground mb-1.5 font-medium">Wallet Address</label>
-              <input
-                value={newAddress} onChange={e => setNewAddress(e.target.value)}
-                placeholder="Paste wallet address..."
-                className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary text-sm transition-all"
-              />
+              <input value={newAddress} onChange={e => setNewAddress(e.target.value)} placeholder="Paste wallet address..."
+                className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary text-sm transition-all" />
             </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
@@ -8322,7 +8331,7 @@ function AddressBookTab() {
             </button>
           </div>
         ) : (
-          addresses.map(addr => (
+          addresses.map((addr: any) => (
             <div key={addr.id} className="glass-card p-4 sm:p-5 flex items-start sm:items-center justify-between gap-3 hover:-translate-y-0.5 transition-all">
               <div className="flex items-start sm:items-center gap-3 sm:gap-4 min-w-0">
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary/15 border border-primary/20 flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">
@@ -8330,24 +8339,24 @@ function AddressBookTab() {
                 </div>
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
-                    <span className="font-semibold text-foreground text-sm sm:text-base">{addr.label}</span>
+                    <span className="font-semibold text-foreground text-sm">{addr.label}</span>
                     {addr.is_verified && (
-                      <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-medium border border-emerald-200">Verified</span>
+                      <span className="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full border border-emerald-200">Verified</span>
                     )}
                     <span className="text-xs bg-secondary border border-border text-muted-foreground px-2 py-0.5 rounded-full">{addr.network}</span>
                   </div>
-                  <div className="text-sm text-primary font-mono truncate max-w-[200px] sm:max-w-xs">{maskAddress(addr.address)}</div>
+                  <div className="text-sm text-primary font-mono truncate max-w-[180px] sm:max-w-xs">{maskAddress(addr.address)}</div>
                   <div className="text-xs text-muted-foreground mt-0.5">
                     {addr.last_used_at ? `Last used: ${new Date(addr.last_used_at).toLocaleDateString()}` : "Never used"}
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-1.5 flex-shrink-0">
-                <button onClick={() => handleCopy(addr)} title="Copy address"
+                <button onClick={() => handleCopy(addr)} title="Copy"
                   className="p-2 sm:p-2.5 rounded-lg bg-secondary border border-border hover:bg-primary/10 hover:border-primary/30 text-muted-foreground hover:text-primary transition-all">
                   {copiedId === addr.id ? <Check className="w-4 h-4 text-primary" /> : <Copy className="w-4 h-4" />}
                 </button>
-                <button onClick={() => handleDelete(addr.id)} title="Delete address"
+                <button onClick={() => handleDelete(addr.id)} title="Delete"
                   className="p-2 sm:p-2.5 rounded-lg bg-destructive/10 border border-destructive/20 hover:bg-destructive/20 text-destructive transition-all">
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -8362,8 +8371,8 @@ function AddressBookTab() {
         <div className="grid grid-cols-3 gap-3 sm:gap-4">
           {[
             { label: "Saved", value: `${addresses.length}/${MAX}` },
-            { label: "Verified", value: addresses.filter(a => a.is_verified).length },
-            { label: "Networks", value: [...new Set(addresses.map(a => a.network))].length },
+            { label: "Verified", value: addresses.filter((a: any) => a.is_verified).length },
+            { label: "Networks", value: [...new Set(addresses.map((a: any) => a.network))].length },
           ].map(s => (
             <div key={s.label} className="glass-card p-3 sm:p-4 text-center">
               <div className="text-xl sm:text-2xl font-bold text-foreground">{s.value}</div>
