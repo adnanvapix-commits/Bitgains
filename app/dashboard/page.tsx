@@ -3814,7 +3814,7 @@ function WithdrawTab({
       icon: Wallet,
       description: "Send to external wallet",
       fee: "2 USDT",
-      time: "5-15 minutes",
+      time: "Up to 24 hours",
     },
   ];
 
@@ -7115,83 +7115,6 @@ function SettingsTab() {
           </div>
         </div>
 
-        {/* Security */}
-        <div className="glass-card p-4 sm:p-6 space-y-3">
-          <div className="flex items-center gap-3 pb-3 border-b border-border">
-            <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
-              <Lock className="w-4 h-4 text-primary" />
-            </div>
-            <div>
-              <div className="font-bold text-foreground text-sm">Security</div>
-              <div className="text-xs text-muted-foreground">Change your password</div>
-            </div>
-          </div>
-          {!showPw ? (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 rounded-xl bg-secondary border border-border">
-                <div>
-                  <div className="text-sm font-semibold text-foreground">Password</div>
-                  <div className="text-xs text-muted-foreground">••••••••••</div>
-                </div>
-                <button
-                  onClick={() => setShowPw(true)}
-                  className="px-3 py-1.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl text-xs font-semibold hover:opacity-90 flex-shrink-0 transition-opacity"
-                >
-                  Change
-                </button>
-              </div>
-              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-700">
-                🔐 Auth secured via Supabase JWT.
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {pwMsg && (
-                <div className={`p-3 rounded-xl text-xs font-medium border ${
-                  pwMsg.type === "success"
-                    ? "bg-emerald-50 border-emerald-200 text-emerald-700"
-                    : "bg-destructive/8 border-destructive/25 text-destructive"
-                }`}>
-                  {pwMsg.text}
-                </div>
-              )}
-              <div>
-                <label className="block text-xs font-semibold text-muted-foreground mb-1">New Password</label>
-                <input
-                  type="password"
-                  value={pw.newPass}
-                  onChange={e => setPw(p => ({ ...p, newPass: e.target.value }))}
-                  className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none text-sm focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-muted-foreground mb-1">Confirm Password</label>
-                <input
-                  type="password"
-                  value={pw.confirm}
-                  onChange={e => setPw(p => ({ ...p, confirm: e.target.value }))}
-                  className="w-full px-3 py-2.5 rounded-xl border border-border bg-card text-foreground outline-none text-sm focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
-                />
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={changePw}
-                  disabled={pwLoading}
-                  className="flex-1 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl text-sm font-semibold disabled:opacity-60 hover:opacity-90 transition-opacity"
-                >
-                  {pwLoading ? "Updating..." : "Update Password"}
-                </button>
-                <button
-                  onClick={() => { setShowPw(false); setPw({ newPass: "", confirm: "" }); setPwMsg(null); }}
-                  className="flex-1 py-2.5 border border-border text-muted-foreground rounded-xl text-sm hover:bg-secondary transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
         {/* Danger Zone */}
         <div className="glass-card p-4 sm:p-6 border border-destructive/20 bg-destructive/5 space-y-3">
           <div className="flex items-center gap-3 pb-3 border-b border-destructive/15">
@@ -7956,17 +7879,17 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
           </div>
 
           {/* Result Cards */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
             {[
-              { label: "Rate",   value: `Up to 15%`,                                              sub: "Dynamic" },
-              { label: "Total Earnings", value: `$${earning.toFixed(2)}`,                                         sub: `Over 3 months (90 days)` },
-              { label: "Total Return",   value: `$${total.toFixed(2)}`,                                            sub: "Principal + rewards" },
-              { label: "ROI",            value: `${num > 0 ? ((earning / num) * 100).toFixed(1) : "0"}%`,         sub: "Return on investment" },
+              { label: "Rate",           value: `Up to 15%`,                                              sub: "Dynamic" },
+              { label: "Total Earnings", value: `$${earning.toFixed(2)}`,                                 sub: `Over 90 days` },
+              { label: "Total Return",   value: `$${total.toFixed(2)}`,                                   sub: "Principal + rewards" },
+              { label: "ROI",            value: `${num > 0 ? ((earning / num) * 100).toFixed(1) : "0"}%`, sub: "Return on investment" },
             ].map(item => (
-              <div key={item.label} className="glass-card p-4 text-center">
-                <div className="text-xs text-muted-foreground mb-1">{item.label}</div>
-                <div className="text-xl font-bold text-foreground">{item.value}</div>
-                <div className="text-xs text-muted-foreground">{item.sub}</div>
+              <div key={item.label} className="glass-card p-3 sm:p-4 text-center">
+                <div className="text-xs text-muted-foreground mb-1 truncate">{item.label}</div>
+                <div className="text-lg sm:text-xl font-bold text-foreground break-words">{item.value}</div>
+                <div className="text-[11px] sm:text-xs text-muted-foreground leading-tight">{item.sub}</div>
               </div>
             ))}
           </div>

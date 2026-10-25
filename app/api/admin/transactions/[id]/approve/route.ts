@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '../../../../../../lib/supabase-server';
 import { getAuthUser, requireAdmin } from '../../../../../../lib/api-auth';
 import { generateTransactionHash, sanitizeTransactionId, logTransactionOperation, updateTransactionStatus, validateTransactionForProcessing } from '../../../../../../lib/server/helpers';
-import { FIRST_DEPOSIT_BONUS_PERCENT } from '../../../../../../lib/server/referralRewards';
+import { FIRST_DEPOSIT_BONUS_PERCENT, distributeReferralRewards } from '../../../../../../lib/server/referralRewards';
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { user, error } = await getAuthUser(req);
@@ -103,7 +103,14 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
         
         // Update transaction status using helper function
         await updateTransactionStatus(sb, sanitizedId, 'completed', user!.id, comment, txHash);
-        
+
+        // Distribute multi-level referral commissions to referrers
+        await distributeReferralRewards({
+          userId: tx.user_id,
+          depositAmount: tx.amount,
+          sourceTransactionId: sanitizedId,
+        }).catch(e => console.error('Referral reward distribution error:', e));
+
         // Handle first deposit bonus
         const { data: userProfile } = await sb.from('profiles')
           .select('referred_by, has_received_first_deposit_bonus, name, email')
