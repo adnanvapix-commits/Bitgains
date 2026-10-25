@@ -8183,8 +8183,7 @@ function AddressBookTab() {
 
   // Helper: get auth headers from Supabase session
   const getAuthHeaders = async (): Promise<HeadersInit> => {
-    const { createClient } = await import("../../lib/supabase");
-    const sb = createClient();
+    const { supabase: sb } = await import("../../lib/supabase");
     const { data: { session } } = await sb.auth.getSession();
     const token = session?.access_token;
     return token
