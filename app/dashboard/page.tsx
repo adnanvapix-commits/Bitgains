@@ -1595,7 +1595,6 @@ function OverviewTab({
                 Total Deposited: {formatCurrency(walletData.totalDeposited)}
               </p>
             )}
-            <div className="flex items-center space-x-2 text-xs">
           </div>
         </motion.div>
 
