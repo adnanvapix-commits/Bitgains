@@ -3275,6 +3275,44 @@ function StakingTab({
   const [cancellingStakeId, setCancellingStakeId] = useState<string | null>(null);
   const [showCancelConfirm, setShowCancelConfirm] = useState<string | null>(null);
 
+  const handleCancelRequest = async (stakeId: string) => {
+    setCancellingStakeId(stakeId);
+    try {
+      const { supabase: sb } = await import("../../lib/supabase");
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session?.access_token) throw new Error("Not authenticated");
+      const res = await fetch("/api/transactions/cancel-stake", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ stakeId }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setNotifications((prev) => [{
+          id: Date.now(), type: "success",
+          message: "Cancellation request submitted! Our support team will contact you shortly. Check Help & Support for updates.",
+          timestamp: new Date(),
+        }, ...prev]);
+        setTimeout(() => setNotifications((prev) => prev.slice(1)), 10000);
+      } else {
+        throw new Error(json.message || "Request failed");
+      }
+    } catch (err: any) {
+      setNotifications((prev) => [{
+        id: Date.now(), type: "error",
+        message: `Failed to submit request: ${err.message}`,
+        timestamp: new Date(),
+      }, ...prev]);
+      setTimeout(() => setNotifications((prev) => prev.slice(1)), 8000);
+    } finally {
+      setCancellingStakeId(null);
+      setShowCancelConfirm(null);
+    }
+  };
+
   // 6-month and 12-month staking packages
   const stakingPackages = [
     {
@@ -3742,81 +3780,57 @@ function StakingTab({
                 const isCancelled = stake.status === "cancelled";
                 const isActive = stake.status === "active";
 
-                const handleCancelRequest = async (stakeId: string) => {
-                  setCancellingStakeId(stakeId);
-                  try {
-                    const { supabase: sb } = await import("../../lib/supabase");
-                    const { data: { session } } = await sb.auth.getSession();
-                    if (!session?.access_token) throw new Error("Not authenticated");
-                    const res = await fetch("/api/transactions/cancel-stake", {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${session.access_token}`,
-                      },
-                      body: JSON.stringify({ stakeId }),
-                    });
-                    const json = await res.json();
-                    if (json.success) {
-                      setNotifications((prev) => [{
-                        id: Date.now(), type: "success",
-                        message: "Cancellation request submitted! Our support team will contact you shortly. Check Help & Support for updates.",
-                        timestamp: new Date(),
-                      }, ...prev]);
-                      setTimeout(() => setNotifications((prev) => prev.slice(1)), 10000);
-                    } else {
-                      throw new Error(json.message || "Request failed");
-                    }
-                  } catch (err: any) {
-                    setNotifications((prev) => [{
-                      id: Date.now(), type: "error",
-                      message: `Failed to submit request: ${err.message}`,
-                      timestamp: new Date(),
-                    }, ...prev]);
-                    setTimeout(() => setNotifications((prev) => prev.slice(1)), 8000);
-                  } finally {
-                    setCancellingStakeId(null);
-                    setShowCancelConfirm(null);
-                  }
-                };
-
                 return (
                   <div
                     key={stake.stakeId}
                     className={`p-4 rounded-xl border ${
-                      isMatured ? "bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800/50"
-                      : isCancelled ? "bg-destructive/5 border-destructive/20"
-                      : "bg-secondary border-border"
+                      isMatured
+                        ? "bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800/50"
+                        : isCancelled
+                        ? "bg-destructive/5 border-destructive/20"
+                        : "bg-secondary border-border"
                     }`}
                   >
-                    <div className="flex flex-col gap-3">
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                        <div className="flex items-center space-x-3">
-                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                            isMatured ? "bg-emerald-500"
-                            : isCancelled ? "bg-destructive"
-                            : "bg-gradient-to-r from-primary to-accent"
-                          }`}>
-                            {isMatured ? <Check className="w-5 h-5 text-white" />
-                            : isCancelled ? <X className="w-5 h-5 text-white" />
-                            : <Clock className="w-5 h-5 text-primary-foreground" />}
-                          </div>
-                          <div>
-                            <p className="text-foreground font-semibold">{formatCurrency(stake.amount)}</p>
-                            <p className="text-muted-foreground text-xs capitalize">{stake.packageType} package</p>
-                          </div>
+                    {/* Stake row */}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      {/* Icon + amount */}
+                      <div className="flex items-center space-x-3">
+                        <div
+                          className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                            isMatured
+                              ? "bg-emerald-500"
+                              : isCancelled
+                              ? "bg-destructive"
+                              : "bg-gradient-to-r from-primary to-accent"
+                          }`}
+                        >
+                          {isMatured ? (
+                            <Check className="w-5 h-5 text-white" />
+                          ) : isCancelled ? (
+                            <X className="w-5 h-5 text-white" />
+                          ) : (
+                            <Clock className="w-5 h-5 text-primary-foreground" />
+                          )}
                         </div>
+                        <div>
+                          <p className="text-foreground font-semibold">{formatCurrency(stake.amount)}</p>
+                          <p className="text-muted-foreground text-xs capitalize">{stake.packageType} package</p>
+                        </div>
+                      </div>
 
-                        <div className="flex-1 px-0 sm:px-4">
-                          <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                            <span>{startDate.toLocaleDateString()}</span>
-                            <span>{endDate.toLocaleDateString()}</span>
-                          </div>
-                          <div className="w-full h-2 bg-border rounded-full overflow-hidden">
-                            <div
-                              className={`h-full rounded-full transition-all duration-500 ${
-                                isMatured ? "bg-emerald-500"
-                                : isCancelled ? "bg-destructive"
+                      {/* Progress bar */}
+                      <div className="flex-1 px-0 sm:px-4">
+                        <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                          <span>{startDate.toLocaleDateString()}</span>
+                          <span>{endDate.toLocaleDateString()}</span>
+                        </div>
+                        <div className="w-full h-2 bg-border rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all duration-500 ${
+                              isMatured
+                                ? "bg-emerald-500"
+                                : isCancelled
+                                ? "bg-destructive"
                                 : "bg-gradient-to-r from-primary to-accent"
                             }`}
                             style={{ width: `${progress}%` }}
@@ -3824,21 +3838,28 @@ function StakingTab({
                         </div>
                       </div>
 
+                      {/* Status text */}
                       <div className="text-right">
-                        <p className={`text-sm font-medium ${
-                          isMatured ? "text-emerald-600"
-                          : isCancelled ? "text-destructive"
-                          : "text-primary"
-                        }`}>
-                          {isMatured ? `+${formatCurrency(stake.actualRewards || 0)} earned`
-                          : isCancelled ? "Cancelled"
-                          : `${daysRemaining} days left`}
+                        <p
+                          className={`text-sm font-medium ${
+                            isMatured
+                              ? "text-emerald-600"
+                              : isCancelled
+                              ? "text-destructive"
+                              : "text-primary"
+                          }`}
+                        >
+                          {isMatured
+                            ? `+${formatCurrency(stake.actualRewards || 0)} earned`
+                            : isCancelled
+                            ? "Cancelled"
+                            : `${daysRemaining} days left`}
                         </p>
                         <p className="text-muted-foreground/60 text-xs capitalize">{stake.status}</p>
                       </div>
                     </div>
 
-                    {/* Cancel stake button for active stakes */}
+                    {/* Cancel button for active stakes */}
                     {isActive && (
                       <div className="mt-3 pt-3 border-t border-border">
                         {showCancelConfirm === stake.stakeId ? (
@@ -3854,7 +3875,7 @@ function StakingTab({
                                 className="flex-1 py-2 px-3 bg-destructive text-white rounded-lg text-sm font-medium hover:bg-destructive/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-1"
                               >
                                 {cancellingStakeId === stake.stakeId ? (
-                                  <><Loader className="w-3 h-3 animate-spin" /> Submitting...</>
+                                  <span className="flex items-center gap-1"><Loader className="w-3 h-3 animate-spin" /> Submitting...</span>
                                 ) : (
                                   "Yes, Request Cancellation"
                                 )}
