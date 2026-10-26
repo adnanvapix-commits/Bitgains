@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
@@ -355,7 +355,7 @@ export default function DashboardPage() {
 
     fetchNotifications();
 
-    // Real-time Supabase subscription — new notifications arrive instantly
+    // Real-time Supabase subscription â€” new notifications arrive instantly
     let channel: ReturnType<typeof import("../../lib/supabase").supabase.channel> | null = null;
 
     const setupRealtime = async () => {
@@ -469,7 +469,7 @@ export default function DashboardPage() {
     }
   };
 
-  // Delete notification — fixed: use functional state read to avoid stale closure
+  // Delete notification â€” fixed: use functional state read to avoid stale closure
   const deleteNotification = async (notificationId: string) => {
     // Optimistic remove immediately so UI feels instant
     let wasUnread = false;
@@ -550,7 +550,7 @@ export default function DashboardPage() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showNotificationDropdown]);
 
-  // Live update removed — rewards calculated on wallet load, no polling needed
+  // Live update removed â€” rewards calculated on wallet load, no polling needed
 
   const formatCurrency = (amount: number, showDecimals = true) => {
     return new Intl.NumberFormat("en-US", {
@@ -809,7 +809,7 @@ export default function DashboardPage() {
                     <div>
                       <p className="text-xs text-muted-foreground">Total Balance</p>
                       <p className="text-lg font-bold text-foreground">
-                        {showBalance ? formatCurrency(balance) : "••••••"}
+                        {showBalance ? formatCurrency(balance) : "â€¢â€¢â€¢â€¢â€¢â€¢"}
                       </p>
                     </div>
                     <button
@@ -830,7 +830,7 @@ export default function DashboardPage() {
                       <p className="text-sm font-semibold text-foreground">
                         {showBalance
                           ? formatCurrency(stakedBalance, false)
-                          : "••••"}
+                          : "â€¢â€¢â€¢â€¢"}
                       </p>
                     </div>
                     <div className="bg-primary/10 border border-primary/20 rounded-lg p-3">
@@ -838,7 +838,7 @@ export default function DashboardPage() {
                       <p className="text-sm font-semibold text-foreground">
                         {showBalance
                           ? formatCurrency(availableBalance, false)
-                          : "••••"}
+                          : "â€¢â€¢â€¢â€¢"}
                       </p>
                     </div>
                   </div>
@@ -850,7 +850,7 @@ export default function DashboardPage() {
                       }`}
                     ></div>
                     <span className="text-muted-foreground">
-                      {isLive ? "Live" : "Paused"} •{" "}
+                      {isLive ? "Live" : "Paused"} â€¢{" "}
                       {isClient ? lastUpdate.toLocaleTimeString() : "--:--:--"}
                     </span>
                   </div>
@@ -1092,7 +1092,7 @@ export default function DashboardPage() {
                     title="Notifications"
                   >
                     <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
-                    {/* Red dot — shows whenever there are unread notifications */}
+                    {/* Red dot â€” shows whenever there are unread notifications */}
                     {unreadNotificationCount > 0 && (
                       <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm shadow-red-500/50 animate-pulse">
                         {unreadNotificationCount > 9 ? "9+" : unreadNotificationCount}
@@ -1411,7 +1411,7 @@ export default function DashboardPage() {
                 <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-emerald-500 to-green-400 rounded-full flex items-center justify-center shadow-lg">
                   <Award className="w-10 h-10 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-foreground mb-2">🎉 Congratulations!</h3>
+                <h3 className="text-2xl font-bold text-foreground mb-2">ðŸŽ‰ Congratulations!</h3>
                 <p className="text-muted-foreground">Your funds have been successfully staked!</p>
               </div>
               <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 mb-5">
@@ -1432,7 +1432,7 @@ export default function DashboardPage() {
                 <div className="flex items-start space-x-3">
                   <Bell className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="text-blue-400 font-semibold text-sm mb-1">Monthly Payout Incoming! 💰</h4>
+                    <h4 className="text-blue-400 font-semibold text-sm mb-1">Monthly Payout Incoming! ðŸ’°</h4>
                     <p className="text-muted-foreground text-sm leading-relaxed">
                       Once your staking period ends, admin will distribute your payout directly to your wallet. You&apos;ll receive a notification when your payout is credited!
                     </p>
@@ -1443,10 +1443,10 @@ export default function DashboardPage() {
                 onClick={() => setShowCongratsModal(false)}
                 className="w-full py-3 px-4 bg-gradient-to-r from-emerald-500 to-green-400 text-white rounded-xl hover:from-emerald-600 hover:to-green-500 transition-all font-semibold text-lg shadow-lg"
               >
-                Awesome, let&apos;s go! 🚀
+                Awesome, let&apos;s go! ðŸš€
               </button>
               <p className="text-muted-foreground text-xs text-center mt-4">
-                💡 Check your wallet and notifications for payout updates
+                ðŸ’¡ Check your wallet and notifications for payout updates
               </p>
             </motion.div>
           </motion.div>
@@ -1678,7 +1678,7 @@ function OverviewTab({
               </div>
             </div>
             <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-1 sm:mb-2">
-              {showBalance ? data.totalBalance.toLocaleString() : "••••••"}
+              {showBalance ? data.totalBalance.toLocaleString() : "â€¢â€¢â€¢â€¢â€¢â€¢"}
             </h3>
             <p className="text-muted-foreground text-xs sm:text-sm mb-1">Total Balance (USDT)</p>
             {walletData && walletData.totalDeposited > 0 && (
@@ -1706,7 +1706,7 @@ function OverviewTab({
               </div>
             </div>
             <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-1 sm:mb-2">
-              {showBalance ? data.stakedAmount.toLocaleString() : "••••••"}
+              {showBalance ? data.stakedAmount.toLocaleString() : "â€¢â€¢â€¢â€¢â€¢â€¢"}
             </h3>
             <p className="text-muted-foreground text-xs sm:text-sm mb-1">Staked Amount (USDT)</p>
             <div className="flex items-center space-x-2 text-xs">
@@ -1733,7 +1733,7 @@ function OverviewTab({
               </div>
             </div>
             <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-1 sm:mb-2">
-              {showBalance ? data.availableAmount.toLocaleString() : "••••••"}
+              {showBalance ? data.availableAmount.toLocaleString() : "â€¢â€¢â€¢â€¢â€¢â€¢"}
             </h3>
             <p className="text-muted-foreground text-xs sm:text-sm mb-1">Available Balance (USDT)</p>
             <div className="flex items-center space-x-2 text-xs">
@@ -1760,7 +1760,7 @@ function OverviewTab({
               </div>
             </div>
             <h3 className="text-2xl sm:text-3xl font-bold text-foreground mb-1 sm:mb-2">
-              {showBalance ? data.earnings.toLocaleString() : "••••••"}
+              {showBalance ? data.earnings.toLocaleString() : "â€¢â€¢â€¢â€¢â€¢â€¢"}
             </h3>
             <p className="text-muted-foreground text-xs sm:text-sm mb-1">Total Earnings (USDT)</p>
             <div className="flex items-center space-x-2 text-xs">
@@ -2004,7 +2004,7 @@ function OverviewTab({
             onClick={() => setActiveTab("history")}
             className="text-emerald-400 hover:text-emerald-300 text-sm font-medium px-4 py-2 rounded-xl hover:bg-emerald-500/10 transition-all duration-300"
           >
-            View All →
+            View All â†’
           </button>
         </div>
         <div className="space-y-4">
@@ -2068,7 +2068,7 @@ function OverviewTab({
                         : transaction.type === "referral_commission"
                         ? "Referral Commission"
                         : transaction.type === "staking_payout"
-                        ? "Staking Payout 🎉"
+                        ? "Staking Payout ðŸŽ‰"
                         : transaction.type === "reward"
                         ? "Staking Reward"
                         : transaction.type}
@@ -2931,7 +2931,7 @@ function DepositTab({
                 <div className="flex items-center justify-center space-x-2">
                   <QrCode className="w-5 h-5 sm:w-6 sm:h-6" />
                   <span>
-                    Show Deposit QR •{" "}
+                    Show Deposit QR â€¢{" "}
                     {amount > 0 ? formatCurrency(amount) : "$0"} {selectedToken}
                   </span>
                 </div>
@@ -2948,7 +2948,7 @@ function DepositTab({
                   : "Enter amount above to continue"}
               </p>
               <p className="text-white/40 text-xs">
-                QR code • Copy address • Upload proof • Instant verification
+                QR code â€¢ Copy address â€¢ Upload proof â€¢ Instant verification
               </p>
             </div>
           </div>
@@ -2957,7 +2957,7 @@ function DepositTab({
         {/* Mobile-Optimized QR Code Modal */}
         <AnimatePresence>
           {showQRModal && (
-            /* Outer: full-screen scrollable backdrop — user can scroll anywhere */
+            /* Outer: full-screen scrollable backdrop â€” user can scroll anywhere */
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -2989,7 +2989,7 @@ function DepositTab({
                             Deposit {formatCurrency(amount)}
                           </h3>
                           <p className="text-muted-foreground text-xs sm:text-sm truncate">
-                            {selectedToken} • Select Network
+                            {selectedToken} â€¢ Select Network
                           </p>
                         </div>
                       </div>
@@ -3002,7 +3002,7 @@ function DepositTab({
                     </div>
                   </div>
 
-                  {/* Body — not independently scrollable; the outer overlay scrolls */}
+                  {/* Body â€” not independently scrollable; the outer overlay scrolls */}
                   <div className="px-3 sm:px-6 lg:px-8 py-3 sm:py-6 space-y-3 sm:space-y-6">
                     {/* Network Selection */}
                     <div className="space-y-3 sm:space-y-4">
@@ -3023,7 +3023,7 @@ function DepositTab({
                             </span>
                           </div>
 
-                          {/* QR Code — white background always so QR is scannable */}
+                          {/* QR Code â€” white background always so QR is scannable */}
                           <div className="mb-3 sm:mb-4">
                             <div className="bg-white p-2 sm:p-4 rounded-lg sm:rounded-2xl shadow-md mx-auto w-fit">
                               <Image
@@ -3036,7 +3036,7 @@ function DepositTab({
                             </div>
                           </div>
 
-                          {/* Address — no line-clamp so full address is always visible */}
+                          {/* Address â€” no line-clamp so full address is always visible */}
                           <div className="bg-secondary border border-border rounded-lg sm:rounded-xl p-2 sm:p-3 mb-2 sm:mb-3">
                             <p className="text-primary font-mono text-xs sm:text-sm break-all select-all">
                               TXMAjhdDAtY4FY9biErqAqx3VS7rfiU7gV
@@ -3151,7 +3151,7 @@ function DepositTab({
                       <p className="text-muted-foreground/60 text-xs mt-2">This helps us verify your payment faster</p>
                     </div>
 
-                    {/* Screenshot Upload — commented out, only transaction ID required for now */}
+                    {/* Screenshot Upload â€” commented out, only transaction ID required for now */}
                     {/* <div className="bg-secondary border border-border rounded-xl sm:rounded-2xl p-3 sm:p-6">
                       <div className="flex items-center space-x-2 mb-2 sm:mb-3">
                         <div className="w-5 h-5 sm:w-6 sm:h-6 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
@@ -3492,7 +3492,7 @@ function StakingTab({
                 {formatCurrency(availableBalance)}
               </p>
               {availableBalance === 0 && walletData && walletData.totalDeposited === 0 && (
-                <p className="text-primary text-xs">No deposits yet — deposit funds first</p>
+                <p className="text-primary text-xs">No deposits yet â€” deposit funds first</p>
               )}
             </div>
           </div>
@@ -3553,7 +3553,7 @@ function StakingTab({
             <div className="w-3 h-3 bg-gradient-to-r from-emerald-500 to-blue-500 rounded"></div>
             <span>Current Month</span>
           </div>
-          <span>•</span>
+          <span>â€¢</span>
           <span>After M9: Alternating 7% / 6% pattern</span>
         </div>
       </motion.div> */}
@@ -3590,7 +3590,7 @@ function StakingTab({
               {pkg.highlight && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <span className="bg-gradient-to-r from-primary to-accent text-primary-foreground text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                    ⭐ Best Returns
+                    â­ Best Returns
                   </span>
                 </div>
               )}
@@ -4616,7 +4616,7 @@ function WithdrawTab({
               {withdrawMethod === "bank"
                 ? "Bank transfers require full verification and may take 1-3 business days"
                 : withdrawAddress && !isValidWalletAddress(withdrawAddress)
-                ? "⚠️ Please enter a valid wallet address (40-42 characters, hex format)"
+                ? "âš ï¸ Please enter a valid wallet address (40-42 characters, hex format)"
                 : "Double-check the address. Transactions cannot be reversed."}
             </p>
             {withdrawMethod !== "bank" && (
@@ -4919,7 +4919,7 @@ function WithdrawTab({
                     Withdraw {withdrawal.token}
                   </p>
                   <p className="text-slate-600 dark:text-slate-300 text-sm">
-                    {withdrawal.method} • {withdrawal.date}
+                    {withdrawal.method} â€¢ {withdrawal.date}
                   </p>
                   <p className="text-white/50 text-xs font-mono">
                     {withdrawal.txHash.slice(0, 10)}...
@@ -7109,7 +7109,7 @@ function AffiliateTab({
                       ${(referredUser.earnings ?? 0).toFixed(2)} earned
                     </p>
                     <p className="text-muted-foreground text-xs">
-                      Level {referredUser.level || 1} — {referredUser.commissionRate ? `${referredUser.commissionRate}% on profits` : "Referral"}
+                      Level {referredUser.level || 1} â€” {referredUser.commissionRate ? `${referredUser.commissionRate}% on profits` : "Referral"}
                     </p>
                     <div className="flex items-center justify-end space-x-1 mt-1">
                       <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
@@ -7118,7 +7118,7 @@ function AffiliateTab({
                   </div>
                 </div>
 
-                {/* Staking info — only for level 1 with data */}
+                {/* Staking info â€” only for level 1 with data */}
                 {referredUser.level === 1 && (
                   <div className="mt-3 pt-3 border-t border-border flex flex-wrap gap-3">
                     <div className="flex items-center gap-1.5 text-xs">
@@ -7132,7 +7132,7 @@ function AffiliateTab({
                       <div className="flex flex-wrap gap-1.5">
                         {referredUser.activeStakes.map((s: any, si: number) => (
                           <span key={si} className="px-2 py-0.5 bg-primary/10 border border-primary/20 text-primary text-[10px] font-medium rounded-full">
-                            {s.packageType} · ${s.amount.toFixed(0)}
+                            {s.packageType} Â· ${s.amount.toFixed(0)}
                           </span>
                         ))}
                       </div>
@@ -7208,7 +7208,7 @@ function AffiliateTab({
 }
 
 
-// Settings Tab — clean redesign
+// Settings Tab â€” clean redesign
 function SettingsTab() {
   const { user, updateUser } = useAuth();
   const [editingName, setEditingName] = useState(false);
@@ -7220,7 +7220,40 @@ function SettingsTab() {
   const [pwLoading, setPwLoading] = useState(false);
   const [pwMsg, setPwMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
+  // KYC fields
+  const [kyc, setKyc] = useState({
+    aadhar_number: "",
+    pan_number: "",
+    permanent_address: "",
+    date_of_birth: "",
+  });
+  const [kycLoading, setKycLoading] = useState(false);
+  const [kycMsg, setKycMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [kycLoaded, setKycLoaded] = useState(false);
+
   useEffect(() => { if (user) setNameValue(user.name || ""); }, [user]);
+
+  // Load KYC fields from API on mount
+  useEffect(() => {
+    if (kycLoaded) return;
+    const load = async () => {
+      try {
+        const { default: apiClient } = await import("../../lib/api/client.js");
+        const res = await apiClient.get("/auth/profile");
+        if (res?.success && res.data?.profile) {
+          const p = res.data.profile;
+          setKyc({
+            aadhar_number:     p.aadhar_number     || "",
+            pan_number:        p.pan_number        || "",
+            permanent_address: p.permanent_address || "",
+            date_of_birth:     p.date_of_birth     || "",
+          });
+          setKycLoaded(true);
+        }
+      } catch { /* silent */ }
+    };
+    load();
+  }, [kycLoaded]);
 
   const flash = (setter: any, type: "success" | "error", text: string) => {
     setter({ type, text });
@@ -7231,7 +7264,6 @@ function SettingsTab() {
     if (!nameValue.trim()) return flash(setMsg, "error", "Name cannot be empty");
     setIsUpdating(true);
     try {
-      // updateUser only updates local state — call API directly
       const { default: apiClient } = await import("../../lib/api/client.js");
       const res = await apiClient.put("/auth/profile", { name: nameValue.trim() });
       if (res?.success) {
@@ -7243,6 +7275,29 @@ function SettingsTab() {
       }
     } catch { flash(setMsg, "error", "Failed to update"); }
     finally { setIsUpdating(false); }
+  };
+
+  const saveKyc = async () => {
+    // Basic validation
+    if (kyc.aadhar_number && !/^\d{12}$/.test(kyc.aadhar_number.replace(/\s/g, ""))) {
+      return flash(setKycMsg, "error", "Aadhaar number must be 12 digits");
+    }
+    if (kyc.pan_number && !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(kyc.pan_number.toUpperCase())) {
+      return flash(setKycMsg, "error", "PAN must be in format ABCDE1234F");
+    }
+    setKycLoading(true);
+    try {
+      const { default: apiClient } = await import("../../lib/api/client.js");
+      const res = await apiClient.put("/auth/profile", {
+        aadhar_number:     kyc.aadhar_number.replace(/\s/g, "") || null,
+        pan_number:        kyc.pan_number.toUpperCase() || null,
+        permanent_address: kyc.permanent_address || null,
+        date_of_birth:     kyc.date_of_birth || null,
+      });
+      if (res?.success) flash(setKycMsg, "success", "Details saved successfully!");
+      else flash(setKycMsg, "error", res?.message || "Failed to save");
+    } catch { flash(setKycMsg, "error", "Failed to save details"); }
+    finally { setKycLoading(false); }
   };
 
   const changePw = async () => {
@@ -7259,15 +7314,6 @@ function SettingsTab() {
     finally { setPwLoading(false); }
   };
 
-  const info = [
-    { label: "Account Type", value: user?.role === "admin" ? "Administrator" : "Premium Member" },
-    { label: "Member Since", value: user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : "—" },
-    { label: "Last Login", value: user?.lastLogin ? new Date(user.lastLogin).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—" },
-    { label: "Email Status", value: user?.isEmailVerified ? "✅ Verified" : "⏳ Pending" },
-    { label: "Referral Code", value: user?.referralCode || "—" },
-    { label: "User ID", value: user?.id ? `${user.id.slice(0, 8)}...${user.id.slice(-4)}` : "—" },
-  ];
-
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
@@ -7280,7 +7326,7 @@ function SettingsTab() {
               ? "bg-emerald-50 border-emerald-200 text-emerald-700"
               : "bg-destructive/8 border-destructive/25 text-destructive"
           }`}>
-            {msg.type === "success" ? "✅ " : "❌ "}{msg.text}
+            {msg.type === "success" ? "âœ… " : "âŒ "}{msg.text}
           </div>
         )}
       </div>
@@ -7304,7 +7350,7 @@ function SettingsTab() {
               {user?.name?.charAt(0)?.toUpperCase() || "U"}
             </div>
             <div className="min-w-0">
-              <div className="font-bold text-foreground truncate">{user?.name || "—"}</div>
+              <div className="font-bold text-foreground truncate">{user?.name || "â€”"}</div>
               <div className="text-xs text-muted-foreground truncate">{user?.email}</div>
             </div>
           </div>
@@ -7320,17 +7366,12 @@ function SettingsTab() {
                   className="w-full px-3 py-2.5 rounded-xl border-2 border-primary bg-primary/5 text-foreground outline-none text-sm focus:ring-2 focus:ring-primary/30"
                 />
                 <div className="flex gap-2">
-                  <button
-                    onClick={saveName}
-                    disabled={isUpdating}
-                    className="flex-1 py-2 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl text-xs font-semibold disabled:opacity-60"
-                  >
+                  <button onClick={saveName} disabled={isUpdating}
+                    className="flex-1 py-2 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl text-xs font-semibold disabled:opacity-60">
                     {isUpdating ? "Saving..." : "Save"}
                   </button>
-                  <button
-                    onClick={() => { setEditingName(false); setNameValue(user?.name || ""); }}
-                    className="flex-1 py-2 border border-border text-muted-foreground rounded-xl text-xs hover:bg-secondary transition-colors"
-                  >
+                  <button onClick={() => { setEditingName(false); setNameValue(user?.name || ""); }}
+                    className="flex-1 py-2 border border-border text-muted-foreground rounded-xl text-xs hover:bg-secondary transition-colors">
                     Cancel
                   </button>
                 </div>
@@ -7340,10 +7381,8 @@ function SettingsTab() {
                 <div className="flex-1 px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground text-sm truncate">
                   {user?.name || "Not set"}
                 </div>
-                <button
-                  onClick={() => setEditingName(true)}
-                  className="px-3 py-2.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-semibold border border-primary/25 flex-shrink-0 transition-colors"
-                >
+                <button onClick={() => setEditingName(true)}
+                  className="px-3 py-2.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-xs font-semibold border border-primary/25 flex-shrink-0 transition-colors">
                   Edit
                 </button>
               </div>
@@ -7355,15 +7394,15 @@ function SettingsTab() {
             <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wide">Email Address</label>
             <div className="flex gap-2 items-center">
               <div className="flex-1 px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground text-sm truncate">
-                {user?.email || "—"}
+                {user?.email || "â€”"}
               </div>
-              <span className="px-2 py-1 text-xs text-muted-foreground bg-secondary rounded-lg border border-border flex-shrink-0">🔒 Fixed</span>
+              <span className="px-2 py-1 text-xs text-muted-foreground bg-secondary rounded-lg border border-border flex-shrink-0">ðŸ”’ Fixed</span>
             </div>
             <p className="text-xs text-muted-foreground/70 mt-1">Contact support to change email.</p>
           </div>
         </div>
 
-        {/* Account Info */}
+        {/* Account Info â€” Member Since + Referral Code only */}
         <div className="glass-card p-4 sm:p-6 space-y-3">
           <div className="flex items-center gap-3 pb-3 border-b border-border">
             <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
@@ -7375,12 +7414,111 @@ function SettingsTab() {
             </div>
           </div>
           <div className="space-y-2">
-            {info.map(item => (
-              <div key={item.label} className="flex justify-between items-center py-2 border-b border-border/50 last:border-0 gap-2">
+            {[
+              { label: "Member Since", value: user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : "â€”" },
+              { label: "Referral Code", value: user?.referralCode || "â€”" },
+            ].map(item => (
+              <div key={item.label} className="flex justify-between items-center py-2.5 border-b border-border/50 last:border-0 gap-2">
                 <span className="text-xs text-muted-foreground font-medium flex-shrink-0">{item.label}</span>
-                <span className="text-xs text-foreground font-semibold text-right truncate">{item.value}</span>
+                <span className="text-xs text-foreground font-semibold text-right font-mono">{item.value}</span>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* KYC / Personal Details â€” full width */}
+        <div className="lg:col-span-2 glass-card p-4 sm:p-6 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-border">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+                <CreditCard className="w-4 h-4 text-primary" />
+              </div>
+              <div>
+                <div className="font-bold text-foreground text-sm">Personal Details</div>
+                <div className="text-xs text-muted-foreground">KYC information â€” kept private and secure</div>
+              </div>
+            </div>
+          </div>
+
+          {kycMsg && (
+            <div className={`p-3 rounded-xl text-sm font-medium border ${
+              kycMsg.type === "success"
+                ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+                : "bg-destructive/8 border-destructive/25 text-destructive"
+            }`}>
+              {kycMsg.type === "success" ? "âœ… " : "âŒ "}{kycMsg.text}
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Aadhaar */}
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wide">
+                Aadhaar Number
+              </label>
+              <input
+                type="text"
+                value={kyc.aadhar_number}
+                onChange={e => setKyc(k => ({ ...k, aadhar_number: e.target.value }))}
+                maxLength={12}
+                placeholder="12-digit Aadhaar number"
+                className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder:text-muted-foreground/50 transition-all"
+              />
+              <p className="text-xs text-muted-foreground/60 mt-1">Enter 12-digit Aadhaar number (no spaces)</p>
+            </div>
+
+            {/* PAN */}
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wide">
+                PAN Number
+              </label>
+              <input
+                type="text"
+                value={kyc.pan_number}
+                onChange={e => setKyc(k => ({ ...k, pan_number: e.target.value.toUpperCase() }))}
+                maxLength={10}
+                placeholder="e.g. ABCDE1234F"
+                className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder:text-muted-foreground/50 transition-all font-mono"
+              />
+              <p className="text-xs text-muted-foreground/60 mt-1">10-character PAN format</p>
+            </div>
+
+            {/* Date of Birth */}
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wide">
+                Date of Birth
+              </label>
+              <input
+                type="date"
+                value={kyc.date_of_birth}
+                onChange={e => setKyc(k => ({ ...k, date_of_birth: e.target.value }))}
+                className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+              />
+            </div>
+
+            {/* Permanent Address */}
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-semibold text-muted-foreground mb-1.5 uppercase tracking-wide">
+                Permanent Address
+              </label>
+              <textarea
+                value={kyc.permanent_address}
+                onChange={e => setKyc(k => ({ ...k, permanent_address: e.target.value }))}
+                rows={3}
+                placeholder="Full permanent address including city, state, PIN code"
+                className="w-full px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary placeholder:text-muted-foreground/50 resize-none transition-all"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              onClick={saveKyc}
+              disabled={kycLoading}
+              className="px-6 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-xl text-sm font-semibold disabled:opacity-60 hover:opacity-90 transition-all shadow-sm"
+            >
+              {kycLoading ? "Saving..." : "Save Personal Details"}
+            </button>
           </div>
         </div>
 
@@ -7410,644 +7548,12 @@ function SettingsTab() {
   );
 }
 
-// Professional Deposit Popup Component
-function DepositPopup({
-  onClose,
-  onDeposit,
-}: {
-  onClose: () => void;
-  onDeposit: (amount: number) => void;
-}) {
-  const [amount, setAmount] = useState("");
-  const [selectedToken, setSelectedToken] = useState("USDT");
-  const [depositMethod, setDepositMethod] = useState("wallet");
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!amount || parseFloat(amount) <= 0) return;
-
-    setIsProcessing(true);
-    // Simulate processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    onDeposit(parseFloat(amount));
-    setIsProcessing(false);
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 overflow-y-auto"
-      onClick={onClose}
-    >
-      <div className="min-h-screen flex items-start justify-center p-4 py-8">
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0, y: 20 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.9, opacity: 0, y: 20 }}
-          className="w-full max-w-md p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-600"
-          onClick={(e) => e.stopPropagation()}
-        >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-white">Deposit Funds</h2>
-          <button
-            onClick={onClose}
-            className="p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Token Selection */}
-          <div>
-            <label className="block text-sm font-medium text-white mb-3">
-              Token
-            </label>
-            <div className="grid grid-cols-2 gap-3">
-              {["USDT", "USDC"].map((token) => (
-                <button
-                  key={token}
-                  type="button"
-                  onClick={() => setSelectedToken(token)}
-                  className={`p-3 rounded-xl border-2 transition-all duration-300 ${
-                    selectedToken === token
-                      ? "border-emerald-500 bg-emerald-500/10"
-                      : "border-warm-400/30 bg-slate-800/80 dark:bg-slate-700/60 hover:border-emerald-500/50"
-                  }`}
-                >
-                  <div className="text-center">
-                    <div className="text-2xl mb-1">
-                      {token === "USDT" ? "💎" : "🪙"}
-                    </div>
-                    <div className="text-slate-900 dark:text-white font-medium">{token}</div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Amount Input */}
-          <div>
-            <label className="block text-sm font-medium text-white mb-2">
-              Amount
-            </label>
-            <div className="relative">
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="0.00"
-                className="input-crypto w-full pr-12"
-                step="0.01"
-                min="0"
-              />
-              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-600 dark:text-slate-300">
-                {selectedToken}
-              </span>
-            </div>
-          </div>
-
-          {/* Deposit Method */}
-          <div>
-            <label className="block text-sm font-medium text-white mb-3">
-              Method
-            </label>
-            <div className="space-y-2">
-              {[
-                { id: "wallet", label: "Crypto Wallet", icon: Wallet },
-                { id: "bank", label: "Bank Transfer", icon: DollarSign },
-                { id: "card", label: "Credit Card", icon: Shield },
-              ].map((method) => (
-                <button
-                  key={method.id}
-                  type="button"
-                  onClick={() => setDepositMethod(method.id)}
-                  className={`w-full flex items-center space-x-3 p-3 rounded-xl border-2 transition-all duration-300 ${
-                    depositMethod === method.id
-                      ? "border-emerald-500 bg-emerald-500/10"
-                      : "border-warm-400/30 bg-slate-800/80 dark:bg-slate-700/60 hover:border-emerald-500/50"
-                  }`}
-                >
-                  <method.icon className="w-5 h-5 text-emerald-400" />
-                  <span className="text-slate-900 dark:text-white font-medium">{method.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Returns */}
-          <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-slate-900 dark:text-white font-medium">Returns</p>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">Variable staking rates</p>
-              </div>
-              <div className="text-right">
-                <p className="text-2xl font-bold text-emerald-400">6-10%</p>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">Per period</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex space-x-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 py-3 px-6 bg-warm-400/15 text-white rounded-xl font-semibold hover:bg-warm-400/25 transition-all duration-300"
-            >
-              Cancel
-            </button>
-            <motion.button
-              type="submit"
-              disabled={!amount || parseFloat(amount) <= 0 || isProcessing}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-300 ${
-                !amount || parseFloat(amount) <= 0 || isProcessing
-                  ? "bg-warm-400/15 text-white/50 cursor-not-allowed"
-                  : "btn-crypto"
-              }`}
-            >
-              {isProcessing ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Processing...</span>
-                </div>
-              ) : (
-                `Deposit ${amount || "0"} ${selectedToken}`
-              )}
-            </motion.button>
-          </div>
-        </form>
-      </motion.div>
-        </div>
-</motion.div>
-  );
-}
-
-// Professional Withdraw Popup Component
-function WithdrawPopup({
-  onClose,
-  onWithdraw,
-  balance,
-}: {
-  onClose: () => void;
-  onWithdraw: (amount: number, toAddress?: string) => void;
-  balance: number;
-}) {
-  const [amount, setAmount] = useState("");
-  const [selectedToken, setSelectedToken] = useState("USDT");
-  const [withdrawMethod, setWithdrawMethod] = useState("instant");
-  const [destinationWallet, setDestinationWallet] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  const withdrawMethods = [
-    {
-      id: "instant",
-      label: "Instant",
-      fee: "0.1%",
-      time: "1-5 min",
-      icon: Zap,
-    },
-    {
-      id: "standard",
-      label: "Standard",
-      fee: "0.05%",
-      time: "1-24 hours",
-      icon: Clock,
-    },
-    {
-      id: "priority",
-      label: "Priority",
-      fee: "0.2%",
-      time: "1-2 hours",
-      icon: ArrowUpRight,
-    },
-  ];
-
-  const selectedMethod = withdrawMethods.find((m) => m.id === withdrawMethod);
-  const amountNum = parseFloat(amount) || 0;
-  const fee = amountNum * (parseFloat(selectedMethod?.fee || "0") / 100);
-  const finalAmount = amountNum - fee;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!amount || amountNum <= 0 || amountNum > balance || !destinationWallet)
-      return;
-
-    setIsProcessing(true);
-    // Simulate processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    onWithdraw(amountNum, "default-address");
-    setIsProcessing(false);
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        className="glass-card-strong w-full max-w-md p-6"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-white">Withdraw Funds</h2>
-          <button
-            onClick={onClose}
-            className="p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Available Balance */}
-          <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-slate-900 dark:text-white font-medium">Available Balance</p>
-                <p className="text-slate-600 dark:text-slate-300 text-sm">Ready to withdraw</p>
-              </div>
-              <div className="text-right">
-                <p className="text-xl font-bold text-emerald-400">
-                  {balance.toLocaleString()} USDT
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Amount Input */}
-          <div>
-            <label className="block text-sm font-medium text-white mb-2">
-              Amount
-            </label>
-            <div className="relative">
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="0.00"
-                className="input-crypto w-full pr-12"
-                step="0.01"
-                min="0"
-                max={balance}
-              />
-              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-600 dark:text-slate-300">
-                USDT
-              </span>
-            </div>
-            <div className="flex justify-between text-sm text-slate-600 dark:text-slate-300 mt-1">
-              <span>Max: {balance.toLocaleString()} USDT</span>
-              <button
-                type="button"
-                onClick={() => setAmount(balance.toString())}
-                className="text-emerald-400 hover:text-emerald-300"
-              >
-                Use Max
-              </button>
-            </div>
-          </div>
-
-          {/* Destination Wallet */}
-          <div>
-            <label className="block text-sm font-medium text-white mb-2">
-              Destination Wallet
-            </label>
-            <input
-              type="text"
-              value={destinationWallet}
-              onChange={(e) => setDestinationWallet(e.target.value)}
-              placeholder="0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6"
-              className="input-crypto w-full"
-            />
-            <p className="text-slate-600 dark:text-slate-300 text-sm mt-1">
-              Make sure this is the correct address. Transactions cannot be
-              reversed.
-            </p>
-          </div>
-
-          {/* Withdraw Method */}
-          <div>
-            <label className="block text-sm font-medium text-white mb-3">
-              Withdraw Method
-            </label>
-            <div className="space-y-2">
-              {withdrawMethods.map((method) => (
-                <button
-                  key={method.id}
-                  type="button"
-                  onClick={() => setWithdrawMethod(method.id)}
-                  className={`w-full flex items-center justify-between p-3 rounded-xl border-2 transition-all duration-300 ${
-                    withdrawMethod === method.id
-                      ? "border-emerald-500 bg-emerald-500/10"
-                      : "border-warm-400/30 bg-slate-800/80 dark:bg-slate-700/60 hover:border-emerald-500/50"
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <method.icon className="w-5 h-5 text-emerald-400" />
-                    <div className="text-left">
-                      <div className="text-slate-900 dark:text-white font-medium">
-                        {method.label}
-                      </div>
-                      <div className="text-slate-600 dark:text-slate-300 text-sm">{method.time}</div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-emerald-400 font-medium">
-                      {method.fee} fee
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Fee Breakdown */}
-          {amount && (
-            <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-4">
-              <h4 className="text-white font-medium mb-3">Fee Breakdown</h4>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-600 dark:text-slate-300">Withdrawal Amount:</span>
-                  <span className="text-white">
-                    {amountNum.toLocaleString()} USDT
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-600 dark:text-slate-300">
-                    Network Fee ({selectedMethod?.fee}):
-                  </span>
-                  <span className="text-red-400">-{fee.toFixed(4)} USDT</span>
-                </div>
-                <div className="border-t border-warm-400/30 pt-2">
-                  <div className="flex justify-between font-semibold">
-                    <span className="text-white">You&apos;ll Receive:</span>
-                    <span className="text-emerald-400">
-                      {finalAmount.toFixed(4)} USDT
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Action Buttons */}
-          <div className="flex space-x-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 py-3 px-6 bg-warm-400/15 text-white rounded-xl font-semibold hover:bg-warm-400/25 transition-all duration-300"
-            >
-              Cancel
-            </button>
-            <motion.button
-              type="submit"
-              disabled={
-                !amount ||
-                amountNum <= 0 ||
-                amountNum > balance ||
-                !destinationWallet ||
-                isProcessing
-              }
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all duration-300 ${
-                !amount ||
-                amountNum <= 0 ||
-                amountNum > balance ||
-                !destinationWallet ||
-                isProcessing
-                  ? "bg-warm-400/15 text-white/50 cursor-not-allowed"
-                  : "btn-crypto"
-              }`}
-            >
-              {isProcessing ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Processing...</span>
-                </div>
-              ) : (
-                `Withdraw ${amount || "0"} USDT`
-              )}
-            </motion.button>
-          </div>
-        </form>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-// Professional Transaction Popup Component
-function TransactionPopup({
-  transaction,
-  onClose,
-}: {
-  transaction: {
-    id: number;
-    type: string;
-    amount: number;
-    status: string;
-    txHash: string;
-    date: string;
-    token: string;
-    fee?: number;
-  };
-  onClose: () => void;
-}) {
-  const [copied, setCopied] = useState(false);
-
-  const copyTxHash = () => {
-    navigator.clipboard.writeText(transaction.txHash);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "completed":
-        return <CheckCircle className="w-6 h-6 text-emerald-400" />;
-      case "pending":
-        return <Clock className="w-6 h-6 text-yellow-400" />;
-      case "failed":
-        return <XCircle className="w-6 h-6 text-red-400" />;
-      default:
-        return <AlertCircle className="w-6 h-6 text-slate-600 dark:text-slate-300" />;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "completed":
-        return "text-emerald-400";
-      case "pending":
-        return "text-yellow-400";
-      case "failed":
-        return "text-red-400";
-      case "rejected":
-        return "text-red-400";
-      default:
-        return "text-slate-400";
-    }
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        className="glass-card-strong w-full max-w-md p-6"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-white">Transaction Details</h2>
-          <button
-            onClick={onClose}
-            className="p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
-        </div>
-
-        <div className="space-y-6">
-          {/* Transaction Type & Status */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div
-                className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                  transaction.type === "deposit"
-                    ? "bg-emerald-500/20"
-                    : transaction.type === "withdraw"
-                    ? "bg-red-500/20"
-                    : "bg-blue-500/20"
-                }`}
-              >
-                {transaction.type === "deposit" ? (
-                  <ArrowUpRight className="w-6 h-6 text-emerald-400" />
-                ) : transaction.type === "withdraw" ? (
-                  <ArrowDownLeft className="w-6 h-6 text-red-400" />
-                ) : (
-                  <TrendingUp className="w-6 h-6 text-blue-400" />
-                )}
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold text-white capitalize">
-                  {transaction.type}
-                </h3>
-                <p className="text-slate-600 dark:text-slate-300">{transaction.date}</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              {getStatusIcon(transaction.status)}
-              <span
-                className={`font-medium ${getStatusColor(transaction.status)}`}
-              >
-                {transaction.status}
-              </span>
-            </div>
-          </div>
-
-          {/* Amount */}
-          <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-4">
-            <div className="text-center">
-              <p className="text-slate-600 dark:text-slate-300 text-sm mb-2">Amount</p>
-              <p
-                className={`text-3xl font-bold ${
-                  transaction.type === "deposit"
-                    ? "text-emerald-400"
-                    : transaction.type === "withdraw"
-                    ? "text-red-400"
-                    : "text-blue-400"
-                }`}
-              >
-                {transaction.type === "withdraw" ? "-" : "+"}
-                {transaction.amount.toLocaleString()} USDT
-              </p>
-              {transaction.fee && transaction.fee > 0 && (
-                <p className="text-slate-600 dark:text-slate-300 text-sm mt-2">
-                  Fee: {transaction.fee} USDT
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Transaction Hash */}
-          <div>
-            <label className="block text-sm font-medium text-white mb-2">
-              Transaction Hash
-            </label>
-            <div className="flex items-center space-x-2">
-              <input
-                type="text"
-                value={transaction.txHash}
-                readOnly
-                className="input-crypto flex-1 font-mono text-sm"
-              />
-              <button
-                onClick={copyTxHash}
-                className="p-2 text-slate-600 dark:text-slate-300 hover:text-white transition-colors"
-              >
-                {copied ? (
-                  <Check className="w-4 h-4 text-emerald-400" />
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
-              </button>
-            </div>
-            <p className="text-slate-600 dark:text-slate-300 text-sm mt-1">
-              Click to copy transaction hash
-            </p>
-          </div>
-
-          {/* Additional Info */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-4">
-              <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">Type</p>
-              <p className="text-white font-medium capitalize">
-                {transaction.type}
-              </p>
-            </div>
-            <div className="bg-slate-800/80 dark:bg-slate-700/60 rounded-xl p-4">
-              <p className="text-slate-600 dark:text-slate-300 text-sm mb-1">Date</p>
-              <p className="text-slate-900 dark:text-white font-medium">{transaction.date}</p>
-            </div>
-          </div>
-
-          {/* Action Button */}
-          <button
-            onClick={onClose}
-            className="w-full py-3 px-6 bg-emerald-500 text-black rounded-xl font-semibold hover:bg-emerald-400 transition-all duration-300"
-          >
-            Close
-          </button>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
 
 
 
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // 1. STAKING CALCULATOR TAB
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function StakingCalculatorTab({ walletData }: { walletData: any }) {
   const [amount, setAmount] = useState("1000");
   const [selectedPlan, setSelectedPlan] = useState<"6-month" | "12-month">("12-month");
@@ -8067,10 +7573,10 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
   const total = num + earning;
 
   const tiers = [
-    { label: "Bronze",   min: 100,   max: 999,      rate: plan.maxRate * 100 + "% max", icon: "🥉" },
-    { label: "Silver",   min: 1000,  max: 4999,     rate: plan.maxRate * 100 + "% max", icon: "🥈" },
-    { label: "Gold",     min: 5000,  max: 24999,    rate: plan.maxRate * 100 + "% max", icon: "🥇" },
-    { label: "Platinum", min: 25000, max: Infinity,  rate: plan.maxRate * 100 + "% max", icon: "💎" },
+    { label: "Bronze",   min: 100,   max: 999,      rate: plan.maxRate * 100 + "% max", icon: "ðŸ¥‰" },
+    { label: "Silver",   min: 1000,  max: 4999,     rate: plan.maxRate * 100 + "% max", icon: "ðŸ¥ˆ" },
+    { label: "Gold",     min: 5000,  max: 24999,    rate: plan.maxRate * 100 + "% max", icon: "ðŸ¥‡" },
+    { label: "Platinum", min: 25000, max: Infinity,  rate: plan.maxRate * 100 + "% max", icon: "ðŸ’Ž" },
   ];
   const currentTier = tiers.find(t => num >= t.min && num <= t.max) ?? tiers[0];
 
@@ -8158,7 +7664,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
               <div>
                 <div className="text-sm font-medium text-muted-foreground">Your Tier</div>
                 <div className="text-2xl font-bold text-foreground">{currentTier.label} Member</div>
-                <div className="text-xs text-primary font-medium mt-0.5">{plan.label} — {currentTier.rate}/mo</div>
+                <div className="text-xs text-primary font-medium mt-0.5">{plan.label} â€” {currentTier.rate}/mo</div>
               </div>
             </div>
           </div>
@@ -8204,7 +7710,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
 
           <div className="glass-card p-4 border border-primary/25 bg-primary/5">
             <div className="flex gap-2 items-start">
-              <span className="text-primary text-lg mt-0.5">⚠</span>
+              <span className="text-primary text-lg mt-0.5">âš </span>
               <p className="text-xs text-muted-foreground">This is a projection based on average rates for the selected plan. Actual returns may vary. Rates are dynamic and locked at time of staking.</p>
             </div>
           </div>
@@ -8248,7 +7754,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function AutoCompoundTab({ walletData }: { walletData: any }) {
   const ac = walletData?.autoCompound;
   const [globalEnabled, setGlobalEnabled] = useState<boolean>(ac?.enabled ?? false);
@@ -8259,7 +7765,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
   const [saved, setSaved]     = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
 
-  // User-controlled projection principal — seed from actual staked amount
+  // User-controlled projection principal â€” seed from actual staked amount
   const defaultPrincipal = walletData?.stakedAmount > 0
     ? String(Math.round(walletData.stakedAmount))
     : "1000";
@@ -8294,7 +7800,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
         setSaveError(data.message || "Failed to save settings");
       }
     } catch (err: any) {
-      setSaveError(err.message || "Network error — please try again");
+      setSaveError(err.message || "Network error â€” please try again");
     } finally {
       setSaving(false);
     }
@@ -8395,7 +7901,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
 
             <div className="glass-card p-5">
               <div className="font-semibold text-foreground mb-3">Next Compound Event</div>
-              <div className="text-2xl font-bold text-primary">—</div>
+              <div className="text-2xl font-bold text-primary">â€”</div>
               <div className="text-sm text-muted-foreground mt-1">
                 {walletData?.stakedAmount > 0
                   ? `Active stake: $${walletData.stakedAmount.toLocaleString()} USDT`
@@ -8454,7 +7960,7 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
             })}
           </div>
           <div className="mt-4 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700/40 text-xs text-emerald-700 dark:text-emerald-400">
-            Compound interest grows <strong>exponentially</strong> — the difference doubles every 12 months!
+            Compound interest grows <strong>exponentially</strong> â€” the difference doubles every 12 months!
           </div>
         </div>
       </div>
@@ -8477,9 +7983,9 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // 4. ADDRESS BOOK TAB
-// ─────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function AddressBookTab() {
   const MAX = 5;
   const [addresses, setAddresses] = useState<any[]>([]);
@@ -8635,7 +8141,7 @@ function AddressBookTab() {
           </div>
         ) : addresses.length === 0 ? (
           <div className="glass-card p-10 sm:p-12 text-center">
-            <div className="text-4xl mb-3">📋</div>
+            <div className="text-4xl mb-3">ðŸ“‹</div>
             <div className="text-lg font-semibold text-foreground mb-1">No addresses saved</div>
             <div className="text-muted-foreground text-sm mb-4">Add trusted wallets for faster withdrawals</div>
             <button onClick={() => setShowAddForm(true)}
@@ -8716,12 +8222,12 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
   const totalAlloc = allocationData.reduce((s, d) => s + d.value, 0) || 1;
 
   const performanceMetrics = [
-    { label: "Total Balance", value: `$${bal.toFixed(2)}`, change: "+0.00%", positive: true, icon: "💰" },
-    { label: "Total Deposited", value: `$${deposited.toFixed(2)}`, change: "", positive: true, icon: "📥" },
-    { label: "Total Withdrawn", value: `$${withdrawn.toFixed(2)}`, change: "", positive: true, icon: "📤" },
-    { label: "Total Earnings", value: `$${earned.toFixed(2)}`, change: "+0.00%", positive: true, icon: "📈" },
-    { label: "Staked Amount", value: `$${staked.toFixed(2)}`, change: "", positive: true, icon: "🔒" },
-    { label: "Available Balance", value: `$${available.toFixed(2)}`, change: "", positive: true, icon: "💳" },
+    { label: "Total Balance", value: `$${bal.toFixed(2)}`, change: "+0.00%", positive: true, icon: "ðŸ’°" },
+    { label: "Total Deposited", value: `$${deposited.toFixed(2)}`, change: "", positive: true, icon: "ðŸ“¥" },
+    { label: "Total Withdrawn", value: `$${withdrawn.toFixed(2)}`, change: "", positive: true, icon: "ðŸ“¤" },
+    { label: "Total Earnings", value: `$${earned.toFixed(2)}`, change: "+0.00%", positive: true, icon: "ðŸ“ˆ" },
+    { label: "Staked Amount", value: `$${staked.toFixed(2)}`, change: "", positive: true, icon: "ðŸ”’" },
+    { label: "Available Balance", value: `$${available.toFixed(2)}`, change: "", positive: true, icon: "ðŸ’³" },
   ];
 
   return (
@@ -8767,7 +8273,7 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
           <h3 className="font-semibold text-foreground mb-4">Portfolio Allocation</h3>
           {allocationData.every(d => d.value === 0) ? (
             <div className="text-center py-8">
-              <div className="text-4xl mb-2">📊</div>
+              <div className="text-4xl mb-2">ðŸ“Š</div>
               <div className="text-sm text-muted-foreground">No funds yet</div>
             </div>
           ) : (
@@ -8833,14 +8339,14 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
 
       {/* Insights */}
       <div className="glass-card p-6">
-        <h3 className="font-semibold text-foreground mb-4">📊 Portfolio Insights</h3>
+        <h3 className="font-semibold text-foreground mb-4">ðŸ“Š Portfolio Insights</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {[
             { title: "Optimization Tip",  desc: bal < 1000 ? `Add $${(1000 - bal).toFixed(2)} to reach Silver tier (8% Per period).` : bal < 5000 ? `Add $${(5000 - bal).toFixed(2)} to reach Gold tier (12% Per period).` : "You're at a great tier! Keep compounding." },
             { title: "Compounding Boost", desc: earned > 0 ? `You've earned $${earned.toFixed(2)} so far. Auto-compound could boost this by ~33% over 12 months.` : "Enable auto-compound after your first stake to maximize growth." },
             { title: "Active Stakes",     desc: (walletData?.wallet?.stakes?.filter((s: any) => s.status === "active")?.length ?? 0) > 0 ? `${walletData.wallet.stakes.filter((s: any) => s.status === "active").length} active stake(s) currently running.` : "No active stakes. Deposit and stake USDT to start earning." },
-            { title: "Tier Status",       desc: bal >= 25000 ? "Platinum tier — earning maximum 15% Per period!" : bal >= 5000 ? `Gold tier. Add $${(25000 - bal).toFixed(2)} for Platinum.` : bal >= 1000 ? `Silver tier. Add $${(5000 - bal).toFixed(2)} for Gold.` : `Add $${(1000 - bal).toFixed(2)} for Silver tier.` },
-            { title: "Monthly Potential", desc: bal > 0 ? `Staking $${bal.toFixed(2)} could earn ~$${(bal * 0.05).toFixed(2)}–$${(bal * 0.15).toFixed(2)}/month.` : "Deposit USDT to see your earning potential." },
+            { title: "Tier Status",       desc: bal >= 25000 ? "Platinum tier â€” earning maximum 15% Per period!" : bal >= 5000 ? `Gold tier. Add $${(25000 - bal).toFixed(2)} for Platinum.` : bal >= 1000 ? `Silver tier. Add $${(5000 - bal).toFixed(2)} for Gold.` : `Add $${(1000 - bal).toFixed(2)} for Silver tier.` },
+            { title: "Monthly Potential", desc: bal > 0 ? `Staking $${bal.toFixed(2)} could earn ~$${(bal * 0.05).toFixed(2)}â€“$${(bal * 0.15).toFixed(2)}/month.` : "Deposit USDT to see your earning potential." },
             { title: "Risk Assessment",   desc: "Your portfolio risk is LOW. USDT staking provides stable, predictable Returns with no market volatility." },
           ].map(ins => (
             <div key={ins.title} className="p-4 rounded-xl bg-secondary border border-border hover:border-primary/30 hover:bg-primary/5 transition-all duration-200">

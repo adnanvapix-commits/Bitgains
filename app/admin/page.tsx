@@ -4052,6 +4052,43 @@ export default function AdminPage() {
                           )}
                           <span>Role: <span className="capitalize font-semibold text-stone-900">{u.role}</span></span>
                         </div>
+
+                        {/* KYC Details */}
+                        {(u.aadharNumber || u.panNumber || u.permanentAddress || u.dateOfBirth) && (
+                          <div className="mt-3 pt-3 border-t border-stone-200">
+                            <p className="text-stone-900/60 text-xs font-semibold uppercase mb-2">KYC / Personal Details</p>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                              {u.aadharNumber && (
+                                <div className="p-2.5 bg-blue-500/8 border border-blue-500/15 rounded-xl">
+                                  <p className="text-stone-900/50 text-[10px] mb-0.5">Aadhaar</p>
+                                  <p className="text-stone-900 font-mono font-semibold text-xs">
+                                    XXXX-XXXX-{u.aadharNumber.slice(-4)}
+                                  </p>
+                                </div>
+                              )}
+                              {u.panNumber && (
+                                <div className="p-2.5 bg-purple-500/8 border border-purple-500/15 rounded-xl">
+                                  <p className="text-stone-900/50 text-[10px] mb-0.5">PAN</p>
+                                  <p className="text-stone-900 font-mono font-semibold text-xs">{u.panNumber}</p>
+                                </div>
+                              )}
+                              {u.dateOfBirth && (
+                                <div className="p-2.5 bg-emerald-500/8 border border-emerald-500/15 rounded-xl">
+                                  <p className="text-stone-900/50 text-[10px] mb-0.5">Date of Birth</p>
+                                  <p className="text-stone-900 font-semibold text-xs">
+                                    {new Date(u.dateOfBirth).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                                  </p>
+                                </div>
+                              )}
+                              {u.permanentAddress && (
+                                <div className="p-2.5 bg-orange-500/8 border border-orange-500/15 rounded-xl sm:col-span-2">
+                                  <p className="text-stone-900/50 text-[10px] mb-0.5">Permanent Address</p>
+                                  <p className="text-stone-900 text-xs leading-relaxed">{u.permanentAddress}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </motion.div>
                     )}
                   </div>

@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
     // Fetch profiles with optional search
     let q = sb
       .from('profiles')
-      .select('*', { count: 'exact' })
+      .select('id, name, email, role, is_active, referral_code, referral_count, created_at, last_login, aadhar_number, pan_number, permanent_address, date_of_birth', { count: 'exact' })
       .order('created_at', { ascending: false })
       .range((page - 1) * limit, page * limit - 1);
 
@@ -119,6 +119,11 @@ export async function GET(req: NextRequest) {
         referralCount: u.referral_count || referredUserIds.length,
         createdAt: u.created_at,
         lastLogin: u.last_login,
+        // KYC fields
+        aadharNumber: u.aadhar_number || null,
+        panNumber: u.pan_number || null,
+        permanentAddress: u.permanent_address || null,
+        dateOfBirth: u.date_of_birth || null,
         wallet: w ? {
           balance: Number(w.balance),
           stakedAmount: Number(w.staked_amount),
