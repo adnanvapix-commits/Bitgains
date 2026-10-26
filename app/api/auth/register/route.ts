@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password))
       return NextResponse.json({ success: false, message: 'Password must contain uppercase, lowercase and a number' }, { status: 400 });
     if (name.length < 2 || name.length > 50)
-      return NextResponse.json({ success: false, message: 'Name must be 2–50 characters' }, { status: 400 });
+      return NextResponse.json({ success: false, message: 'Name must be 2-50 characters' }, { status: 400 });
 
     const sb = getSupabaseAdmin();
 

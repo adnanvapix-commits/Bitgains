@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
             packageType: stake.package_type,
           });
 
-          // Final payout — mark stake as matured
+          // Final payout -- mark stake as matured
           if (payoutNumber === 3) {
             await sb.from('stakes').update({
               status: 'matured',
@@ -144,7 +144,7 @@ export async function POST(req: NextRequest) {
           amount: totalPayout,
           currency: 'USDT',
           status: 'completed',
-          description: `30-day staking payout (${payoutLabel}) – ${pct}% of staked amount`,
+          description: `30-day staking payout (${payoutLabel}) - ${pct}% of staked amount`,
           completed_at: nowISO,
           reviewed_by: user!.id,
           reviewed_at: nowISO,

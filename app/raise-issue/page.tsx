@@ -225,10 +225,10 @@ export default function RaiseIssuePage() {
                   onChange={e => setPriority(e.target.value)}
                   className="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all appearance-none cursor-pointer"
                 >
-                  <option value="low">Low — General inquiry</option>
-                  <option value="medium">Medium — Standard issue</option>
-                  <option value="high">High — Important matter</option>
-                  <option value="urgent">Urgent — Critical issue</option>
+                  <option value="low">Low -- General inquiry</option>
+                  <option value="medium">Medium -- Standard issue</option>
+                  <option value="high">High -- Important matter</option>
+                  <option value="urgent">Urgent -- Critical issue</option>
                 </select>
               </div>
 

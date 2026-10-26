@@ -95,7 +95,7 @@ export default function ForgotPasswordPage() {
                 Forgot Password?
               </h1>
               <p className="text-white/70 text-sm sm:text-base">
-                No worries! Enter your email and we’ll send you reset instructions.
+                No worries! Enter your email and we'll send you reset instructions.
               </p>
             </>
           ) : (
@@ -200,7 +200,7 @@ export default function ForgotPasswordPage() {
                 
                 <div className="space-y-3 text-white/70 text-sm">
                   <p>
-                    We’ve sent a password reset link to:
+                    We've sent a password reset link to:
                   </p>
                   <p className="text-emerald-400 font-medium text-base">
                     {email}
@@ -210,14 +210,14 @@ export default function ForgotPasswordPage() {
                       <strong>📧 Next Steps:</strong>
                     </p>
                     <ul className="text-left mt-2 space-y-1 text-xs text-white/70">
-                      <li>• Check your email inbox</li>
-                      <li>• Click the reset link in the email</li>
-                      <li>• Create a new password</li>
-                      <li>• Link expires in 1 hour</li>
+                      <li>- Check your email inbox</li>
+                      <li>- Click the reset link in the email</li>
+                      <li>- Create a new password</li>
+                      <li>- Link expires in 1 hour</li>
                     </ul>
                   </div>
                   <p className="text-xs text-white/60 mt-4">
-                    Didn’t receive the email? Check your spam folder or try again.
+                    Didn't receive the email? Check your spam folder or try again.
                   </p>
                 </div>
               </motion.div>
@@ -264,7 +264,7 @@ export default function ForgotPasswordPage() {
                 </Link>
               </div>
               <div>
-                <span className="text-white/70 text-sm">Don’t have an account? </span>
+                <span className="text-white/70 text-sm">Don't have an account? </span>
                 <Link
                   href="/signup"
                   className="text-blue-400 hover:text-blue-300 font-medium transition-colors text-sm"

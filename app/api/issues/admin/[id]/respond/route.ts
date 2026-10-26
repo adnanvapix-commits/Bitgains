@@ -21,10 +21,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       status: issue.status === 'open' ? 'in-progress' : issue.status,
     }).eq('id', id).select().single();
 
-    // Notify the user that admin replied — with redirect to support
+    // Notify the user that admin replied -- with redirect to support
     if (issue.user_id) {
       const shortSubject = issue.subject?.length > 40
-        ? issue.subject.slice(0, 40) + '…'
+        ? issue.subject.slice(0, 40) + '...'
         : issue.subject;
 
       await sb.from('notifications').insert({

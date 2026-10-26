@@ -102,7 +102,7 @@ export default function Home() {
 
             <p className="text-lg sm:text-xl md:text-2xl text-warm-700 max-w-4xl mx-auto leading-relaxed px-4 sm:px-0">
               Lock your USDT for one month and earn{" "}
-              <span className="font-bold text-emerald-400">5% – 15% APM</span>.
+              <span className="font-bold text-emerald-400">5% - 15% APM</span>.
               <br className="hidden sm:block" />
               <span className="sm:hidden"> </span>
               Your appreciation is paid once your lock period ends.
@@ -205,7 +205,7 @@ export default function Home() {
                 icon: Shield,
                 title: "Simple & Clear",
                 description:
-                  "We keep it straightforward — stake only USDT, no other coins or confusing plans.",
+                  "We keep it straightforward -- stake only USDT, no other coins or confusing plans.",
                 color: "from-emerald-500 to-green-400",
               },
               {
@@ -400,7 +400,7 @@ export default function Home() {
               {
                 question: "How often do I get paid?",
                 answer:
-                  "You receive your appreciation once per stake — at the end of the 1-month lock.",
+                  "You receive your appreciation once per stake -- at the end of the 1-month lock.",
               },
               {
                 question: "Can I stake again after payout?",

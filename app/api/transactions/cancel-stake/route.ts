@@ -29,7 +29,7 @@ Amount: ${stake.amount} USDT
 Start Date: ${new Date(stake.start_date).toLocaleDateString()}
 End Date: ${new Date(stake.end_date).toLocaleDateString()}`;
 
-    const subject = `Cancel Staking Request — ${stake.stake_id}`;
+    const subject = `Cancel Staking Request -- ${stake.stake_id}`;
     const description = `I would like to request cancellation of my active stake.
 
 ${stakeInfo}

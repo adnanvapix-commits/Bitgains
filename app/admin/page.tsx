@@ -248,25 +248,25 @@ export default function AdminPage() {
     });
   };
 
-  // Safe date formatter — returns fallback if date is invalid
+  // Safe date formatter -- returns fallback if date is invalid
   const formatDate = (val?: string | null, opts?: Intl.DateTimeFormatOptions) => {
-    if (!val) return "—";
+    if (!val) return "--";
     const d = new Date(val);
-    if (isNaN(d.getTime())) return "—";
+    if (isNaN(d.getTime())) return "--";
     return d.toLocaleDateString(undefined, opts);
   };
 
   const formatDateTime = (val?: string | null) => {
-    if (!val) return "—";
+    if (!val) return "--";
     const d = new Date(val);
-    if (isNaN(d.getTime())) return "—";
+    if (isNaN(d.getTime())) return "--";
     return d.toLocaleString();
   };
 
   const formatTime = (val?: string | null) => {
-    if (!val) return "—";
+    if (!val) return "--";
     const d = new Date(val);
-    if (isNaN(d.getTime())) return "—";
+    if (isNaN(d.getTime())) return "--";
     return d.toLocaleTimeString();
   };
 
@@ -369,7 +369,7 @@ export default function AdminPage() {
       ]);
 
       if (transactionsResponse.success) {
-        // Supabase returns `id`/`created_at`, but the UI uses `_id`/`submittedAt` — normalize here
+        // Supabase returns `id`/`created_at`, but the UI uses `_id`/`submittedAt` -- normalize here
         setPendingTransactions(
           (transactionsResponse.data.transactions || []).map((tx: any) => ({
             ...tx,
@@ -1006,10 +1006,10 @@ export default function AdminPage() {
 
       if (response.success) {
         alert(
-          `✅ Payout distributed successfully!\n\n` +
-          `• Users processed: ${response.data.usersProcessed}\n` +
-          `• Total distributed: $${response.data.totalDistributed.toFixed(4)}\n` +
-          `• Percentage: ${response.data.percentage}%`
+          ` Payout distributed successfully!\n\n` +
+          `- Users processed: ${response.data.usersProcessed}\n` +
+          `- Total distributed: $${response.data.totalDistributed.toFixed(4)}\n` +
+          `- Percentage: ${response.data.percentage}%`
         );
         
         // Reset form and refresh data
@@ -2349,7 +2349,7 @@ export default function AdminPage() {
                           </span>
                         </td>
                         <td className="p-3 sm:p-4">
-                          {/* Status buttons — avoids dark OS dropdown */}
+                          {/* Status buttons -- avoids dark OS dropdown */}
                           <div className="flex flex-wrap gap-1">
                             {[
                               { value: "open",        label: "Open",        bg: "bg-yellow-100 text-yellow-700 border-yellow-300 hover:bg-yellow-200" },
@@ -2627,18 +2627,18 @@ export default function AdminPage() {
                   </h4>
                   <ul className="text-stone-900/70 text-sm space-y-2">
                     <li>
-                      • Use this feature to manually adjust user balances when
+                      - Use this feature to manually adjust user balances when
                       deposits are rejected by mistake
                     </li>
-                    <li>• Or to deduct funds if approved incorrectly</li>
-                    <li>• All adjustments are logged in the Audit Logs tab</li>
-                    <li>• Always provide a clear reason for the adjustment</li>
+                    <li>- Or to deduct funds if approved incorrectly</li>
+                    <li>- All adjustments are logged in the Audit Logs tab</li>
+                    <li>- Always provide a clear reason for the adjustment</li>
                   </ul>
                 </div>
 
                 <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4">
                   <h4 className="text-yellow-400 font-semibold mb-2">
-                    ⚠️ Use Cases
+                    Warning:️ Use Cases
                   </h4>
                   <ul className="text-stone-900/70 text-sm space-y-2">
                     <li>
@@ -3213,7 +3213,7 @@ export default function AdminPage() {
                   </div>
                 </div>
 
-                {/* Hierarchy Tree — flat list showing L1, L2, L3 as same-style rows */}
+                {/* Hierarchy Tree -- flat list showing L1, L2, L3 as same-style rows */}
                 <h3 className="text-lg font-bold text-stone-900 mb-4 flex items-center gap-2">
                   <Network className="w-5 h-5 text-purple-400" />
                   Referral Tree (Downline)
@@ -3317,7 +3317,7 @@ export default function AdminPage() {
                     <label className="block text-stone-900/80 text-sm mb-2">
                       Send To
                     </label>
-                    {/* Custom searchable dropdown — avoids dark OS dropdown */}
+                    {/* Custom searchable dropdown -- avoids dark OS dropdown */}
                     <div className="relative" data-notif-send-to>
                       <button
                         type="button"
@@ -3382,7 +3382,7 @@ export default function AdminPage() {
                     <label className="block text-stone-900/80 text-sm mb-2">
                       Notification Type
                     </label>
-                    {/* Custom dropdown — avoids dark OS dropdown */}
+                    {/* Custom dropdown -- avoids dark OS dropdown */}
                     <div className="relative" data-notif-type>
                       <button
                         type="button"
@@ -3398,9 +3398,9 @@ export default function AdminPage() {
                         <span className="font-medium">
                           {notificationType === "announcement" && "📢 Announcement"}
                           {notificationType === "info"         && "ℹ️ Information"}
-                          {notificationType === "success"      && "✅ Success"}
-                          {notificationType === "warning"      && "⚠️ Warning"}
-                          {notificationType === "error"        && "❌ Error"}
+                          {notificationType === "success"      && " Success"}
+                          {notificationType === "warning"      && "Warning:️ Warning"}
+                          {notificationType === "error"        && " Error"}
                         </span>
                         <ChevronDown className="w-4 h-4 flex-shrink-0 ml-2 text-stone-500" />
                       </button>
@@ -3410,9 +3410,9 @@ export default function AdminPage() {
                           {[
                             { value: "announcement", label: "📢 Announcement", color: "text-purple-700", hover: "hover:bg-purple-50" },
                             { value: "info",         label: "ℹ️ Information",   color: "text-blue-700",   hover: "hover:bg-blue-50" },
-                            { value: "success",      label: "✅ Success",       color: "text-green-700",  hover: "hover:bg-green-50" },
-                            { value: "warning",      label: "⚠️ Warning",       color: "text-yellow-700", hover: "hover:bg-yellow-50" },
-                            { value: "error",        label: "❌ Error",         color: "text-red-700",    hover: "hover:bg-red-50" },
+                            { value: "success",      label: " Success",       color: "text-green-700",  hover: "hover:bg-green-50" },
+                            { value: "warning",      label: "Warning:️ Warning",       color: "text-yellow-700", hover: "hover:bg-yellow-50" },
+                            { value: "error",        label: " Error",         color: "text-red-700",    hover: "hover:bg-red-50" },
                           ].map((opt) => (
                             <button
                               key={opt.value}
@@ -3623,7 +3623,7 @@ export default function AdminPage() {
                 Distribute 30-Day Interval Payout
               </h3>
               <p className="text-stone-900/60 text-sm mb-4">
-                Each 90-day stake receives <strong>3 payouts</strong> — one every 30 days. 
+                Each 90-day stake receives <strong>3 payouts</strong> -- one every 30 days. 
                 Only stakes that have passed their next 30-day interval are shown as eligible.
               </p>
               
@@ -3996,7 +3996,7 @@ export default function AdminPage() {
                           <User className="w-5 h-5 text-emerald-600" />
                         </div>
                         <div>
-                          <p className="text-stone-900 font-semibold text-sm">{u.name || "—"}</p>
+                          <p className="text-stone-900 font-semibold text-sm">{u.name || "--"}</p>
                           <p className="text-stone-900/60 text-xs">{u.email}</p>
                           <p className="text-stone-900/40 text-xs">Joined {formatDate(u.createdAt)}</p>
                         </div>
@@ -4397,7 +4397,7 @@ export default function AdminPage() {
                             <div>
                               <p className="text-blue-600 font-bold text-base">${stake.amount?.toLocaleString()} USDT</p>
                               <p className="text-stone-500 text-xs mt-0.5 capitalize">{stake.packageType} package</p>
-                              <p className="text-stone-400 text-xs">{formatDate(stake.startDate)} – {formatDate(stake.endDate)}</p>
+                              <p className="text-stone-400 text-xs">{formatDate(stake.startDate)} - {formatDate(stake.endDate)}</p>
                             </div>
                             <div className="text-right">
                               <p className="text-red-500 text-sm font-semibold">-${(stake.amount * 0.1).toLocaleString()}</p>
@@ -4409,7 +4409,7 @@ export default function AdminPage() {
                   </div>
                   <p className="text-stone-400 text-xs mt-2">
                     {cancelStakeModal.selectedStakeId
-                      ? "Tap again to deselect — will cancel ALL stakes"
+                      ? "Tap again to deselect -- will cancel ALL stakes"
                       : "Tap a stake to cancel only that one, or leave all unselected to cancel ALL"}
                   </p>
                 </div>
@@ -4532,11 +4532,11 @@ export default function AdminPage() {
                       Warning: Permanent Deletion
                     </p>
                     <ul className="text-stone-900/70 text-sm space-y-1">
-                      <li>• All user data will be permanently deleted</li>
-                      <li>• Wallet and balance will be lost</li>
-                      <li>• All transactions history will be removed</li>
-                      <li>• All stakes will be deleted</li>
-                      <li>• User will be removed from referral chains</li>
+                      <li>- All user data will be permanently deleted</li>
+                      <li>- Wallet and balance will be lost</li>
+                      <li>- All transactions history will be removed</li>
+                      <li>- All stakes will be deleted</li>
+                      <li>- User will be removed from referral chains</li>
                     </ul>
                   </div>
                 </div>
