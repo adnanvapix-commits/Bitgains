@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   CheckCircle,
   XCircle,
+  X,
   Clock,
   ArrowUpRight,
   ArrowDownLeft,
@@ -2326,26 +2327,27 @@ export default function AdminPage() {
                           </span>
                         </td>
                         <td className="p-3 sm:p-4">
-                          <select
-                            value={issue.status}
-                            onChange={(e) =>
-                              handleUpdateIssueStatus(issue._id, e.target.value)
-                            }
-                            className="px-2 py-1 bg-cream-200/60 border border-stone-300/50 rounded-lg text-stone-900 text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
-                          >
-                            <option value="open" className="bg-gray-900">
-                              Open
-                            </option>
-                            <option value="in-progress" className="bg-gray-900">
-                              In Progress
-                            </option>
-                            <option value="resolved" className="bg-gray-900">
-                              Resolved
-                            </option>
-                            <option value="closed" className="bg-gray-900">
-                              Closed
-                            </option>
-                          </select>
+                          {/* Status buttons — avoids dark OS dropdown */}
+                          <div className="flex flex-wrap gap-1">
+                            {[
+                              { value: "open",        label: "Open",        bg: "bg-yellow-100 text-yellow-700 border-yellow-300 hover:bg-yellow-200" },
+                              { value: "in-progress", label: "In Progress", bg: "bg-blue-100 text-blue-700 border-blue-300 hover:bg-blue-200" },
+                              { value: "resolved",    label: "Resolved",    bg: "bg-emerald-100 text-emerald-700 border-emerald-300 hover:bg-emerald-200" },
+                              { value: "closed",      label: "Closed",      bg: "bg-stone-100 text-stone-600 border-stone-300 hover:bg-stone-200" },
+                            ].map((opt) => (
+                              <button
+                                key={opt.value}
+                                onClick={() => handleUpdateIssueStatus(issue._id, opt.value)}
+                                className={`px-2 py-1 text-[10px] font-semibold rounded-lg border transition-all ${opt.bg} ${
+                                  issue.status === opt.value
+                                    ? "ring-2 ring-offset-1 ring-current opacity-100 scale-105"
+                                    : "opacity-60"
+                                }`}
+                              >
+                                {opt.label}
+                              </button>
+                            ))}
+                          </div>
                         </td>
                         <td className="p-3 sm:p-4">
                           <div className="text-stone-900/80">
@@ -4141,7 +4143,7 @@ export default function AdminPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80  flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999] p-4"
             onClick={() =>
               setCancelStakeModal({
                 open: false,
@@ -4151,195 +4153,142 @@ export default function AdminPage() {
             }
           >
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-cream-100 border border-stone-300/50 rounded-2xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto"
+              className="bg-white border border-stone-200 rounded-2xl shadow-2xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto"
             >
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center">
-                  <AlertTriangle className="w-6 h-6 text-red-400" />
+              {/* Header */}
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <AlertTriangle className="w-6 h-6 text-red-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-stone-900">Cancel Stake</h3>
+                    <p className="text-stone-500 text-sm">A 10% early cancellation penalty will be applied</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-bold text-stone-900">
-                    Cancel Stakes
-                  </h3>
-                  <p className="text-stone-900/60 text-sm">
-                    10% penalty will be applied
-                  </p>
-                </div>
+                <button
+                  onClick={() => setCancelStakeModal({ open: false, user: null, selectedStakeId: null })}
+                  className="p-2 hover:bg-stone-100 rounded-xl transition-colors text-stone-400 hover:text-stone-700"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
 
               {/* User Info */}
-              <div className="bg-cream-100/80 rounded-xl p-4 mb-4">
+              <div className="bg-stone-50 border border-stone-200 rounded-xl p-4 mb-4">
                 <div className="flex justify-between mb-2">
-                  <span className="text-stone-900/60">User:</span>
-                  <span className="text-stone-900 font-medium">
-                    {cancelStakeModal.user.name}
-                  </span>
+                  <span className="text-stone-500 text-sm">User:</span>
+                  <span className="text-stone-900 font-semibold">{cancelStakeModal.user.name}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-stone-900/60">Email:</span>
-                  <span className="text-stone-900">
-                    {cancelStakeModal.user.email}
-                  </span>
+                  <span className="text-stone-500 text-sm">Email:</span>
+                  <span className="text-stone-700 text-sm">{cancelStakeModal.user.email}</span>
                 </div>
               </div>
 
               {/* Individual Stakes */}
               {cancelStakeModal.user.wallet?.stakes &&
-              cancelStakeModal.user.wallet.stakes.filter(
-                (s: any) => s.status === "active"
-              ).length > 0 ? (
+              cancelStakeModal.user.wallet.stakes.filter((s: any) => s.status === "active").length > 0 ? (
                 <div className="mb-4">
-                  <h4 className="text-stone-900/80 font-medium mb-3">
-                    Active Stakes:
-                  </h4>
-                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                  <h4 className="text-stone-700 font-semibold mb-3 text-sm uppercase tracking-wide">Active Stakes</h4>
+                  <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                     {cancelStakeModal.user.wallet.stakes
                       .filter((stake: any) => stake.status === "active")
                       .map((stake: any) => (
                         <div
                           key={stake.stakeId}
-                          className={`bg-cream-100/80 rounded-lg p-3 border transition-colors cursor-pointer ${
+                          className={`rounded-xl p-3 border-2 transition-all cursor-pointer ${
                             cancelStakeModal.selectedStakeId === stake.stakeId
-                              ? "border-red-500/50 bg-red-500/10"
-                              : "border-stone-300/40 hover:border-stone-300/50"
+                              ? "border-red-400 bg-red-50"
+                              : "border-stone-200 bg-stone-50 hover:border-stone-300"
                           }`}
                           onClick={() =>
                             setCancelStakeModal({
                               ...cancelStakeModal,
                               selectedStakeId:
-                                cancelStakeModal.selectedStakeId ===
-                                stake.stakeId
-                                  ? null
-                                  : stake.stakeId,
+                                cancelStakeModal.selectedStakeId === stake.stakeId ? null : stake.stakeId,
                             })
                           }
                         >
                           <div className="flex justify-between items-start">
                             <div>
-                              <p className="text-blue-400 font-bold">
-                                ${stake.amount?.toLocaleString()}
-                              </p>
-                              <p className="text-stone-900/60 text-xs">
-                                {stake.packageType} package
-                              </p>
-                              <p className="text-stone-900/40 text-xs">
-                                {formatDate(stake.startDate)}{" "}
-                                - {formatDate(stake.endDate)}
-                              </p>
+                              <p className="text-blue-600 font-bold text-base">${stake.amount?.toLocaleString()} USDT</p>
+                              <p className="text-stone-500 text-xs mt-0.5 capitalize">{stake.packageType} package</p>
+                              <p className="text-stone-400 text-xs">{formatDate(stake.startDate)} – {formatDate(stake.endDate)}</p>
                             </div>
                             <div className="text-right">
-                              <p className="text-red-400 text-sm">
-                                -${(stake.amount * 0.1).toLocaleString()}
-                              </p>
-                              <p className="text-stone-900/40 text-xs">penalty</p>
+                              <p className="text-red-500 text-sm font-semibold">-${(stake.amount * 0.1).toLocaleString()}</p>
+                              <p className="text-stone-400 text-xs">penalty</p>
                             </div>
                           </div>
                         </div>
                       ))}
                   </div>
-                  <p className="text-stone-900/40 text-xs mt-2">
+                  <p className="text-stone-400 text-xs mt-2">
                     {cancelStakeModal.selectedStakeId
-                      ? "Click to deselect and cancel ALL stakes"
-                      : "Click a stake to cancel only that one, or leave unselected to cancel ALL"}
+                      ? "Tap again to deselect — will cancel ALL stakes"
+                      : "Tap a stake to cancel only that one, or leave all unselected to cancel ALL"}
                   </p>
                 </div>
               ) : (
-                <div className="bg-cream-100/80 rounded-xl p-4 mb-4">
-                  <div className="flex justify-between mb-2">
-                    <span className="text-stone-900/60">Total Staked:</span>
-                    <span className="text-blue-400 font-bold">
-                      $
-                      {cancelStakeModal.user.wallet?.stakedAmount?.toLocaleString() ||
-                        0}
-                    </span>
+                <div className="bg-stone-50 border border-stone-200 rounded-xl p-4 mb-4">
+                  <div className="flex justify-between">
+                    <span className="text-stone-500 text-sm">Total Staked:</span>
+                    <span className="text-blue-600 font-bold">${cancelStakeModal.user.wallet?.stakedAmount?.toLocaleString() || 0}</span>
                   </div>
                 </div>
               )}
 
               {/* Summary */}
-              <div className="bg-cream-100/80 rounded-xl p-4 mb-4">
-                <div className="flex justify-between mb-2">
-                  <span className="text-stone-900/60">
-                    {cancelStakeModal.selectedStakeId
-                      ? "Selected Stake:"
-                      : "All Stakes:"}
-                  </span>
-                  <span className="text-blue-400 font-bold">
-                    $
-                    {cancelStakeModal.selectedStakeId
-                      ? cancelStakeModal.user.wallet?.stakes
-                          ?.find(
-                            (s: any) =>
-                              s.stakeId === cancelStakeModal.selectedStakeId
-                          )
-                          ?.amount?.toLocaleString() || 0
-                      : cancelStakeModal.user.wallet?.stakedAmount?.toLocaleString() ||
-                        0}
+              <div className="bg-stone-50 border border-stone-200 rounded-xl p-4 mb-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-stone-500">{cancelStakeModal.selectedStakeId ? "Selected Stake:" : "All Stakes:"}</span>
+                  <span className="text-blue-600 font-bold">
+                    ${cancelStakeModal.selectedStakeId
+                      ? cancelStakeModal.user.wallet?.stakes?.find((s: any) => s.stakeId === cancelStakeModal.selectedStakeId)?.amount?.toLocaleString() || 0
+                      : cancelStakeModal.user.wallet?.stakedAmount?.toLocaleString() || 0}
                   </span>
                 </div>
-                <div className="flex justify-between mb-2">
-                  <span className="text-stone-900/60">Penalty (10%):</span>
-                  <span className="text-red-400 font-bold">
-                    -$
-                    {cancelStakeModal.selectedStakeId
-                      ? (
-                          (cancelStakeModal.user.wallet?.stakes?.find(
-                            (s: any) =>
-                              s.stakeId === cancelStakeModal.selectedStakeId
-                          )?.amount || 0) * 0.1
-                        ).toLocaleString()
-                      : (
-                          (cancelStakeModal.user.wallet?.stakedAmount || 0) *
-                          0.1
-                        ).toLocaleString()}
+                <div className="flex justify-between text-sm">
+                  <span className="text-stone-500">Penalty (10%):</span>
+                  <span className="text-red-500 font-bold">
+                    -${cancelStakeModal.selectedStakeId
+                      ? ((cancelStakeModal.user.wallet?.stakes?.find((s: any) => s.stakeId === cancelStakeModal.selectedStakeId)?.amount || 0) * 0.1).toLocaleString()
+                      : ((cancelStakeModal.user.wallet?.stakedAmount || 0) * 0.1).toLocaleString()}
                   </span>
                 </div>
-                <div className="border-t border-stone-300/40 pt-2 mt-2">
-                  <div className="flex justify-between">
-                    <span className="text-stone-900/80 font-medium">
-                      Return to User:
-                    </span>
-                    <span className="text-emerald-400 font-bold">
-                      $
-                      {cancelStakeModal.selectedStakeId
-                        ? (
-                            (cancelStakeModal.user.wallet?.stakes?.find(
-                              (s: any) =>
-                                s.stakeId === cancelStakeModal.selectedStakeId
-                            )?.amount || 0) * 0.9
-                          ).toLocaleString()
-                        : (
-                            (cancelStakeModal.user.wallet?.stakedAmount || 0) *
-                            0.9
-                          ).toLocaleString()}
-                    </span>
-                  </div>
+                <div className="border-t border-stone-200 pt-2 flex justify-between text-sm font-semibold">
+                  <span className="text-stone-700">Return to User:</span>
+                  <span className="text-emerald-600 font-bold">
+                    ${cancelStakeModal.selectedStakeId
+                      ? ((cancelStakeModal.user.wallet?.stakes?.find((s: any) => s.stakeId === cancelStakeModal.selectedStakeId)?.amount || 0) * 0.9).toLocaleString()
+                      : ((cancelStakeModal.user.wallet?.stakedAmount || 0) * 0.9).toLocaleString()}
+                  </span>
                 </div>
               </div>
 
-              <div className="mb-4">
-                <label className="block text-stone-900/80 text-sm mb-2">
-                  Reason for Cancellation (Required)
+              {/* Reason */}
+              <div className="mb-5">
+                <label className="block text-stone-700 text-sm font-medium mb-2">
+                  Reason for Cancellation <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   value={cancelStakeReason}
                   onChange={(e) => setCancelStakeReason(e.target.value)}
-                  className="w-full h-24 px-4 py-2 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-red-500/50"
+                  className="w-full h-24 px-4 py-3 bg-white border border-stone-300 rounded-xl text-stone-900 placeholder-stone-400 resize-none focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 transition-all"
                   placeholder="Enter the reason for early stake cancellation..."
                 />
               </div>
 
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center gap-3">
                 <button
-                  onClick={() =>
-                    handleCancelStake(cancelStakeModal.selectedStakeId)
-                  }
+                  onClick={() => handleCancelStake(cancelStakeModal.selectedStakeId)}
                   disabled={!cancelStakeReason.trim() || isCancellingStake}
-                  className="flex-1 py-3 px-4 bg-red-500 text-stone-900 rounded-xl hover:bg-red-600 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 py-3 px-4 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                 >
                   {isCancellingStake
                     ? "Processing..."
@@ -4347,17 +4296,12 @@ export default function AdminPage() {
                     ? "Cancel Selected Stake"
                     : "Cancel All Stakes"}
                 </button>
-
                 <button
                   onClick={() => {
-                    setCancelStakeModal({
-                      open: false,
-                      user: null,
-                      selectedStakeId: null,
-                    });
+                    setCancelStakeModal({ open: false, user: null, selectedStakeId: null });
                     setCancelStakeReason("");
                   }}
-                  className="flex-1 py-3 px-4 bg-cream-200/60 text-stone-900 rounded-xl hover:bg-cream-300/60 transition-colors"
+                  className="flex-1 py-3 px-4 bg-stone-100 text-stone-700 rounded-xl hover:bg-stone-200 transition-colors font-medium"
                 >
                   Close
                 </button>
