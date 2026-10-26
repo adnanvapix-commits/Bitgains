@@ -1103,14 +1103,21 @@ export default function AdminPage() {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
-      if (!t.closest("[data-notif-send-to]"))   setShowSendToDropdown(false);
-      if (!t.closest("[data-notif-type]"))       setShowTypeDropdown(false);
-      if (!t.closest("[data-balance-user-select]"))   setBalanceUserSearch((prev) => (prev && !selectedUser ? "" : prev));
-      if (!t.closest("[data-hierarchy-user-select]")) setHierarchyUserSearch((prev) => (prev && !selectedUserForHierarchy ? "" : prev));
+      if (!t.closest("[data-notif-send-to]"))  setShowSendToDropdown(false);
+      if (!t.closest("[data-notif-type]"))      setShowTypeDropdown(false);
+      // Close the data-dropdown panels for hierarchy/balance pickers
+      if (!t.closest("[data-hierarchy-user-select]")) {
+        const el = document.querySelector("[data-hierarchy-user-select] [data-dropdown]") as HTMLElement;
+        if (el) el.style.display = "none";
+      }
+      if (!t.closest("[data-balance-user-select]")) {
+        const el = document.querySelector("[data-balance-user-select] [data-dropdown]") as HTMLElement;
+        if (el) el.style.display = "none";
+      }
     };
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
-  }, [selectedUser, selectedUserForHierarchy]);
+  }, []);
 
   if (!isAuthenticated || !user) {
     return (
@@ -2423,40 +2430,42 @@ export default function AdminPage() {
                     <label className="block text-stone-900/80 text-sm mb-2">
                       Select User
                     </label>
-                    {/* Custom searchable dropdown — no dark OS styling */}
+                    {/* Same style as Push Notification Send To */}
                     <div className="relative" data-balance-user-select>
-                      <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-                        <input
-                          type="text"
-                          value={balanceUserSearch}
-                          onChange={(e) => {
-                            setBalanceUserSearch(e.target.value);
-                            if (!e.target.value) setSelectedUser("");
-                          }}
-                          placeholder={
-                            selectedUser
-                              ? allUsers.find((u: any) => (u._id || u.id) === selectedUser)
-                                  ? `${allUsers.find((u: any) => (u._id || u.id) === selectedUser)?.name} (${allUsers.find((u: any) => (u._id || u.id) === selectedUser)?.email})`
-                                  : "Search users..."
-                              : "Search by name or email..."
-                          }
-                          className="w-full pl-10 pr-4 py-3 bg-white border border-stone-300 rounded-xl text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 text-sm"
-                        />
-                        {selectedUser && (
-                          <button
-                            type="button"
-                            onClick={() => { setSelectedUser(""); setBalanceUserSearch(""); }}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        )}
-                      </div>
-                      {balanceUserSearch && !selectedUser && (
-                        <div className="absolute z-50 w-full mt-1 bg-white border border-stone-200 rounded-xl shadow-xl max-h-56 overflow-y-auto">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const el = document.querySelector("[data-balance-user-select] [data-dropdown]") as HTMLElement;
+                          if (el) el.style.display = el.style.display === "none" ? "block" : "none";
+                        }}
+                        className="w-full px-4 py-3 bg-white border border-stone-300 rounded-xl text-stone-900 text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                      >
+                        <span className="truncate text-sm">
+                          {selectedUser
+                            ? (() => {
+                                const u = allUsers.find((u: any) => (u._id || u.id) === selectedUser);
+                                return u ? `${u.name} (${u.email})` : "-- Select a user --";
+                              })()
+                            : "-- Select a user --"}
+                        </span>
+                        <ChevronDown className="w-4 h-4 text-stone-500 flex-shrink-0 ml-2" />
+                      </button>
+
+                      <div data-dropdown className="absolute z-50 w-full mt-1 bg-white border border-stone-200 rounded-xl shadow-xl hidden">
+                        <div className="p-2 border-b border-stone-100">
+                          <input
+                            type="text"
+                            value={balanceUserSearch}
+                            onChange={(e) => setBalanceUserSearch(e.target.value)}
+                            placeholder="Search by name or email..."
+                            className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 placeholder-stone-400"
+                            autoFocus
+                          />
+                        </div>
+                        <div className="overflow-y-auto max-h-48">
                           {allUsers
                             .filter((u: any) => {
+                              if (!balanceUserSearch) return true;
                               const q = balanceUserSearch.toLowerCase();
                               return u.name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q);
                             })
@@ -2466,22 +2475,26 @@ export default function AdminPage() {
                                 type="button"
                                 onClick={() => {
                                   setSelectedUser(u._id || u.id);
-                                  setBalanceUserSearch(`${u.name} (${u.email})`);
+                                  setBalanceUserSearch("");
+                                  const el = document.querySelector("[data-balance-user-select] [data-dropdown]") as HTMLElement;
+                                  if (el) el.style.display = "none";
                                 }}
-                                className="w-full px-4 py-2.5 text-left hover:bg-emerald-50 transition-colors border-b border-stone-100 last:border-0"
+                                className={`w-full px-4 py-2.5 text-left text-sm hover:bg-emerald-50 transition-colors border-b border-stone-50 last:border-0 ${selectedUser === (u._id || u.id) ? "bg-emerald-50 font-semibold text-emerald-700" : "text-stone-900"}`}
                               >
-                                <p className="text-stone-900 font-medium text-sm">{u.name}</p>
-                                <p className="text-stone-500 text-xs">{u.email} · Balance: ${u.wallet?.balance || 0}</p>
+                                <span className="font-medium">{u.name}</span>
+                                <span className="text-stone-500 text-xs ml-1">({u.email})</span>
+                                <span className="text-stone-400 text-xs ml-1">· ${u.wallet?.balance || 0}</span>
                               </button>
                             ))}
                           {allUsers.filter((u: any) => {
+                            if (!balanceUserSearch) return true;
                             const q = balanceUserSearch.toLowerCase();
                             return u.name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q);
                           }).length === 0 && (
                             <p className="p-4 text-stone-500 text-sm text-center">No users found</p>
                           )}
                         </div>
-                      )}
+                      </div>
                     </div>
                   </div>
 
@@ -3003,43 +3016,42 @@ export default function AdminPage() {
                   <label className="block text-stone-900/80 text-sm mb-2">
                     Select User to View Hierarchy
                   </label>
-                  {/* Custom searchable dropdown */}
+                  {/* Same style as Push Notification Send To */}
                   <div className="relative" data-hierarchy-user-select>
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-                      <input
-                        type="text"
-                        value={hierarchyUserSearch}
-                        onChange={(e) => {
-                          setHierarchyUserSearch(e.target.value);
-                          if (!e.target.value) {
-                            setSelectedUserForHierarchy("");
-                            setReferralHierarchy(null);
-                          }
-                        }}
-                        placeholder={
-                          selectedUserForHierarchy
-                            ? allUsers.find((u: any) => (u._id || u.id) === selectedUserForHierarchy)
-                                ? `${allUsers.find((u: any) => (u._id || u.id) === selectedUserForHierarchy)?.name} (${allUsers.find((u: any) => (u._id || u.id) === selectedUserForHierarchy)?.email})`
-                                : "Search users..."
-                            : "Search by name or email..."
-                        }
-                        className="w-full pl-10 pr-4 py-3 bg-white border border-stone-300 rounded-xl text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-sm"
-                      />
-                      {selectedUserForHierarchy && (
-                        <button
-                          type="button"
-                          onClick={() => { setSelectedUserForHierarchy(""); setHierarchyUserSearch(""); setReferralHierarchy(null); }}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
-                    {hierarchyUserSearch && !selectedUserForHierarchy && (
-                      <div className="absolute z-50 w-full mt-1 bg-white border border-stone-200 rounded-xl shadow-xl max-h-56 overflow-y-auto">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const el = document.querySelector("[data-hierarchy-user-select] [data-dropdown]");
+                        (el as HTMLElement)?.style && ((el as HTMLElement).style.display = (el as HTMLElement).style.display === "none" ? "block" : "none");
+                      }}
+                      className="w-full px-4 py-3 bg-white border border-stone-300 rounded-xl text-stone-900 text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                    >
+                      <span className="truncate text-sm">
+                        {selectedUserForHierarchy
+                          ? (() => {
+                              const u = allUsers.find((u: any) => (u._id || u.id) === selectedUserForHierarchy);
+                              return u ? `${u.name} (${u.email})` : "-- Select a user --";
+                            })()
+                          : "-- Select a user --"}
+                      </span>
+                      <ChevronDown className="w-4 h-4 text-stone-500 flex-shrink-0 ml-2" />
+                    </button>
+
+                    <div data-dropdown className="absolute z-50 w-full mt-1 bg-white border border-stone-200 rounded-xl shadow-xl hidden">
+                      <div className="p-2 border-b border-stone-100">
+                        <input
+                          type="text"
+                          value={hierarchyUserSearch}
+                          onChange={(e) => setHierarchyUserSearch(e.target.value)}
+                          placeholder="Search by name or email..."
+                          className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 placeholder-stone-400"
+                          autoFocus
+                        />
+                      </div>
+                      <div className="overflow-y-auto max-h-48">
                         {allUsers
                           .filter((u: any) => {
+                            if (!hierarchyUserSearch) return true;
                             const q = hierarchyUserSearch.toLowerCase();
                             return u.name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q);
                           })
@@ -3050,23 +3062,26 @@ export default function AdminPage() {
                               onClick={() => {
                                 const uid = u._id || u.id;
                                 setSelectedUserForHierarchy(uid);
-                                setHierarchyUserSearch(`${u.name} (${u.email})`);
+                                setHierarchyUserSearch("");
                                 fetchReferralHierarchy(uid);
+                                const el = document.querySelector("[data-hierarchy-user-select] [data-dropdown]") as HTMLElement;
+                                if (el) el.style.display = "none";
                               }}
-                              className="w-full px-4 py-2.5 text-left hover:bg-purple-50 transition-colors border-b border-stone-100 last:border-0"
+                              className={`w-full px-4 py-2.5 text-left text-sm hover:bg-purple-50 transition-colors border-b border-stone-50 last:border-0 ${selectedUserForHierarchy === (u._id || u.id) ? "bg-purple-50 font-semibold text-purple-700" : "text-stone-900"}`}
                             >
-                              <p className="text-stone-900 font-medium text-sm">{u.name}</p>
-                              <p className="text-stone-500 text-xs">{u.email}</p>
+                              <span className="font-medium">{u.name}</span>
+                              <span className="text-stone-500 text-xs ml-1">({u.email})</span>
                             </button>
                           ))}
                         {allUsers.filter((u: any) => {
+                          if (!hierarchyUserSearch) return true;
                           const q = hierarchyUserSearch.toLowerCase();
                           return u.name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q);
                         }).length === 0 && (
                           <p className="p-4 text-stone-500 text-sm text-center">No users found</p>
                         )}
                       </div>
-                    )}
+                    </div>
                   </div>
                 </div>
 
