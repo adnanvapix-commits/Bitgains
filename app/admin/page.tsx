@@ -207,6 +207,20 @@ export default function AdminPage() {
   const [notificationType, setNotificationType] = useState<
     "info" | "success" | "warning" | "error" | "announcement"
   >("announcement");
+
+  // Custom dropdown open states for push notification
+  const [showSendToDropdown, setShowSendToDropdown] = useState(false);
+  const [showTypeDropdown, setShowTypeDropdown] = useState(false);
+  const [sendToSearch, setSendToSearch] = useState("");
+
+  // Per-tab search/filter state
+  const [pendingSearch, setPendingSearch] = useState("");
+  const [stakingActivitySearch, setStakingActivitySearch] = useState("");
+  const [userStakingSearch, setUserStakingSearch] = useState("");
+  const [issuesSearch, setIssuesSearch] = useState("");
+  const [auditLogsSearch, setAuditLogsSearch] = useState("");
+  const [deletedTxSearch, setDeletedTxSearch] = useState("");
+  const [payoutsSearch, setPayoutsSearch] = useState("");
   const [isSendingNotification, setIsSendingNotification] = useState(false);
   const [sentNotifications, setSentNotifications] = useState<any[]>([]);
   const [isLoadingNotifications, setIsLoadingNotifications] = useState(false);
@@ -1082,6 +1096,17 @@ export default function AdminPage() {
     fetchStakingTransactions,
   ]);
 
+  // Close custom dropdowns when clicking outside
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      const t = e.target as HTMLElement;
+      if (!t.closest("[data-notif-send-to]"))  setShowSendToDropdown(false);
+      if (!t.closest("[data-notif-type]"))      setShowTypeDropdown(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
   if (!isAuthenticated || !user) {
     return (
       <div className="min-h-screen bg-cream-50 flex items-center justify-center">
@@ -1102,6 +1127,53 @@ export default function AdminPage() {
       </div>
     );
   }
+
+  // ── Filtered data for each tab ──────────────────────────────────────────
+  const filteredPendingTx = pendingTransactions.filter((tx: any) => {
+    if (!pendingSearch) return true;
+    const q = pendingSearch.toLowerCase();
+    return tx.userId?.name?.toLowerCase().includes(q) ||
+           tx.userId?.email?.toLowerCase().includes(q) ||
+           tx.type?.toLowerCase().includes(q);
+  });
+  const filteredStakingActivity = stakingTransactions.filter((tx: any) => {
+    if (!stakingActivitySearch) return true;
+    const q = stakingActivitySearch.toLowerCase();
+    return tx.userId?.name?.toLowerCase().includes(q) ||
+           tx.userId?.email?.toLowerCase().includes(q) ||
+           tx.type?.toLowerCase().includes(q);
+  });
+  const filteredUserStaking = users.filter((u: any) => {
+    if (!userStakingSearch) return true;
+    const q = userStakingSearch.toLowerCase();
+    return u.name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q);
+  });
+  const filteredIssues = issues.filter((i: any) => {
+    if (!issuesSearch) return true;
+    const q = issuesSearch.toLowerCase();
+    return i.subject?.toLowerCase().includes(q) ||
+           i.userId?.email?.toLowerCase().includes(q) ||
+           i.userId?.name?.toLowerCase().includes(q);
+  });
+  const filteredAuditLogs = auditLogs.filter((l: any) => {
+    if (!auditLogsSearch) return true;
+    const q = auditLogsSearch.toLowerCase();
+    return l.adminEmail?.toLowerCase().includes(q) ||
+           l.targetUserEmail?.toLowerCase().includes(q) ||
+           l.action?.toLowerCase().includes(q);
+  });
+  const filteredDeletedTx = deletedTransactions.filter((tx: any) => {
+    if (!deletedTxSearch) return true;
+    const q = deletedTxSearch.toLowerCase();
+    return tx.userId?.name?.toLowerCase().includes(q) ||
+           tx.userId?.email?.toLowerCase().includes(q) ||
+           tx.type?.toLowerCase().includes(q);
+  });
+  const filteredPayoutUsers = eligibleUsers.filter((u: any) => {
+    if (!payoutsSearch) return true;
+    const q = payoutsSearch.toLowerCase();
+    return u.name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q);
+  });
 
   return (
     <div className="min-h-screen bg-cream-50">
@@ -1476,9 +1548,21 @@ export default function AdminPage() {
               className="bg-cream-100/80  border border-stone-300/50 rounded-xl sm:rounded-2xl overflow-hidden"
             >
               <div className="p-4 sm:p-6 border-b border-stone-300/40">
-                <h2 className="text-lg sm:text-xl font-bold text-stone-900">
-                  Pending Transactions
-                </h2>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <h2 className="text-lg sm:text-xl font-bold text-stone-900">
+                    Pending Transactions
+                  </h2>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                    <input
+                      type="text"
+                      value={pendingSearch}
+                      onChange={(e) => setPendingSearch(e.target.value)}
+                      placeholder="Search by name or email..."
+                      className="pl-9 pr-4 py-2 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 w-full sm:w-64"
+                    />
+                  </div>
+                </div>
               </div>
 
               {isLoading ? (
@@ -1524,7 +1608,7 @@ export default function AdminPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {pendingTransactions.map((tx, index) => (
+                      {filteredPendingTx.map((tx, index) => (
                         <motion.tr
                           key={tx._id}
                           initial={{ opacity: 0, y: 10 }}
@@ -1695,12 +1779,17 @@ export default function AdminPage() {
             className="bg-cream-100/80  border border-stone-300/50 rounded-xl sm:rounded-2xl overflow-hidden"
           >
             <div className="p-4 sm:p-6 border-b border-stone-300/40">
-              <h2 className="text-lg sm:text-xl font-bold text-stone-900">
-                Staking Activity
-              </h2>
-              <p className="text-stone-900/60 text-sm mt-1">
-                All stake and unstake transactions
-              </p>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <h2 className="text-lg sm:text-xl font-bold text-stone-900">Staking Activity</h2>
+                  <p className="text-stone-900/60 text-sm mt-1">All stake and unstake transactions</p>
+                </div>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                  <input type="text" value={stakingActivitySearch} onChange={(e) => setStakingActivitySearch(e.target.value)}
+                    placeholder="Search by name, email, type..." className="pl-9 pr-4 py-2 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 w-full sm:w-64" />
+                </div>
+              </div>
             </div>
 
             {isLoadingStaking ? (
@@ -1743,7 +1832,7 @@ export default function AdminPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {stakingTransactions.map((tx, index) => (
+                    {filteredStakingActivity.map((tx, index) => (
                       <motion.tr
                         key={tx._id}
                         initial={{ opacity: 0, y: 10 }}
@@ -1840,11 +1929,16 @@ export default function AdminPage() {
             className="bg-cream-100/80  border border-stone-300/50 rounded-xl sm:rounded-2xl overflow-hidden"
           >
             <div className="p-4 sm:p-6 border-b border-stone-300/40">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <h2 className="text-lg sm:text-xl font-bold text-stone-900">
                   User Staking Overview
                 </h2>
-                <div className="flex items-center space-x-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                    <input type="text" value={userStakingSearch} onChange={(e) => setUserStakingSearch(e.target.value)}
+                      placeholder="Search user..." className="pl-9 pr-4 py-2 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 w-52" />
+                  </div>
                   <span className="text-stone-900/60 text-sm">
                     Total Staked:{" "}
                     <span className="text-emerald-400 font-bold">
@@ -1904,7 +1998,7 @@ export default function AdminPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {users.map((user, index) => (
+                    {filteredUserStaking.map((user, index) => (
                       <motion.tr
                         key={user._id}
                         initial={{ opacity: 0, y: 10 }}
@@ -2075,14 +2169,20 @@ export default function AdminPage() {
             className="bg-cream-100/80  border border-stone-300/50 rounded-xl sm:rounded-2xl overflow-hidden"
           >
             <div className="p-4 sm:p-6 border-b border-stone-300/40">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <h2 className="text-lg sm:text-xl font-bold text-stone-900">
                   User Issues
                 </h2>
-
-                {/* Issue Filters */}
-                <div className="flex items-center space-x-2">
-                  <span className="text-stone-900/60 text-sm">Filter:</span>
+                <div className="flex flex-wrap items-center gap-3">
+                  {/* Search */}
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                    <input type="text" value={issuesSearch} onChange={(e) => setIssuesSearch(e.target.value)}
+                      placeholder="Search subject or email..." className="pl-9 pr-4 py-2 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 w-52" />
+                  </div>
+                  {/* Issue Filters */}
+                  <div className="flex items-center space-x-2">
+                    <span className="text-stone-900/60 text-sm">Filter:</span>
                   {["all", "open", "in-progress", "resolved"].map(
                     (filterOption) => (
                       <button
@@ -2098,6 +2198,7 @@ export default function AdminPage() {
                       </button>
                     )
                   )}
+                  </div>
                 </div>
               </div>
 
@@ -2182,7 +2283,7 @@ export default function AdminPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {issues.map((issue: any) => (
+                    {filteredIssues.map((issue: any) => (
                       <motion.tr
                         key={issue._id}
                         initial={{ opacity: 0 }}
@@ -2532,18 +2633,21 @@ export default function AdminPage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-cream-100/80  border border-stone-300/50 rounded-2xl p-4 sm:p-6"
           >
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
               <h2 className="text-xl sm:text-2xl font-bold text-stone-900 flex items-center space-x-3">
                 <RefreshCw className="w-6 h-6 text-yellow-400" />
                 <span>Deleted / Rejected Transactions</span>
               </h2>
-              <button
-                onClick={fetchDeletedTransactions}
-                className="p-2 bg-cream-200/60 text-stone-900 rounded-lg hover:bg-cream-300/60 transition-colors"
-                title="Refresh"
-              >
-                <RefreshCw className="w-5 h-5" />
-              </button>
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                  <input type="text" value={deletedTxSearch} onChange={(e) => setDeletedTxSearch(e.target.value)}
+                    placeholder="Search..." className="pl-9 pr-4 py-2 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 w-52" />
+                </div>
+                <button onClick={fetchDeletedTransactions} className="p-2 bg-cream-200/60 text-stone-900 rounded-lg hover:bg-cream-300/60 transition-colors" title="Refresh">
+                  <RefreshCw className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
             {isLoadingDeleted ? (
@@ -2584,7 +2688,7 @@ export default function AdminPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {deletedTransactions.map((tx: any) => (
+                    {filteredDeletedTx.map((tx: any) => (
                       <motion.tr
                         key={tx._id}
                         initial={{ opacity: 0 }}
@@ -2712,18 +2816,21 @@ export default function AdminPage() {
 
             {/* Audit Logs Table */}
             <div className="bg-cream-100/80  border border-stone-300/50 rounded-2xl p-4 sm:p-6">
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
                 <h2 className="text-xl sm:text-2xl font-bold text-stone-900 flex items-center space-x-3">
                   <Calendar className="w-6 h-6 text-cyan-400" />
                   <span>Admin Activity Audit Log</span>
                 </h2>
-                <button
-                  onClick={fetchAuditLogs}
-                  className="p-2 bg-cream-200/60 text-stone-900 rounded-lg hover:bg-cream-300/60 transition-colors"
-                  title="Refresh"
-                >
-                  <RefreshCw className="w-5 h-5" />
-                </button>
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                    <input type="text" value={auditLogsSearch} onChange={(e) => setAuditLogsSearch(e.target.value)}
+                      placeholder="Search admin, user, action..." className="pl-9 pr-4 py-2 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 w-56" />
+                  </div>
+                  <button onClick={fetchAuditLogs} className="p-2 bg-cream-200/60 text-stone-900 rounded-lg hover:bg-cream-300/60 transition-colors" title="Refresh">
+                    <RefreshCw className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
 
               {isLoadingAuditLogs ? (
@@ -2761,7 +2868,7 @@ export default function AdminPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {auditLogs.map((log: any) => (
+                      {filteredAuditLogs.map((log: any) => (
                         <motion.tr
                           key={log._id}
                           initial={{ opacity: 0 }}
@@ -2989,152 +3096,63 @@ export default function AdminPage() {
                   </div>
                 </div>
 
-                {/* Hierarchy Tree */}
+                {/* Hierarchy Tree — flat list showing L1, L2, L3 as same-style rows */}
                 <h3 className="text-lg font-bold text-stone-900 mb-4 flex items-center gap-2">
                   <Network className="w-5 h-5 text-purple-400" />
                   Referral Tree (Downline)
                 </h3>
 
-                {referralHierarchy.downline?.level1?.users &&
-                referralHierarchy.downline.level1.users.length > 0 ? (
+                {(referralHierarchy.downline?.level1?.users?.length > 0 ||
+                  referralHierarchy.downline?.level2?.users?.length > 0 ||
+                  referralHierarchy.downline?.level3?.users?.length > 0) ? (
                   <div className="space-y-2">
-                    {referralHierarchy.downline.level1.users.map(
-                      (level1User: any) => (
-                        <div
-                          key={level1User.id || level1User._id}
-                          className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4"
-                        >
-                          <div
-                            className="flex items-center justify-between cursor-pointer"
-                            onClick={() => toggleNodeExpand(level1User.id || level1User._id)}
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                                <span className="text-stone-900 font-bold text-sm">
-                                  L1
-                                </span>
-                              </div>
-                              <div>
-                                <p className="text-stone-900 font-medium">
-                                  {level1User.name}
-                                </p>
-                                <p className="text-stone-900/60 text-xs">
-                                  {level1User.email}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <span className="text-purple-400 text-sm font-medium">
-                                8% Commission
-                              </span>
-                              {referralHierarchy.downline?.level2?.users?.filter(
-                                (u: any) =>
-                                  u.referredBy?.toString() ===
-                                  level1User._id?.toString()
-                              ).length > 0 &&
-                                (expandedNodes.has(level1User.id || level1User._id) ? (
-                                  <ChevronDown className="w-5 h-5 text-stone-900/60" />
-                                ) : (
-                                  <ChevronRight className="w-5 h-5 text-stone-900/60" />
-                                ))}
-                            </div>
+                    {/* Level 1 */}
+                    {(referralHierarchy.downline?.level1?.users || []).map((u: any) => (
+                      <div key={u.id || u._id} className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="text-white font-bold text-sm">L1</span>
                           </div>
-
-                          {/* Level 2 Children */}
-                          {expandedNodes.has(level1User.id || level1User._id) && (
-                            <div className="mt-3 ml-8 space-y-2">
-                              {referralHierarchy.downline?.level2?.users
-                                ?.filter(
-                                  (level2User: any) =>
-                                    level2User.referredBy?.toString() ===
-                                    level1User._id?.toString()
-                                )
-                                .map((level2User: any) => (
-                                  <div
-                                    key={level2User.id || level2User._id}
-                                    className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3"
-                                  >
-                                    <div
-                                      className="flex items-center justify-between cursor-pointer"
-                                      onClick={() =>
-                                        toggleNodeExpand(level2User.id || level2User._id)
-                                      }
-                                    >
-                                      <div className="flex items-center gap-2">
-                                        <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                                          <span className="text-stone-900 font-bold text-xs">
-                                            L2
-                                          </span>
-                                        </div>
-                                        <div>
-                                          <p className="text-stone-900 font-medium text-sm">
-                                            {level2User.name}
-                                          </p>
-                                          <p className="text-stone-900/60 text-xs">
-                                            {level2User.email}
-                                          </p>
-                                        </div>
-                                      </div>
-                                      <div className="flex items-center gap-2">
-                                        <span className="text-blue-400 text-xs font-medium">
-                                          4%
-                                        </span>
-                                        {referralHierarchy.downline?.level3?.users?.filter(
-                                          (u: any) =>
-                                            u.referredBy?.toString() ===
-                                            level2User._id?.toString()
-                                        ).length > 0 &&
-                                          (expandedNodes.has(level2User.id || level2User._id) ? (
-                                            <ChevronDown className="w-4 h-4 text-stone-900/60" />
-                                          ) : (
-                                            <ChevronRight className="w-4 h-4 text-stone-900/60" />
-                                          ))}
-                                      </div>
-                                    </div>
-
-                                    {/* Level 3 Children */}
-                                    {expandedNodes.has(level2User.id || level2User._id) && (
-                                      <div className="mt-2 ml-6 space-y-1">
-                                        {referralHierarchy.downline?.level3?.users
-                                          ?.filter(
-                                            (level3User: any) =>
-                                              level3User.referredBy?.toString() ===
-                                              level2User._id?.toString()
-                                          )
-                                          .map((level3User: any) => (
-                                            <div
-                                              key={level3User.id || level3User._id}
-                                              className="bg-cyan-500/10 border border-cyan-500/30 rounded p-2 flex items-center justify-between"
-                                            >
-                                              <div className="flex items-center gap-2">
-                                                <div className="w-5 h-5 bg-cyan-500 rounded-full flex items-center justify-center">
-                                                  <span className="text-stone-900 font-bold text-[10px]">
-                                                    L3
-                                                  </span>
-                                                </div>
-                                                <div>
-                                                  <p className="text-stone-900 font-medium text-xs">
-                                                    {level3User.name}
-                                                  </p>
-                                                  <p className="text-stone-900/60 text-[10px]">
-                                                    {level3User.email}
-                                                  </p>
-                                                </div>
-                                              </div>
-                                              <span className="text-cyan-400 text-xs font-medium">
-                                                2%
-                                              </span>
-                                            </div>
-                                          ))}
-                                      </div>
-                                    )}
-                                  </div>
-                                ))}
-                            </div>
-                          )}
+                          <div>
+                            <p className="text-stone-900 font-medium">{u.name}</p>
+                            <p className="text-stone-900/60 text-xs">{u.email}</p>
+                          </div>
                         </div>
-                      )
-                    )}
+                        <span className="text-purple-500 text-sm font-semibold">8% Commission</span>
+                      </div>
+                    ))}
+
+                    {/* Level 2 */}
+                    {(referralHierarchy.downline?.level2?.users || []).map((u: any) => (
+                      <div key={u.id || u._id} className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="text-white font-bold text-sm">L2</span>
+                          </div>
+                          <div>
+                            <p className="text-stone-900 font-medium">{u.name}</p>
+                            <p className="text-stone-900/60 text-xs">{u.email}</p>
+                          </div>
+                        </div>
+                        <span className="text-blue-500 text-sm font-semibold">4% Commission</span>
+                      </div>
+                    ))}
+
+                    {/* Level 3 */}
+                    {(referralHierarchy.downline?.level3?.users || []).map((u: any) => (
+                      <div key={u.id || u._id} className="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-4 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="text-white font-bold text-sm">L3</span>
+                          </div>
+                          <div>
+                            <p className="text-stone-900 font-medium">{u.name}</p>
+                            <p className="text-stone-900/60 text-xs">{u.email}</p>
+                          </div>
+                        </div>
+                        <span className="text-cyan-600 text-sm font-semibold">2% Commission</span>
+                      </div>
+                    ))}
                   </div>
                 ) : (
                   <div className="text-center py-8">
@@ -3182,24 +3200,64 @@ export default function AdminPage() {
                     <label className="block text-stone-900/80 text-sm mb-2">
                       Send To
                     </label>
-                    <select
-                      value={notificationUserId}
-                      onChange={(e) => setNotificationUserId(e.target.value)}
-                      className="w-full px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-                    >
-                      <option value="all" className="bg-gray-800">
-                        All Users (Broadcast)
-                      </option>
-                      {allUsers.map((user: any) => (
-                        <option
-                          key={user._id}
-                          value={user._id}
-                          className="bg-gray-800"
-                        >
-                          {user.name} ({user.email})
-                        </option>
-                      ))}
-                    </select>
+                    {/* Custom searchable dropdown — avoids dark OS dropdown */}
+                    <div className="relative" data-notif-send-to>
+                      <button
+                        type="button"
+                        onClick={() => { setShowSendToDropdown(!showSendToDropdown); setShowTypeDropdown(false); }}
+                        className="w-full px-4 py-3 bg-white border border-stone-300 rounded-xl text-stone-900 text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                      >
+                        <span className="truncate">
+                          {notificationUserId === "all"
+                            ? "📢 All Users (Broadcast)"
+                            : allUsers.find((u: any) => (u._id || u.id) === notificationUserId)
+                              ? `${allUsers.find((u: any) => (u._id || u.id) === notificationUserId)?.name} (${allUsers.find((u: any) => (u._id || u.id) === notificationUserId)?.email})`
+                              : "Select user..."}
+                        </span>
+                        <ChevronDown className="w-4 h-4 text-stone-500 flex-shrink-0 ml-2" />
+                      </button>
+
+                      {showSendToDropdown && (
+                        <div className="absolute z-50 w-full mt-1 bg-white border border-stone-200 rounded-xl shadow-xl max-h-64 overflow-hidden">
+                          <div className="p-2 border-b border-stone-100">
+                            <input
+                              type="text"
+                              value={sendToSearch}
+                              onChange={(e) => setSendToSearch(e.target.value)}
+                              placeholder="Search by name or email..."
+                              className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-lg text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                              autoFocus
+                            />
+                          </div>
+                          <div className="overflow-y-auto max-h-48">
+                            <button
+                              type="button"
+                              onClick={() => { setNotificationUserId("all"); setShowSendToDropdown(false); setSendToSearch(""); }}
+                              className={`w-full px-4 py-2.5 text-left text-sm hover:bg-emerald-50 transition-colors ${notificationUserId === "all" ? "bg-emerald-50 text-emerald-700 font-semibold" : "text-stone-900"}`}
+                            >
+                              📢 All Users (Broadcast)
+                            </button>
+                            {allUsers
+                              .filter((u: any) => {
+                                if (!sendToSearch) return true;
+                                const q = sendToSearch.toLowerCase();
+                                return u.name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q);
+                              })
+                              .map((user: any) => (
+                                <button
+                                  key={user._id || user.id}
+                                  type="button"
+                                  onClick={() => { setNotificationUserId(user._id || user.id); setShowSendToDropdown(false); setSendToSearch(""); }}
+                                  className={`w-full px-4 py-2.5 text-left text-sm hover:bg-emerald-50 transition-colors ${notificationUserId === (user._id || user.id) ? "bg-emerald-50 text-emerald-700 font-semibold" : "text-stone-900"}`}
+                                >
+                                  <span className="font-medium">{user.name}</span>
+                                  <span className="text-stone-500 ml-1 text-xs">({user.email})</span>
+                                </button>
+                              ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Notification Type */}
@@ -3207,32 +3265,49 @@ export default function AdminPage() {
                     <label className="block text-stone-900/80 text-sm mb-2">
                       Notification Type
                     </label>
-                    <select
-                      value={notificationType}
-                      onChange={(e) =>
-                        setNotificationType(e.target.value as any)
-                      }
-                      className="w-full px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-                      style={{ colorScheme: "light" }}
-                    >
-                      <option value="announcement">📢 Announcement</option>
-                      <option value="info">ℹ️ Information</option>
-                      <option value="success">✅ Success</option>
-                      <option value="warning">⚠️ Warning</option>
-                      <option value="error">❌ Error</option>
-                    </select>
-                    {/* Color preview badge */}
-                    <div className="mt-2 flex items-center gap-2">
-                      <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
-                        notificationType === "announcement" ? "bg-purple-500/20 text-purple-700"
-                        : notificationType === "success"      ? "bg-green-500/20 text-green-700"
-                        : notificationType === "warning"      ? "bg-yellow-500/20 text-yellow-700"
-                        : notificationType === "error"        ? "bg-red-500/20 text-red-700"
-                        : "bg-blue-500/20 text-blue-700"
-                      }`}>
-                        {notificationType.toUpperCase()}
-                      </span>
-                      <span className="text-stone-900/50 text-xs">Preview badge color</span>
+                    {/* Custom dropdown — avoids dark OS dropdown */}
+                    <div className="relative" data-notif-type>
+                      <button
+                        type="button"
+                        onClick={() => { setShowTypeDropdown(!showTypeDropdown); setShowSendToDropdown(false); }}
+                        className={`w-full px-4 py-3 bg-white border border-stone-300 rounded-xl text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-emerald-500/50 ${
+                          notificationType === "announcement" ? "text-purple-700"
+                          : notificationType === "success"    ? "text-green-700"
+                          : notificationType === "warning"    ? "text-yellow-700"
+                          : notificationType === "error"      ? "text-red-700"
+                          : "text-blue-700"
+                        }`}
+                      >
+                        <span className="font-medium">
+                          {notificationType === "announcement" && "📢 Announcement"}
+                          {notificationType === "info"         && "ℹ️ Information"}
+                          {notificationType === "success"      && "✅ Success"}
+                          {notificationType === "warning"      && "⚠️ Warning"}
+                          {notificationType === "error"        && "❌ Error"}
+                        </span>
+                        <ChevronDown className="w-4 h-4 flex-shrink-0 ml-2 text-stone-500" />
+                      </button>
+
+                      {showTypeDropdown && (
+                        <div className="absolute z-50 w-full mt-1 bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden">
+                          {[
+                            { value: "announcement", label: "📢 Announcement", color: "text-purple-700", hover: "hover:bg-purple-50" },
+                            { value: "info",         label: "ℹ️ Information",   color: "text-blue-700",   hover: "hover:bg-blue-50" },
+                            { value: "success",      label: "✅ Success",       color: "text-green-700",  hover: "hover:bg-green-50" },
+                            { value: "warning",      label: "⚠️ Warning",       color: "text-yellow-700", hover: "hover:bg-yellow-50" },
+                            { value: "error",        label: "❌ Error",         color: "text-red-700",    hover: "hover:bg-red-50" },
+                          ].map((opt) => (
+                            <button
+                              key={opt.value}
+                              type="button"
+                              onClick={() => { setNotificationType(opt.value as any); setShowTypeDropdown(false); }}
+                              className={`w-full px-4 py-3 text-left text-sm font-medium ${opt.color} ${opt.hover} transition-colors ${notificationType === opt.value ? "font-bold bg-stone-50" : ""}`}
+                            >
+                              {opt.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -3516,13 +3591,22 @@ export default function AdminPage() {
             {/* Eligible Users Table */}
             <div className="bg-cream-100/80 border border-stone-300/50 rounded-2xl overflow-hidden">
               <div className="p-6 border-b border-stone-300/40">
-                <h3 className="text-lg font-bold text-stone-900 flex items-center">
-                  <Users className="w-5 h-5 mr-2" />
-                  Eligible Users for Payout
-                </h3>
-                <p className="text-stone-900/60 text-sm mt-1">
-                  Only users whose staking period has ended are selectable for payouts
-                </p>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <div>
+                    <h3 className="text-lg font-bold text-stone-900 flex items-center">
+                      <Users className="w-5 h-5 mr-2" />
+                      Eligible Users for Payout
+                    </h3>
+                    <p className="text-stone-900/60 text-sm mt-1">
+                      Only users whose staking period has ended are selectable for payouts
+                    </p>
+                  </div>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                    <input type="text" value={payoutsSearch} onChange={(e) => setPayoutsSearch(e.target.value)}
+                      placeholder="Search by name or email..." className="pl-9 pr-4 py-2 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 w-full sm:w-64" />
+                  </div>
+                </div>
               </div>
 
               {isLoadingPayouts ? (
@@ -3556,7 +3640,7 @@ export default function AdminPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {eligibleUsers.map((user, index) => (
+                      {filteredPayoutUsers.map((user, index) => (
                         <motion.tr
                           key={user.userId}
                           initial={{ opacity: 0, y: 10 }}
