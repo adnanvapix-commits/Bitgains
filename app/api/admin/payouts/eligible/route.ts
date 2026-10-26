@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '../../../../../lib/supabase-server';
 import { getAuthUser, requireAdmin } from '../../../../../lib/api-auth';
+import { getPackageDurationMonths, PackageType } from '../../../../../lib/server/stakingRates';
 
 export async function GET(req: NextRequest) {
   const { user, error } = await getAuthUser(req);
@@ -25,24 +26,18 @@ export async function GET(req: NextRequest) {
 
     if (stakeErr) throw stakeErr;
 
-    // For each stake, count how many 30-day payouts have already been distributed
-    // We check transactions of type 'staking_payout' linked to each stake via metadata
-    const stakeIds = (stakes || []).map((s: any) => s.stake_id);
-    let payoutCountMap = new Map<string, number>(); // stakeId -> payouts already given
+    // Count how many 30-day payouts have already been distributed per stake
+    let payoutCountMap = new Map<string, number>();
+    const { data: payoutTxs } = await sb
+      .from('transactions')
+      .select('metadata')
+      .eq('type', 'staking_payout');
 
-    if (stakeIds.length > 0) {
-      // Get all staking_payout transactions and count per stake
-      const { data: payoutTxs } = await sb
-        .from('transactions')
-        .select('metadata')
-        .eq('type', 'staking_payout');
-
-      for (const tx of (payoutTxs || [])) {
-        const stakePayouts = tx.metadata?.stakePayouts || [];
-        for (const sp of stakePayouts) {
-          if (sp.stakeId) {
-            payoutCountMap.set(sp.stakeId, (payoutCountMap.get(sp.stakeId) || 0) + 1);
-          }
+    for (const tx of (payoutTxs || [])) {
+      const stakePayouts = tx.metadata?.stakePayouts || [];
+      for (const sp of stakePayouts) {
+        if (sp.stakeId) {
+          payoutCountMap.set(sp.stakeId, (payoutCountMap.get(sp.stakeId) || 0) + 1);
         }
       }
     }
@@ -53,13 +48,13 @@ export async function GET(req: NextRequest) {
       const uid = stake.user_id;
       const startDate = new Date(stake.start_date);
       const endDate = new Date(stake.end_date);
+      const pkgType = (stake.package_type as PackageType) || '12-month';
+      const totalPayoutSlots = getPackageDurationMonths(pkgType);
 
       const daysTotal = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
       const daysElapsed = Math.max(0, Math.round((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)));
       const daysRemaining = Math.max(0, Math.round((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
 
-      // Total payout slots: 3 (every 30 days in 90-day stake)
-      const totalPayoutSlots = 3;
       const payoutsGiven = payoutCountMap.get(stake.stake_id) || 0;
       const payoutsRemaining = Math.max(0, totalPayoutSlots - payoutsGiven);
 

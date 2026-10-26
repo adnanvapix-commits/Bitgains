@@ -322,22 +322,25 @@ export default function DashboardPage() {
     }
   };
 
+  // Normalize a raw Supabase notification row into the shape the UI expects
+  const normalizeNotification = (n: any) => ({
+    ...n,
+    _id: n._id || n.id,
+    read: n.read ?? n.isRead ?? n.is_read ?? false,
+    createdAt: n.createdAt || n.created_at,
+  });
+
   // Fetch notifications
   const fetchNotifications = async () => {
     try {
       setLoadingNotifications(true);
       const response = await notificationsApi.getNotifications();
       if (response.success) {
-        // Normalize Supabase id -> _id for notifications
-        setPushNotifications(
-          (response.data.notifications || []).map((n: any) => ({
-            ...n,
-            _id: n._id || n.id,
-            read: n.read ?? n.isRead ?? n.is_read ?? false,
-            createdAt: n.createdAt || n.created_at,
-          }))
-        );
-        setUnreadNotificationCount(response.data.unreadCount || 0);
+        const normalized = (response.data.notifications || []).map(normalizeNotification);
+        setPushNotifications(normalized);
+        // Derive unread count from normalized list so it's always accurate
+        const unread = normalized.filter((n: any) => !n.read).length;
+        setUnreadNotificationCount(unread);
       }
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -346,22 +349,104 @@ export default function DashboardPage() {
     }
   };
 
-  // Fetch notifications when authenticated
+  // Fetch notifications + subscribe to real-time updates when authenticated
   useEffect(() => {
-    if (isAuthenticated && user) {
-      fetchNotifications();
-      // Refresh notifications every 5 minutes
-      const interval = setInterval(fetchNotifications, 300000);
-      return () => clearInterval(interval);
-    }
-  }, [isAuthenticated, user]);
+    if (!isAuthenticated || !user) return;
+
+    fetchNotifications();
+
+    // Real-time Supabase subscription — new notifications arrive instantly
+    let channel: ReturnType<typeof import("../../lib/supabase").supabase.channel> | null = null;
+
+    const setupRealtime = async () => {
+      const { supabase: sb } = await import("../../lib/supabase");
+      const uid = user.id;
+
+      channel = sb
+        .channel(`notifications:${uid}`)
+        .on(
+          "postgres_changes",
+          {
+            event: "INSERT",
+            schema: "public",
+            table: "notifications",
+            filter: `user_id=eq.${uid}`,
+          },
+          (payload: any) => {
+            const newNotif = normalizeNotification(payload.new);
+            setPushNotifications((prev) => {
+              // Avoid duplicates
+              if (prev.some((n: any) => n._id === newNotif._id)) return prev;
+              return [newNotif, ...prev];
+            });
+            if (!newNotif.read) {
+              setUnreadNotificationCount((prev) => prev + 1);
+            }
+          }
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "UPDATE",
+            schema: "public",
+            table: "notifications",
+            filter: `user_id=eq.${uid}`,
+          },
+          (payload: any) => {
+            const updated = normalizeNotification(payload.new);
+            setPushNotifications((prev) =>
+              prev.map((n: any) => (n._id === updated._id ? { ...n, ...updated } : n))
+            );
+            // Recount unread from updated list
+            setPushNotifications((prev) => {
+              const unread = prev.filter((n: any) => !n.read).length;
+              setUnreadNotificationCount(unread);
+              return prev;
+            });
+          }
+        )
+        .on(
+          "postgres_changes",
+          {
+            event: "DELETE",
+            schema: "public",
+            table: "notifications",
+            filter: `user_id=eq.${uid}`,
+          },
+          (payload: any) => {
+            const deletedId = payload.old?.id;
+            if (deletedId) {
+              setPushNotifications((prev) => {
+                const removed = prev.find((n: any) => n._id === deletedId);
+                const next = prev.filter((n: any) => n._id !== deletedId);
+                if (removed && !removed.read) {
+                  setUnreadNotificationCount((c) => Math.max(0, c - 1));
+                }
+                return next;
+              });
+            }
+          }
+        )
+        .subscribe();
+    };
+
+    setupRealtime();
+
+    return () => {
+      if (channel) {
+        import("../../lib/supabase").then(({ supabase: sb }) => {
+          sb.removeChannel(channel!);
+        });
+      }
+    };
+  }, [isAuthenticated, user?.id]);
 
   // Mark notification as read
   const markNotificationAsRead = async (notificationId: string) => {
     try {
       await notificationsApi.markAsRead(notificationId);
       setPushNotifications((prev) =>
-        prev.map((n: { _id: string; read?: boolean }) =>
+        prev.map((n: any) =>
           n._id === notificationId ? { ...n, read: true } : n
         )
       );
@@ -376,7 +461,7 @@ export default function DashboardPage() {
     try {
       await notificationsApi.markAllAsRead();
       setPushNotifications((prev) =>
-        prev.map((n: { _id: string; read?: boolean }) => ({ ...n, read: true }))
+        prev.map((n: any) => ({ ...n, read: true }))
       );
       setUnreadNotificationCount(0);
     } catch (error) {
@@ -384,31 +469,25 @@ export default function DashboardPage() {
     }
   };
 
-  // Delete notification
+  // Delete notification — fixed: use functional state read to avoid stale closure
   const deleteNotification = async (notificationId: string) => {
+    // Optimistic remove immediately so UI feels instant
+    let wasUnread = false;
+    setPushNotifications((prev) => {
+      const target = prev.find((n: any) => n._id === notificationId);
+      if (target && !target.read) wasUnread = true;
+      return prev.filter((n: any) => n._id !== notificationId);
+    });
+    if (wasUnread) {
+      setUnreadNotificationCount((prev) => Math.max(0, prev - 1));
+    }
+
     try {
       await notificationsApi.deleteNotification(notificationId);
-      setPushNotifications((prev) =>
-        prev.filter((n: { _id: string }) => n._id !== notificationId)
-      );
-      // Also update unread count if notification was unread
-      const notification = pushNotifications.find(
-        (n: { _id: string; read?: boolean }) => n._id === notificationId
-      );
-      if (notification && !notification.read) {
-        setUnreadNotificationCount((prev) => Math.max(0, prev - 1));
-      }
     } catch (error) {
       console.error("Error deleting notification:", error);
-      setNotifications((prev) => [
-        {
-          id: Date.now(),
-          type: "error",
-          message: "Failed to delete notification",
-          timestamp: new Date(),
-        },
-        ...prev,
-      ]);
+      // Revert: re-fetch to restore accurate state
+      fetchNotifications();
     }
   };
 
@@ -1013,11 +1092,10 @@ export default function DashboardPage() {
                     title="Notifications"
                   >
                     <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
+                    {/* Red dot — shows whenever there are unread notifications */}
                     {unreadNotificationCount > 0 && (
-                      <span className="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-primary-foreground text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
-                        {unreadNotificationCount > 9
-                          ? "9+"
-                          : unreadNotificationCount}
+                      <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm shadow-red-500/50 animate-pulse">
+                        {unreadNotificationCount > 9 ? "9+" : unreadNotificationCount}
                       </span>
                     )}
                   </button>
@@ -1030,12 +1108,17 @@ export default function DashboardPage() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute right-0 top-12 w-80 sm:w-96 max-h-96 overflow-y-auto bg-card border border-border rounded-2xl shadow-2xl z-50"
+                        className="absolute right-0 top-12 w-80 sm:w-96 max-h-[480px] overflow-y-auto bg-card border border-border rounded-2xl shadow-2xl z-50"
                       >
                         <div className="sticky top-0 bg-card p-4 border-b border-border flex items-center justify-between">
-                          <h3 className="text-foreground font-semibold">
-                            Notifications
-                          </h3>
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-foreground font-semibold">Notifications</h3>
+                            {unreadNotificationCount > 0 && (
+                              <span className="px-2 py-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full">
+                                {unreadNotificationCount} new
+                              </span>
+                            )}
+                          </div>
                           {unreadNotificationCount > 0 && (
                             <button
                               onClick={markAllNotificationsAsRead}
@@ -1054,9 +1137,7 @@ export default function DashboardPage() {
                           ) : pushNotifications.length === 0 ? (
                             <div className="text-center py-8">
                               <Bell className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
-                              <p className="text-muted-foreground text-sm">
-                                No notifications yet
-                              </p>
+                              <p className="text-muted-foreground text-sm">No notifications yet</p>
                             </div>
                           ) : (
                             pushNotifications.map(
@@ -1067,79 +1148,90 @@ export default function DashboardPage() {
                                 type: string;
                                 read: boolean;
                                 createdAt: string;
-                              }) => (
-                                <motion.div
-                                  key={notification._id}
-                                  initial={{ opacity: 0, x: -10 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  className={`p-3 rounded-xl mb-2 cursor-pointer transition-all duration-200 border ${
-                                    notification.read
-                                      ? "bg-secondary border-border hover:bg-primary/10 hover:border-primary/20"
-                                      : "bg-primary/10 border-primary/30 hover:bg-primary/15"
-                                  }`}
-                                  onClick={() => {
-                                    if (!notification.read) {
-                                      markNotificationAsRead(notification._id);
-                                    }
-                                  }}
-                                >
-                                  <div className="flex items-start space-x-3">
-                                    <div
-                                      className={`p-2 rounded-lg ${
-                                        notification.type === "success"
-                                          ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
-                                          : notification.type === "warning"
-                                          ? "bg-yellow-500/15 text-yellow-600 dark:text-yellow-400"
-                                          : notification.type === "error"
-                                          ? "bg-destructive/15 text-destructive"
-                                          : notification.type === "announcement"
-                                          ? "bg-primary/15 text-primary"
-                                          : "bg-primary/15 text-primary"
-                                      }`}
-                                    >
-                                      <Bell className="w-4 h-4" />
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                      <div className="flex items-center justify-between">
-                                        <h4
-                                          className={`font-medium text-sm ${
-                                            notification.read
-                                              ? "text-muted-foreground"
-                                              : "text-foreground"
-                                          }`}
-                                        >
-                                          {notification.title}
-                                        </h4>
-                                        <div className="flex items-center space-x-2">
-                                          {!notification.read && (
-                                            <span className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></span>
-                                          )}
-                                          <button
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              deleteNotification(
-                                                notification._id
-                                              );
-                                            }}
-                                            className="p-1 hover:bg-destructive/15 rounded-lg transition-colors group"
-                                            title="Delete notification"
-                                          >
-                                            <Trash2 className="w-4 h-4 text-muted-foreground/50 group-hover:text-destructive transition-colors" />
-                                          </button>
-                                        </div>
+                                action_url?: string;
+                              }) => {
+                                const isAdminReply = notification.title?.includes("Reply from Support") ||
+                                  notification.title?.includes("Support Team");
+                                return (
+                                  <motion.div
+                                    key={notification._id}
+                                    initial={{ opacity: 0, x: -10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    className={`p-3 rounded-xl mb-2 cursor-pointer transition-all duration-200 border ${
+                                      notification.read
+                                        ? "bg-secondary border-border hover:bg-primary/10 hover:border-primary/20"
+                                        : isAdminReply
+                                        ? "bg-blue-500/10 border-blue-500/40 hover:bg-blue-500/15"
+                                        : "bg-primary/10 border-primary/30 hover:bg-primary/15"
+                                    }`}
+                                    onClick={() => {
+                                      if (!notification.read) markNotificationAsRead(notification._id);
+                                      // If it's an admin reply or has action_url, navigate there
+                                      if (notification.action_url) {
+                                        window.location.href = notification.action_url;
+                                      }
+                                    }}
+                                  >
+                                    <div className="flex items-start space-x-3">
+                                      <div
+                                        className={`p-2 rounded-lg flex-shrink-0 ${
+                                          isAdminReply
+                                            ? "bg-blue-500/15 text-blue-500"
+                                            : notification.type === "success"
+                                            ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                                            : notification.type === "warning"
+                                            ? "bg-yellow-500/15 text-yellow-600 dark:text-yellow-400"
+                                            : notification.type === "error"
+                                            ? "bg-destructive/15 text-destructive"
+                                            : "bg-primary/15 text-primary"
+                                        }`}
+                                      >
+                                        {isAdminReply ? (
+                                          <MessageSquare className="w-4 h-4" />
+                                        ) : (
+                                          <Bell className="w-4 h-4" />
+                                        )}
                                       </div>
-                                      <p className="text-muted-foreground text-xs mt-1 line-clamp-2">
-                                        {notification.message}
-                                      </p>
-                                      <p className="text-muted-foreground/60 text-xs mt-2">
-                                        {new Date(
-                                          notification.createdAt
-                                        ).toLocaleString()}
-                                      </p>
+                                      <div className="flex-1 min-w-0">
+                                        <div className="flex items-start justify-between gap-1">
+                                          <h4 className={`font-medium text-sm leading-tight ${
+                                            notification.read ? "text-muted-foreground" : "text-foreground"
+                                          }`}>
+                                            {notification.title}
+                                          </h4>
+                                          <div className="flex items-center gap-1 flex-shrink-0">
+                                            {!notification.read && (
+                                              <span className="w-2 h-2 bg-red-500 rounded-full" />
+                                            )}
+                                            <button
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                deleteNotification(notification._id);
+                                              }}
+                                              className="p-1 hover:bg-destructive/15 rounded-lg transition-colors group"
+                                              title="Delete notification"
+                                            >
+                                              <Trash2 className="w-3.5 h-3.5 text-muted-foreground/50 group-hover:text-destructive transition-colors" />
+                                            </button>
+                                          </div>
+                                        </div>
+                                        <p className="text-muted-foreground text-xs mt-1 line-clamp-2">
+                                          {notification.message}
+                                        </p>
+                                        {isAdminReply && notification.action_url && (
+                                          <span className="inline-flex items-center gap-1 text-blue-500 text-xs mt-1 font-medium">
+                                            <HelpCircle className="w-3 h-3" />
+                                            Tap to view in Help & Support
+                                          </span>
+                                        )}
+                                        <p className="text-muted-foreground/60 text-xs mt-1.5">
+                                          {new Date(notification.createdAt).toLocaleString()}
+                                        </p>
+                                      </div>
                                     </div>
-                                  </div>
-                                </motion.div>
-                              )
+                                  </motion.div>
+                                );
+                              }
                             )
                           )}
                         </div>
@@ -3178,21 +3270,36 @@ function StakingTab({
   walletData: any;
 }) {
   const [stakingAmount, setStakingAmount] = useState("");
-  const [selectedPackage, setSelectedPackage] = useState("locked90");
+  const [selectedPackage, setSelectedPackage] = useState("6month");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [cancellingStakeId, setCancellingStakeId] = useState<string | null>(null);
+  const [showCancelConfirm, setShowCancelConfirm] = useState<string | null>(null);
 
-  // Only 90-day staking with dynamic up-to-15% rates
+  // 6-month and 12-month staking packages
   const stakingPackages = [
     {
-      id: "locked90",
-      label: "90-Day Stake",
-      apr: "Up to 15%",
-      description: "Dynamic returns up to 15% over 90 days",
+      id: "6month",
+      label: "6-Month Stake",
+      apr: "Up to 12%/mo",
+      description: "Earn up to 12% per month over 6 months",
       minStake: 100,
-      lockPeriod: "90 days",
+      lockPeriod: "6 months",
+      icon: Shield,
+      color: "blue",
+      packageType: "6-month",
+      highlight: false,
+    },
+    {
+      id: "12month",
+      label: "12-Month Stake",
+      apr: "Up to 15%/mo",
+      description: "Earn up to 15% per month over 12 months",
+      minStake: 100,
+      lockPeriod: "12 months",
       icon: Award,
       color: "purple",
-      packageType: "90-day",
+      packageType: "12-month",
+      highlight: true,
     },
   ];
 
@@ -3420,11 +3527,16 @@ function StakingTab({
         transition={{ duration: 0.5, delay: 0.1 }}
         className="bg-card border border-border rounded-3xl p-6 sm:p-8"
       >
-        <h3 className="text-2xl font-bold text-foreground mb-6">
-          Choose Staking Package
-        </h3>
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-2xl font-bold text-foreground">
+            Choose Staking Package
+          </h3>
+          <div className="px-3 py-1 bg-primary/15 rounded-full border border-primary/25">
+            <span className="text-primary text-xs font-medium">2 Plans Available</span>
+          </div>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           {stakingPackages.map((pkg) => (
             <motion.div
               key={pkg.id}
@@ -3437,6 +3549,14 @@ function StakingTab({
                   : "border-border bg-secondary hover:border-primary/50 hover:bg-primary/5"
               }`}
             >
+              {pkg.highlight && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <span className="bg-gradient-to-r from-primary to-accent text-primary-foreground text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                    ⭐ Best Returns
+                  </span>
+                </div>
+              )}
+
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-primary to-accent rounded-xl flex items-center justify-center shadow-sm shadow-primary/15">
                   <pkg.icon className="w-6 h-6 text-primary-foreground" />
@@ -3449,7 +3569,7 @@ function StakingTab({
 
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground text-sm">Current Rate</span>
+                  <span className="text-muted-foreground text-sm">Monthly Rate</span>
                   <span className="font-bold text-primary">{pkg.apr}</span>
                 </div>
                 <div className="flex justify-between">
@@ -3620,44 +3740,84 @@ function StakingTab({
                 const progress = Math.min(100, ((totalDays - daysRemaining) / totalDays) * 100);
                 const isMatured = stake.status === "matured";
                 const isCancelled = stake.status === "cancelled";
+                const isActive = stake.status === "active";
+
+                const handleCancelRequest = async (stakeId: string) => {
+                  setCancellingStakeId(stakeId);
+                  try {
+                    const { supabase: sb } = await import("../../lib/supabase");
+                    const { data: { session } } = await sb.auth.getSession();
+                    if (!session?.access_token) throw new Error("Not authenticated");
+                    const res = await fetch("/api/transactions/cancel-stake", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${session.access_token}`,
+                      },
+                      body: JSON.stringify({ stakeId }),
+                    });
+                    const json = await res.json();
+                    if (json.success) {
+                      setNotifications((prev) => [{
+                        id: Date.now(), type: "success",
+                        message: "Cancellation request submitted! Our support team will contact you shortly. Check Help & Support for updates.",
+                        timestamp: new Date(),
+                      }, ...prev]);
+                      setTimeout(() => setNotifications((prev) => prev.slice(1)), 10000);
+                    } else {
+                      throw new Error(json.message || "Request failed");
+                    }
+                  } catch (err: any) {
+                    setNotifications((prev) => [{
+                      id: Date.now(), type: "error",
+                      message: `Failed to submit request: ${err.message}`,
+                      timestamp: new Date(),
+                    }, ...prev]);
+                    setTimeout(() => setNotifications((prev) => prev.slice(1)), 8000);
+                  } finally {
+                    setCancellingStakeId(null);
+                    setShowCancelConfirm(null);
+                  }
+                };
 
                 return (
                   <div
                     key={stake.stakeId}
                     className={`p-4 rounded-xl border ${
-                      isMatured ? "bg-emerald-50 border-emerald-200"
+                      isMatured ? "bg-emerald-50 dark:bg-emerald-900/10 border-emerald-200 dark:border-emerald-800/50"
                       : isCancelled ? "bg-destructive/5 border-destructive/20"
                       : "bg-secondary border-border"
                     }`}
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                          isMatured ? "bg-emerald-500"
-                          : isCancelled ? "bg-destructive"
-                          : "bg-gradient-to-r from-primary to-accent"
-                        }`}>
-                          {isMatured ? <Check className="w-5 h-5 text-white" />
-                          : isCancelled ? <X className="w-5 h-5 text-white" />
-                          : <Clock className="w-5 h-5 text-primary-foreground" />}
+                    <div className="flex flex-col gap-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <div className="flex items-center space-x-3">
+                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                            isMatured ? "bg-emerald-500"
+                            : isCancelled ? "bg-destructive"
+                            : "bg-gradient-to-r from-primary to-accent"
+                          }`}>
+                            {isMatured ? <Check className="w-5 h-5 text-white" />
+                            : isCancelled ? <X className="w-5 h-5 text-white" />
+                            : <Clock className="w-5 h-5 text-primary-foreground" />}
+                          </div>
+                          <div>
+                            <p className="text-foreground font-semibold">{formatCurrency(stake.amount)}</p>
+                            <p className="text-muted-foreground text-xs capitalize">{stake.packageType} package</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-foreground font-semibold">{formatCurrency(stake.amount)}</p>
-                          <p className="text-muted-foreground text-xs">{stake.packageType} package</p>
-                        </div>
-                      </div>
 
-                      <div className="flex-1 px-4">
-                        <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                          <span>{startDate.toLocaleDateString()}</span>
-                          <span>{endDate.toLocaleDateString()}</span>
-                        </div>
-                        <div className="w-full h-2 bg-border rounded-full overflow-hidden">
-                          <div
-                            className={`h-full rounded-full transition-all duration-500 ${
-                              isMatured ? "bg-emerald-500"
-                              : isCancelled ? "bg-destructive"
-                              : "bg-gradient-to-r from-primary to-accent"
+                        <div className="flex-1 px-0 sm:px-4">
+                          <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                            <span>{startDate.toLocaleDateString()}</span>
+                            <span>{endDate.toLocaleDateString()}</span>
+                          </div>
+                          <div className="w-full h-2 bg-border rounded-full overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all duration-500 ${
+                                isMatured ? "bg-emerald-500"
+                                : isCancelled ? "bg-destructive"
+                                : "bg-gradient-to-r from-primary to-accent"
                             }`}
                             style={{ width: `${progress}%` }}
                           />
@@ -3677,6 +3837,47 @@ function StakingTab({
                         <p className="text-muted-foreground/60 text-xs capitalize">{stake.status}</p>
                       </div>
                     </div>
+
+                    {/* Cancel stake button for active stakes */}
+                    {isActive && (
+                      <div className="mt-3 pt-3 border-t border-border">
+                        {showCancelConfirm === stake.stakeId ? (
+                          <div className="bg-destructive/10 border border-destructive/30 rounded-xl p-3 space-y-2">
+                            <p className="text-destructive text-sm font-medium flex items-center gap-2">
+                              <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+                              Request cancellation? A support ticket will be raised and our team will contact you.
+                            </p>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleCancelRequest(stake.stakeId)}
+                                disabled={cancellingStakeId === stake.stakeId}
+                                className="flex-1 py-2 px-3 bg-destructive text-white rounded-lg text-sm font-medium hover:bg-destructive/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-1"
+                              >
+                                {cancellingStakeId === stake.stakeId ? (
+                                  <><Loader className="w-3 h-3 animate-spin" /> Submitting...</>
+                                ) : (
+                                  "Yes, Request Cancellation"
+                                )}
+                              </button>
+                              <button
+                                onClick={() => setShowCancelConfirm(null)}
+                                className="px-3 py-2 bg-secondary border border-border text-muted-foreground rounded-lg text-sm hover:bg-primary/10 transition-colors"
+                              >
+                                Keep Stake
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => setShowCancelConfirm(stake.stakeId)}
+                            className="w-full py-2 px-4 text-sm text-muted-foreground border border-border rounded-lg hover:border-destructive/50 hover:text-destructive hover:bg-destructive/5 transition-all duration-200 flex items-center justify-center gap-2"
+                          >
+                            <XCircle className="w-4 h-4" />
+                            Request Cancellation
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -3729,9 +3930,9 @@ function StakingTab({
                 <span className="text-primary-foreground font-bold text-sm">1</span>
               </div>
               <div>
-                <h4 className="text-foreground font-semibold">Stake Your Funds</h4>
+                <h4 className="text-foreground font-semibold">Choose Your Plan</h4>
                 <p className="text-muted-foreground text-sm">
-                  Enter the amount you want to stake from your available deposit balance.
+                  Select the 6-month plan (up to 12%/mo) or the 12-month plan (up to 15%/mo) for maximum returns.
                 </p>
               </div>
             </div>
@@ -3741,9 +3942,9 @@ function StakingTab({
                 <span className="text-primary-foreground font-bold text-sm">2</span>
               </div>
               <div>
-                <h4 className="text-foreground font-semibold">Compound Growth</h4>
+                <h4 className="text-foreground font-semibold">Stake Your Funds</h4>
                 <p className="text-muted-foreground text-sm">
-                  Rewards are automatically added to your balance for compound growth.
+                  Enter the amount you want to stake from your available deposit balance (minimum $100 USDT).
                 </p>
               </div>
             </div>
@@ -3755,9 +3956,21 @@ function StakingTab({
                 <span className="text-primary-foreground font-bold text-sm">3</span>
               </div>
               <div>
-                <h4 className="text-foreground font-semibold">Earn Daily Rewards</h4>
+                <h4 className="text-foreground font-semibold">Monthly Payouts</h4>
                 <p className="text-muted-foreground text-sm">
-                  Your staked funds earn rewards daily based on the current month&apos;s rate.
+                  Admin distributes your monthly rewards directly to your wallet every 30 days during your staking period.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-3">
+              <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <span className="text-primary-foreground font-bold text-sm">4</span>
+              </div>
+              <div>
+                <h4 className="text-foreground font-semibold">Need to Cancel?</h4>
+                <p className="text-muted-foreground text-sm">
+                  Use the &quot;Request Cancellation&quot; button on any active stake. A support ticket is auto-created and our team will reach out.
                 </p>
               </div>
             </div>
@@ -7777,23 +7990,27 @@ function TransactionPopup({
 // ─────────────────────────────────────────────────────────────
 function StakingCalculatorTab({ walletData }: { walletData: any }) {
   const [amount, setAmount] = useState("1000");
+  const [selectedPlan, setSelectedPlan] = useState<"6-month" | "12-month">("12-month");
   const [compoundEnabled, setCompoundEnabled] = useState(false);
 
-  // Fixed 90-day staking only, rate up to 15%
-  const duration = "90";
-  const rate = 0.15; // up to 15% per month
+  const planConfig = {
+    "6-month":  { months: 6,  maxRate: 0.12, label: "6-Month Plan",  avgRate: 0.10 },
+    "12-month": { months: 12, maxRate: 0.15, label: "12-Month Plan", avgRate: 0.125 },
+  };
+  const plan = planConfig[selectedPlan];
+  const rate = plan.avgRate;
   const num = parseFloat(amount) || 0;
-  const months = 3; // 90 days = 3 months
+  const months = plan.months;
   const simpleEarning = num * rate * months;
   const compoundEarning = num * (Math.pow(1 + rate, months) - 1);
   const earning = compoundEnabled ? compoundEarning : simpleEarning;
   const total = num + earning;
 
   const tiers = [
-    { label: "Bronze",   min: 100,   max: 999,      rate: "Up to 15%", icon: "🥉" },
-    { label: "Silver",   min: 1000,  max: 4999,     rate: "Up to 15%", icon: "🥈" },
-    { label: "Gold",     min: 5000,  max: 24999,    rate: "Up to 15%", icon: "🥇" },
-    { label: "Platinum", min: 25000, max: Infinity,  rate: "Up to 15%", icon: "💎" },
+    { label: "Bronze",   min: 100,   max: 999,      rate: plan.maxRate * 100 + "% max", icon: "🥉" },
+    { label: "Silver",   min: 1000,  max: 4999,     rate: plan.maxRate * 100 + "% max", icon: "🥈" },
+    { label: "Gold",     min: 5000,  max: 24999,    rate: plan.maxRate * 100 + "% max", icon: "🥇" },
+    { label: "Platinum", min: 25000, max: Infinity,  rate: plan.maxRate * 100 + "% max", icon: "💎" },
   ];
   const currentTier = tiers.find(t => num >= t.min && num <= t.max) ?? tiers[0];
 
@@ -7836,12 +8053,24 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
             </div>
           </div>
 
-          {/* Duration — fixed 90 days */}
+          {/* Plan selector */}
           <div>
-            <label className="block text-sm font-medium text-muted-foreground mb-2">Lock Duration</label>
-            <div className="p-4 rounded-xl border-2 border-primary bg-primary/10 text-center overflow-hidden">
-              <div className="font-bold text-foreground text-lg">90 Days</div>
-              <div className="text-sm text-primary font-medium">Up to 15%</div>
+            <label className="block text-sm font-medium text-muted-foreground mb-2">Staking Plan</label>
+            <div className="grid grid-cols-2 gap-2">
+              {(["6-month", "12-month"] as const).map(plan => (
+                <button
+                  key={plan}
+                  onClick={() => setSelectedPlan(plan)}
+                  className={`p-3 rounded-xl border-2 text-center transition-all duration-200 ${
+                    selectedPlan === plan
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border bg-secondary text-muted-foreground hover:border-primary/40"
+                  }`}
+                >
+                  <div className="font-bold text-sm">{plan === "6-month" ? "6 Months" : "12 Months"}</div>
+                  <div className="text-xs mt-0.5">{plan === "6-month" ? "Up to 12%/mo" : "Up to 15%/mo"}</div>
+                </button>
+              ))}
             </div>
           </div>
 
@@ -7864,12 +8093,12 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
         <div className="space-y-4">
           {/* Tier Badge */}
           <div className="glass-card p-5 bg-primary/8 border border-primary/25">
-          <div className="glass-card p-4 bg-primary/8 border border-primary/25 overflow-hidden">
+            <div className="flex items-center gap-4">
               <span className="text-3xl">{currentTier.icon}</span>
               <div>
                 <div className="text-sm font-medium text-muted-foreground">Your Tier</div>
                 <div className="text-2xl font-bold text-foreground">{currentTier.label} Member</div>
-                <div className="text-lg sm:text-2xl font-bold text-foreground">{currentTier.label} Member</div>
+                <div className="text-xs text-primary font-medium mt-0.5">{plan.label} — {currentTier.rate}/mo</div>
               </div>
             </div>
           </div>
@@ -7877,10 +8106,10 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
           {/* Result Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
             {[
-              { label: "Rate",           value: `Up to 15%`,                                              sub: "Dynamic" },
-              { label: "Total Earnings", value: `$${earning.toFixed(2)}`,                                 sub: `Over 90 days` },
-              { label: "Total Return",   value: `$${total.toFixed(2)}`,                                   sub: "Principal + rewards" },
-              { label: "ROI",            value: `${num > 0 ? ((earning / num) * 100).toFixed(1) : "0"}%`, sub: "Return on investment" },
+              { label: "Max Rate",       value: `${plan.maxRate * 100}%/mo`,                                sub: "Per month" },
+              { label: "Total Earnings", value: `$${earning.toFixed(2)}`,                                  sub: `Over ${months} months` },
+              { label: "Total Return",   value: `$${total.toFixed(2)}`,                                    sub: "Principal + rewards" },
+              { label: "ROI",            value: `${num > 0 ? ((earning / num) * 100).toFixed(1) : "0"}%`,  sub: "Return on investment" },
             ].map(item => (
               <div key={item.label} className="glass-card p-3 text-center overflow-hidden">
                 <div className="text-[11px] text-muted-foreground mb-1 truncate">{item.label}</div>
@@ -7916,7 +8145,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
           <div className="glass-card p-4 border border-primary/25 bg-primary/5">
             <div className="flex gap-2 items-start">
               <span className="text-primary text-lg mt-0.5">⚠</span>
-              <p className="text-xs text-muted-foreground">This is a projection based on current rates. Actual returns may vary. Rates are locked at time of staking.</p>
+              <p className="text-xs text-muted-foreground">This is a projection based on average rates for the selected plan. Actual returns may vary. Rates are dynamic and locked at time of staking.</p>
             </div>
           </div>
         </div>
@@ -7937,7 +8166,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
               </tr>
             </thead>
             <tbody>
-              {Array.from({ length: Math.min(months, 6) }, (_, i) => {
+              {Array.from({ length: months }, (_, i) => {
                 const m = i + 1;
                 const bal = compoundEnabled ? num * Math.pow(1 + rate, m) : num + num * rate * m;
                 const earn = bal - num;

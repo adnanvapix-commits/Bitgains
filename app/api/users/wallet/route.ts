@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
-import { calculateVariableReward, getCurrentStakingMonth, getMonthlyRate } from '../../../../lib/server/stakingRates';
+import { calculateVariableReward, getCurrentStakingMonth, getMonthlyRate, PackageType } from '../../../../lib/server/stakingRates';
 
 export async function GET(req: NextRequest) {
   const { user, error } = await getAuthUser(req);
@@ -13,7 +13,10 @@ export async function GET(req: NextRequest) {
     // Get wallet - auto-create if missing
     let { data: wallet } = await sb.from('wallets').select('*').eq('user_id', uid).single();
     if (!wallet) {
-      const { data: w } = await sb.from('wallets').insert({ user_id: uid, balance: 0, staked_amount: 0, total_earnings: 0, total_deposited: 0, total_withdrawn: 0, apr: 12.5 }).select('*').single();
+      const { data: w } = await sb.from('wallets').insert({
+        user_id: uid, balance: 0, staked_amount: 0, total_earnings: 0,
+        total_deposited: 0, total_withdrawn: 0, apr: 12.5,
+      }).select('*').single();
       wallet = w;
     }
     if (!wallet) return NextResponse.json({ success: false, message: 'Failed to initialize wallet' }, { status: 500 });
@@ -26,19 +29,32 @@ export async function GET(req: NextRequest) {
 
     for (const stake of (activeStakes || [])) {
       if (now >= stake.end_date) {
-        const { reward } = calculateVariableReward(stake.amount, stake.start_date, stake.start_date, stake.end_date);
+        const pkgType = (stake.package_type as PackageType) || '12-month';
+        const { reward } = calculateVariableReward(stake.amount, stake.start_date, stake.start_date, stake.end_date, pkgType);
         totalReward += reward;
-        maturedStakes.push({ stakeId: stake.stake_id, amount: stake.amount, rewards: reward, packageType: stake.package_type });
+        maturedStakes.push({
+          stakeId: stake.stake_id, amount: stake.amount,
+          rewards: reward, packageType: stake.package_type,
+        });
         await sb.from('stakes').update({ status: 'matured', actual_rewards: reward, matured_at: now }).eq('id', stake.id);
         const { data: existingReward } = await sb.from('transactions').select('id').eq('user_id', uid).eq('type', 'reward').contains('metadata', { stakeId: stake.stake_id }).maybeSingle();
         if (!existingReward) {
-          await sb.from('transactions').insert({ user_id: uid, type: 'reward', amount: reward, currency: 'USDT', status: 'completed', description: `Stake matured: ${stake.package_type} stake of ${stake.amount} USDT`, completed_at: now, metadata: { stakeId: stake.stake_id, stakedAmount: stake.amount, packageType: stake.package_type } });
+          await sb.from('transactions').insert({
+            user_id: uid, type: 'reward', amount: reward, currency: 'USDT', status: 'completed',
+            description: `Stake matured: ${stake.package_type} stake of ${stake.amount} USDT`,
+            completed_at: now, metadata: { stakeId: stake.stake_id, stakedAmount: stake.amount, packageType: stake.package_type },
+          });
         }
       }
     }
 
     if (totalReward > 0) {
-      await sb.from('wallets').update({ balance: wallet.balance + totalReward, staked_amount: Math.max(0, wallet.staked_amount - maturedStakes.reduce((s, m) => s + m.amount, 0)), total_earnings: wallet.total_earnings + totalReward, last_staking_update: now }).eq('user_id', uid);
+      await sb.from('wallets').update({
+        balance: wallet.balance + totalReward,
+        staked_amount: Math.max(0, wallet.staked_amount - maturedStakes.reduce((s, m) => s + m.amount, 0)),
+        total_earnings: wallet.total_earnings + totalReward,
+        last_staking_update: now,
+      }).eq('user_id', uid);
     }
 
     // Fresh wallet
@@ -46,7 +62,9 @@ export async function GET(req: NextRequest) {
     const { data: allStakes } = await sb.from('stakes').select('*').eq('user_id', uid).order('created_at', { ascending: false });
     const w = fresh || wallet;
     const currentMonth = w.staking_start_date ? getCurrentStakingMonth(w.staking_start_date) : 1;
-    const currentRate = getMonthlyRate(currentMonth);
+
+    // Use 12-month rate as default for display
+    const currentRate = getMonthlyRate(currentMonth, '12-month');
 
     return NextResponse.json({
       success: true,
@@ -65,7 +83,11 @@ export async function GET(req: NextRequest) {
           currentStakingMonth: currentMonth,
           currentMonthlyRate: currentRate,
           currentMonthlyRatePercent: `${(currentRate * 100).toFixed(0)}%`,
-          stakes: (allStakes || []).map((s: any) => ({ stakeId: s.stake_id, amount: s.amount, startDate: s.start_date, endDate: s.end_date, packageType: s.package_type, status: s.status, expectedRewards: s.expected_rewards, actualRewards: s.actual_rewards, maturedAt: s.matured_at })),
+          stakes: (allStakes || []).map((s: any) => ({
+            stakeId: s.stake_id, amount: s.amount, startDate: s.start_date, endDate: s.end_date,
+            packageType: s.package_type, status: s.status, expectedRewards: s.expected_rewards,
+            actualRewards: s.actual_rewards, maturedAt: s.matured_at,
+          })),
           maturedStakes,
           createdAt: w.created_at,
           updatedAt: w.updated_at,
