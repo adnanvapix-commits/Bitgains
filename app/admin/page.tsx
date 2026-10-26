@@ -305,6 +305,8 @@ export default function AdminPage() {
   const [selectedUserForHierarchy, setSelectedUserForHierarchy] =
     useState<string>("");
   const [referralHierarchy, setReferralHierarchy] = useState<any>(null);
+  const [hierarchyUserSearch, setHierarchyUserSearch] = useState("");
+  const [balanceUserSearch, setBalanceUserSearch] = useState("");
   const [isLoadingHierarchy, setIsLoadingHierarchy] = useState(false);
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
 
@@ -1101,12 +1103,14 @@ export default function AdminPage() {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
-      if (!t.closest("[data-notif-send-to]"))  setShowSendToDropdown(false);
-      if (!t.closest("[data-notif-type]"))      setShowTypeDropdown(false);
+      if (!t.closest("[data-notif-send-to]"))   setShowSendToDropdown(false);
+      if (!t.closest("[data-notif-type]"))       setShowTypeDropdown(false);
+      if (!t.closest("[data-balance-user-select]"))   setBalanceUserSearch((prev) => (prev && !selectedUser ? "" : prev));
+      if (!t.closest("[data-hierarchy-user-select]")) setHierarchyUserSearch((prev) => (prev && !selectedUserForHierarchy ? "" : prev));
     };
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
+  }, [selectedUser, selectedUserForHierarchy]);
 
   if (!isAuthenticated || !user) {
     return (
@@ -2419,23 +2423,66 @@ export default function AdminPage() {
                     <label className="block text-stone-900/80 text-sm mb-2">
                       Select User
                     </label>
-                    <select
-                      value={selectedUser}
-                      onChange={(e) => setSelectedUser(e.target.value)}
-                      className="w-full px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-                    >
-                      <option value="">-- Select a user --</option>
-                      {allUsers.map((user: any) => (
-                        <option
-                          key={user._id}
-                          value={user._id}
-                          className="bg-cream-100"
-                        >
-                          {user.email} ({user.name}) - Balance: $
-                          {user.wallet?.balance || 0}
-                        </option>
-                      ))}
-                    </select>
+                    {/* Custom searchable dropdown — no dark OS styling */}
+                    <div className="relative" data-balance-user-select>
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                        <input
+                          type="text"
+                          value={balanceUserSearch}
+                          onChange={(e) => {
+                            setBalanceUserSearch(e.target.value);
+                            if (!e.target.value) setSelectedUser("");
+                          }}
+                          placeholder={
+                            selectedUser
+                              ? allUsers.find((u: any) => (u._id || u.id) === selectedUser)
+                                  ? `${allUsers.find((u: any) => (u._id || u.id) === selectedUser)?.name} (${allUsers.find((u: any) => (u._id || u.id) === selectedUser)?.email})`
+                                  : "Search users..."
+                              : "Search by name or email..."
+                          }
+                          className="w-full pl-10 pr-4 py-3 bg-white border border-stone-300 rounded-xl text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 text-sm"
+                        />
+                        {selectedUser && (
+                          <button
+                            type="button"
+                            onClick={() => { setSelectedUser(""); setBalanceUserSearch(""); }}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                      {balanceUserSearch && !selectedUser && (
+                        <div className="absolute z-50 w-full mt-1 bg-white border border-stone-200 rounded-xl shadow-xl max-h-56 overflow-y-auto">
+                          {allUsers
+                            .filter((u: any) => {
+                              const q = balanceUserSearch.toLowerCase();
+                              return u.name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q);
+                            })
+                            .map((u: any) => (
+                              <button
+                                key={u._id || u.id}
+                                type="button"
+                                onClick={() => {
+                                  setSelectedUser(u._id || u.id);
+                                  setBalanceUserSearch(`${u.name} (${u.email})`);
+                                }}
+                                className="w-full px-4 py-2.5 text-left hover:bg-emerald-50 transition-colors border-b border-stone-100 last:border-0"
+                              >
+                                <p className="text-stone-900 font-medium text-sm">{u.name}</p>
+                                <p className="text-stone-500 text-xs">{u.email} · Balance: ${u.wallet?.balance || 0}</p>
+                              </button>
+                            ))}
+                          {allUsers.filter((u: any) => {
+                            const q = balanceUserSearch.toLowerCase();
+                            return u.name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q);
+                          }).length === 0 && (
+                            <p className="p-4 text-stone-500 text-sm text-center">No users found</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* Action Type */}
@@ -2956,29 +3003,71 @@ export default function AdminPage() {
                   <label className="block text-stone-900/80 text-sm mb-2">
                     Select User to View Hierarchy
                   </label>
-                  <select
-                    value={selectedUserForHierarchy}
-                    onChange={(e) => {
-                      setSelectedUserForHierarchy(e.target.value);
-                      if (e.target.value) {
-                        fetchReferralHierarchy(e.target.value);
-                      } else {
-                        setReferralHierarchy(null);
-                      }
-                    }}
-                    className="w-full px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
-                  >
-                    <option value="">-- Select a user --</option>
-                    {allUsers.map((user: any) => (
-                      <option
-                        key={user._id}
-                        value={user._id}
-                        className="bg-cream-100"
-                      >
-                        {user.name} ({user.email})
-                      </option>
-                    ))}
-                  </select>
+                  {/* Custom searchable dropdown */}
+                  <div className="relative" data-hierarchy-user-select>
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                      <input
+                        type="text"
+                        value={hierarchyUserSearch}
+                        onChange={(e) => {
+                          setHierarchyUserSearch(e.target.value);
+                          if (!e.target.value) {
+                            setSelectedUserForHierarchy("");
+                            setReferralHierarchy(null);
+                          }
+                        }}
+                        placeholder={
+                          selectedUserForHierarchy
+                            ? allUsers.find((u: any) => (u._id || u.id) === selectedUserForHierarchy)
+                                ? `${allUsers.find((u: any) => (u._id || u.id) === selectedUserForHierarchy)?.name} (${allUsers.find((u: any) => (u._id || u.id) === selectedUserForHierarchy)?.email})`
+                                : "Search users..."
+                            : "Search by name or email..."
+                        }
+                        className="w-full pl-10 pr-4 py-3 bg-white border border-stone-300 rounded-xl text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-sm"
+                      />
+                      {selectedUserForHierarchy && (
+                        <button
+                          type="button"
+                          onClick={() => { setSelectedUserForHierarchy(""); setHierarchyUserSearch(""); setReferralHierarchy(null); }}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                    {hierarchyUserSearch && !selectedUserForHierarchy && (
+                      <div className="absolute z-50 w-full mt-1 bg-white border border-stone-200 rounded-xl shadow-xl max-h-56 overflow-y-auto">
+                        {allUsers
+                          .filter((u: any) => {
+                            const q = hierarchyUserSearch.toLowerCase();
+                            return u.name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q);
+                          })
+                          .map((u: any) => (
+                            <button
+                              key={u._id || u.id}
+                              type="button"
+                              onClick={() => {
+                                const uid = u._id || u.id;
+                                setSelectedUserForHierarchy(uid);
+                                setHierarchyUserSearch(`${u.name} (${u.email})`);
+                                fetchReferralHierarchy(uid);
+                              }}
+                              className="w-full px-4 py-2.5 text-left hover:bg-purple-50 transition-colors border-b border-stone-100 last:border-0"
+                            >
+                              <p className="text-stone-900 font-medium text-sm">{u.name}</p>
+                              <p className="text-stone-500 text-xs">{u.email}</p>
+                            </button>
+                          ))}
+                        {allUsers.filter((u: any) => {
+                          const q = hierarchyUserSearch.toLowerCase();
+                          return u.name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q);
+                        }).length === 0 && (
+                          <p className="p-4 text-stone-500 text-sm text-center">No users found</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Commission Structure Info */}
@@ -3536,17 +3625,30 @@ export default function AdminPage() {
                   <label className="block text-stone-900/80 text-sm mb-2">
                     Selected Users
                   </label>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <button
                       onClick={handleSelectAllEligible}
-                      className="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg hover:bg-emerald-500/30 transition-colors text-sm"
+                      className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all border ${
+                        selectedPayoutUsers.length === eligibleUsers.filter(u => u.selectable).length && eligibleUsers.filter(u => u.selectable).length > 0
+                          ? "bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-600"
+                          : "bg-emerald-500/15 text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/25"
+                      }`}
                     >
-                      {selectedPayoutUsers.length === eligibleUsers.filter(u => u.selectable).length 
-                        ? "Deselect All" : "Select All Eligible"}
+                      {selectedPayoutUsers.length === eligibleUsers.filter(u => u.selectable).length && eligibleUsers.filter(u => u.selectable).length > 0
+                        ? "✓ Deselect All"
+                        : "☑ Select All Eligible"}
                     </button>
-                    <span className="text-stone-900/60 text-sm">
-                      {selectedPayoutUsers.length} selected
+                    <span className="px-3 py-2 bg-stone-100 border border-stone-200 rounded-xl text-stone-700 text-sm font-medium">
+                      {selectedPayoutUsers.length} / {eligibleUsers.filter(u => u.selectable).length} selected
                     </span>
+                    {selectedPayoutUsers.length > 0 && (
+                      <button
+                        onClick={() => setSelectedPayoutUsers([])}
+                        className="px-3 py-2 bg-stone-100 border border-stone-200 rounded-xl text-stone-500 text-sm hover:bg-stone-200 transition-colors flex items-center gap-1"
+                      >
+                        <X className="w-3.5 h-3.5" /> Clear
+                      </button>
+                    )}
                   </div>
                 </div>
 
