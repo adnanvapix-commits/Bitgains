@@ -3,7 +3,7 @@ import crypto from 'crypto';
 const store = new Map<string, { hash: string; attempts: number; expiresAt: number; metadata: any }>();
 const hash = (code: string) => crypto.createHash('sha256').update(code).digest('hex');
 
-export const OTP_CONTEXTS = { WITHDRAWAL: 'withdrawal' };
+export const OTP_CONTEXTS = { WITHDRAWAL: 'withdrawal', SIGNUP: 'signup' };
 
 export const createOtpSession = ({ userId, context, metadata = {} }: { userId: string; context: string; metadata?: any }) => {
   const len = parseInt(process.env.OTP_LENGTH || '6', 10);
