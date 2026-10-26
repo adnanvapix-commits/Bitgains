@@ -154,6 +154,10 @@ export default function AdminPage() {
   const [isLoadingIssues, setIsLoadingIssues] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("transactions");
+  const [allUsersDetailed, setAllUsersDetailed] = useState<any[]>([]);
+  const [allUsersDetailedLoading, setAllUsersDetailedLoading] = useState(false);
+  const [allUsersDetailedSearch, setAllUsersDetailedSearch] = useState("");
+  const [selectedUserDetail, setSelectedUserDetail] = useState<any>(null);
   const [processingTx, setProcessingTx] = useState<string | null>(null);
   const [commentModal, setCommentModal] = useState<{
     open: boolean;
@@ -534,6 +538,27 @@ export default function AdminPage() {
       }
     } catch (error) {
       console.error("Error fetching users:", error);
+    }
+  }, []);
+
+  // Fetch all users with full details for Total Users tab
+  const fetchAllUsersDetailed = useCallback(async (search = "") => {
+    setAllUsersDetailedLoading(true);
+    try {
+      const { supabase: sb } = await import("../../lib/supabase");
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session?.access_token) return;
+      const params = new URLSearchParams({ limit: "100" });
+      if (search) params.set("search", search);
+      const res = await fetch(`/api/admin/users/all?${params.toString()}`, {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      const json = await res.json();
+      if (json.success) setAllUsersDetailed(json.data.users || []);
+    } catch (err) {
+      console.error("Error fetching detailed users:", err);
+    } finally {
+      setAllUsersDetailedLoading(false);
     }
   }, []);
 
@@ -1072,265 +1097,6 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Global Search Bar */}
-        <div className="relative mb-6">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-900/60" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() =>
-                searchQuery.length >= 2 && setShowSearchResults(true)
-              }
-              placeholder="Search users, emails, transactions, wallet addresses..."
-              className="w-full pl-12 pr-4 py-3 bg-cream-100/80 border border-stone-300/50 rounded-xl text-stone-900 placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50"
-            />
-            {isSearching && (
-              <Loader2 className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-emerald-400 animate-spin" />
-            )}
-          </div>
-
-          {/* Search Results Dropdown */}
-          {showSearchResults && searchResults && (
-            <div className="absolute z-50 w-full mt-2 bg-cream-100 border border-stone-300/50 rounded-xl shadow-2xl max-h-[32rem] overflow-y-auto">
-              {searchResults.counts && (
-                <div className="grid grid-cols-3 gap-2 p-3 border-b border-stone-300/40 text-center">
-                  <div className="bg-cream-100/80 rounded-lg p-2">
-                    <p className="text-xs text-stone-900/60">Users</p>
-                    <p className="text-stone-900 font-semibold text-lg">
-                      {searchResults.counts.users}
-                    </p>
-                  </div>
-                  <div className="bg-cream-100/80 rounded-lg p-2">
-                    <p className="text-xs text-stone-900/60">Transactions</p>
-                    <p className="text-stone-900 font-semibold text-lg">
-                      {searchResults.counts.transactions}
-                    </p>
-                  </div>
-                  <div className="bg-cream-100/80 rounded-lg p-2">
-                    <p className="text-xs text-stone-900/60">Issues</p>
-                    <p className="text-stone-900 font-semibold text-lg">
-                      {searchResults.counts.issues}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* Users Results */}
-              {userMatches.length > 0 && (
-                <div className="p-3 border-b border-stone-300/40">
-                  <h4 className="text-xs font-semibold text-stone-900/60 mb-3 flex items-center gap-2">
-                    <User className="w-3 h-3" />
-                    Users ({userMatches.length})
-                  </h4>
-                  {userMatches.map((match) => (
-                    <div
-                      key={match._id}
-                      className="p-3 mb-2 last:mb-0 bg-cream-100/80 rounded-lg"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="text-stone-900 font-medium text-sm">
-                            {match.name}
-                          </p>
-                          <p className="text-stone-900/60 text-xs">{match.email}</p>
-                        </div>
-                        <span
-                          className={`text-[10px] px-2 py-0.5 rounded ${
-                            match.isActive
-                              ? "bg-emerald-500/20 text-emerald-400"
-                              : "bg-red-500/20 text-red-400"
-                          }`}
-                        >
-                          {match.isActive ? "Active" : "Inactive"}
-                        </span>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-2 mt-2 text-[11px]">
-                        <span className="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">
-                          Balance: ${formatCurrency(match.wallet?.balance)}
-                        </span>
-                        <span className="bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded">
-                          Staked: ${formatCurrency(match.wallet?.stakedAmount)}
-                        </span>
-                        <span className="bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded">
-                          Deposited: $
-                          {formatCurrency(match.wallet?.totalDeposited)}
-                        </span>
-                        {match.referralCode && (
-                          <span className="bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded">
-                            Ref: {match.referralCode}
-                          </span>
-                        )}
-                      </div>
-                      {match.recentTransactions?.length > 0 && (
-                        <div className="mt-3 border-t border-stone-300/40 pt-2">
-                          <p className="text-stone-900/60 text-[10px] uppercase mb-1">
-                            Recent Activity
-                          </p>
-                          <div className="space-y-1">
-                            {match.recentTransactions.map((tx) => (
-                              <div
-                                key={tx._id}
-                                className="flex items-center justify-between text-[11px] text-stone-900/70"
-                              >
-                                <div className="flex items-center gap-2">
-                                  <ArrowUpRight className="w-3 h-3" />
-                                  <span>{tx.type.toUpperCase()}</span>
-                                </div>
-                                <span>${formatCurrency(tx.amount)}</span>
-                                <span
-                                  className={`px-2 py-0.5 rounded ${getStatusBadgeClass(
-                                    tx.status
-                                  )}`}
-                                >
-                                  {tx.status}
-                                </span>
-                                <span>
-                                  {new Date(tx.createdAt).toLocaleDateString()}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Transactions Results */}
-              {transactionMatches.length > 0 && (
-                <div className="p-3 border-b border-stone-300/40">
-                  <h4 className="text-xs font-semibold text-stone-900/60 mb-3 flex items-center gap-2">
-                    <ArrowUpRight className="w-3 h-3" />
-                    Transactions ({transactionMatches.length})
-                  </h4>
-                  {transactionMatches.map((tx) => (
-                    <div
-                      key={tx._id}
-                      className="p-3 mb-2 last:mb-0 bg-cream-100/80 rounded-lg"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="text-stone-900 font-medium text-sm">
-                            {tx.userId?.name ||
-                              tx.userId?.email ||
-                              "Unknown User"}
-                          </p>
-                          <p className="text-stone-900/60 text-xs">
-                            {tx.userId?.email || "No email on record"}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-stone-900 font-semibold text-sm">
-                            ${formatCurrency(tx.amount)}
-                          </p>
-                          <span
-                            className={`text-[10px] px-2 py-0.5 rounded ${getStatusBadgeClass(
-                              tx.status
-                            )}`}
-                          >
-                            {tx.status}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-2 text-[11px] text-stone-900/60 mt-2">
-                        <span className="uppercase">{tx.type}</span>
-                        {tx.network && <span>Network: {tx.network}</span>}
-                        {tx.txHash && (
-                          <span className="truncate">
-                            Hash: {tx.txHash.slice(0, 10)}...
-                          </span>
-                        )}
-                      </div>
-                      {tx.description && (
-                        <p className="text-stone-900/60 text-xs mt-2 line-clamp-2">
-                          {tx.description}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Issues Results */}
-              {issueMatches.length > 0 && (
-                <div className="p-3 border-b border-stone-300/40">
-                  <h4 className="text-xs font-semibold text-stone-900/60 mb-3 flex items-center gap-2">
-                    <MessageSquare className="w-3 h-3" />
-                    Support Issues ({issueMatches.length})
-                  </h4>
-                  {issueMatches.map((issue) => (
-                    <div
-                      key={issue._id}
-                      className="p-3 mb-2 last:mb-0 bg-cream-100/80 rounded-lg"
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="text-stone-900 font-medium text-sm">
-                            {issue.subject}
-                          </p>
-                          <p className="text-stone-900/60 text-xs">
-                            {issue.userId?.email || "Unknown user"}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`text-[10px] px-2 py-0.5 rounded ${getPriorityBadgeClass(
-                              issue.priority
-                            )}`}
-                          >
-                            {issue.priority}
-                          </span>
-                          <span
-                            className={`text-[10px] px-2 py-0.5 rounded ${getStatusBadgeClass(
-                              issue.status
-                            )}`}
-                          >
-                            {issue.status}
-                          </span>
-                        </div>
-                      </div>
-                      {issue.description && (
-                        <p className="text-stone-900/60 text-xs mt-2 line-clamp-2">
-                          {issue.description}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* No Results */}
-              {userMatches.length === 0 &&
-                transactionMatches.length === 0 &&
-                issueMatches.length === 0 && (
-                  <div className="p-4 text-center">
-                    <Search className="w-8 h-8 text-stone-900/20 mx-auto mb-2" />
-                    <p className="text-stone-900/60 text-sm">
-                      No results found for "{searchQuery}"
-                    </p>
-                  </div>
-                )}
-
-              {/* Close Button */}
-              <div className="p-2 border-t border-stone-300/40">
-                <button
-                  onClick={() => {
-                    setShowSearchResults(false);
-                    setSearchQuery("");
-                    setSearchResults(null);
-                  }}
-                  className="w-full py-2 text-stone-900/60 hover:text-stone-900 text-sm transition-colors"
-                >
-                  Close Search
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
         {/* Navigation Tabs */}
         <div className="flex space-x-1 mb-6 sm:mb-8 bg-cream-100/80 rounded-xl p-1 overflow-x-auto">
           <button
@@ -1485,6 +1251,20 @@ export default function AdminPage() {
             <div className="flex items-center justify-center space-x-2">
               <Gift className="w-4 h-4" />
               <span>30-Day Payouts</span>
+            </div>
+          </button>
+
+          <button
+            onClick={() => { setActiveTab("total-users"); fetchAllUsersDetailed(); }}
+            className={`flex-shrink-0 px-4 py-3 rounded-lg font-medium transition-all duration-300 ${
+              activeTab === "total-users"
+                ? "bg-emerald-500 text-black shadow-lg"
+                : "text-stone-900/70 hover:text-stone-900 hover:bg-cream-200/60"
+            }`}
+          >
+            <div className="flex items-center justify-center space-x-2">
+              <Users className="w-4 h-4" />
+              <span>Total Users</span>
             </div>
           </button>
         </div>
@@ -3857,6 +3637,162 @@ export default function AdminPage() {
                 </div>
               )}
             </div>
+          </motion.div>
+        )}
+
+        {/* ── Total Users Tab ─────────────────────────────────────── */}
+        {activeTab === "total-users" && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-cream-100/80 border border-stone-300/50 rounded-2xl overflow-hidden"
+          >
+            <div className="p-4 sm:p-6 border-b border-stone-300/40">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <h2 className="text-lg sm:text-xl font-bold text-stone-900">Total Users</h2>
+                  <p className="text-stone-900/60 text-sm mt-1">All registered users with full account details</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="px-3 py-1 bg-emerald-500/20 text-emerald-700 text-sm font-semibold rounded-full">
+                    {allUsersDetailed.length} users
+                  </span>
+                  <button
+                    onClick={() => fetchAllUsersDetailed(allUsersDetailedSearch)}
+                    className="p-2 bg-cream-200/60 hover:bg-cream-300/60 rounded-xl transition-colors"
+                  >
+                    <RefreshCw className="w-4 h-4 text-stone-900/60" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Search */}
+              <div className="relative mt-4">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-900/50" />
+                <input
+                  type="text"
+                  value={allUsersDetailedSearch}
+                  onChange={(e) => {
+                    setAllUsersDetailedSearch(e.target.value);
+                    clearTimeout((window as any).__userSearchTimer);
+                    (window as any).__userSearchTimer = setTimeout(() => {
+                      fetchAllUsersDetailed(e.target.value);
+                    }, 400);
+                  }}
+                  placeholder="Search by name or email..."
+                  className="w-full pl-10 pr-4 py-2.5 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 placeholder-stone-900/40 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                />
+              </div>
+            </div>
+
+            {allUsersDetailedLoading ? (
+              <div className="flex items-center justify-center py-16">
+                <Loader2 className="w-6 h-6 animate-spin text-emerald-500" />
+              </div>
+            ) : allUsersDetailed.length === 0 ? (
+              <div className="p-8 text-center text-stone-900/50">No users found.</div>
+            ) : (
+              <div className="divide-y divide-stone-300/30">
+                {allUsersDetailed.map((u: any) => (
+                  <div
+                    key={u.id}
+                    className="p-4 sm:p-5 hover:bg-cream-200/40 cursor-pointer transition-colors"
+                    onClick={() => setSelectedUserDetail(selectedUserDetail?.id === u.id ? null : u)}
+                  >
+                    {/* Row summary */}
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center flex-shrink-0">
+                          <User className="w-5 h-5 text-emerald-600" />
+                        </div>
+                        <div>
+                          <p className="text-stone-900 font-semibold text-sm">{u.name || "—"}</p>
+                          <p className="text-stone-900/60 text-xs">{u.email}</p>
+                          <p className="text-stone-900/40 text-xs">Joined {new Date(u.createdAt).toLocaleDateString()}</p>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2 text-xs">
+                        <span className="px-2 py-1 bg-emerald-500/15 text-emerald-700 rounded-lg font-medium">
+                          Balance: ${(u.wallet?.balance ?? 0).toFixed(2)}
+                        </span>
+                        <span className="px-2 py-1 bg-blue-500/15 text-blue-700 rounded-lg font-medium">
+                          Staked: ${(u.wallet?.stakedAmount ?? 0).toFixed(2)}
+                        </span>
+                        <span className="px-2 py-1 bg-purple-500/15 text-purple-700 rounded-lg font-medium">
+                          Business: ${(u.stats?.totalBusiness ?? 0).toFixed(2)}
+                        </span>
+                        <span className={`px-2 py-1 rounded-lg font-medium ${u.isActive ? "bg-emerald-500/15 text-emerald-700" : "bg-red-500/15 text-red-700"}`}>
+                          {u.isActive ? "Active" : "Inactive"}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Expanded detail panel */}
+                    {selectedUserDetail?.id === u.id && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        className="mt-4 pt-4 border-t border-stone-300/40 overflow-hidden"
+                      >
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                          {[
+                            { label: "Total Balance",    value: `$${(u.wallet?.balance ?? 0).toFixed(2)}`,          color: "emerald" },
+                            { label: "Currently Staked", value: `$${(u.wallet?.stakedAmount ?? 0).toFixed(2)}`,     color: "blue" },
+                            { label: "Total Deposited",  value: `$${(u.wallet?.totalDeposited ?? 0).toFixed(2)}`,   color: "purple" },
+                            { label: "Total Withdrawn",  value: `$${(u.wallet?.totalWithdrawn ?? 0).toFixed(2)}`,   color: "orange" },
+                            { label: "Total Earnings",   value: `$${(u.wallet?.totalEarnings ?? 0).toFixed(2)}`,    color: "yellow" },
+                            { label: "Total Business",   value: `$${(u.stats?.totalBusiness ?? 0).toFixed(2)}`,     color: "pink" },
+                            { label: "Referrals (L1)",   value: u.stats?.level1ReferralCount ?? 0,                  color: "cyan" },
+                            { label: "Transactions",     value: u.stats?.totalTransactions ?? 0,                    color: "slate" },
+                          ].map((item) => (
+                            <div key={item.label} className={`p-3 bg-${item.color}-500/10 border border-${item.color}-500/20 rounded-xl`}>
+                              <p className="text-stone-900/60 text-xs mb-1">{item.label}</p>
+                              <p className="text-stone-900 font-bold text-sm">{item.value}</p>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Active Stakes */}
+                        {u.activeStakes && u.activeStakes.length > 0 && (
+                          <div className="mb-3">
+                            <p className="text-stone-900/60 text-xs font-semibold uppercase mb-2">Active Stakes</p>
+                            <div className="space-y-2">
+                              {u.activeStakes.map((s: any) => {
+                                const end = new Date(s.endDate);
+                                const daysLeft = Math.max(0, Math.ceil((end.getTime() - Date.now()) / 86400000));
+                                return (
+                                  <div key={s.stakeId} className="flex items-center justify-between p-2.5 bg-cream-200/60 border border-stone-300/40 rounded-lg text-xs">
+                                    <div>
+                                      <span className="text-stone-900 font-semibold">${s.amount.toFixed(2)} USDT</span>
+                                      <span className="text-stone-900/50 ml-2">· {s.packageType}</span>
+                                    </div>
+                                    <div className="text-right">
+                                      <span className="text-stone-900/60">{daysLeft} days left</span>
+                                      <span className="text-stone-900/40 ml-2">ends {end.toLocaleDateString()}</span>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Account Info */}
+                        <div className="flex flex-wrap gap-3 text-xs text-stone-900/60">
+                          {u.referralCode && (
+                            <span>Ref Code: <span className="text-stone-900 font-mono font-semibold">{u.referralCode}</span></span>
+                          )}
+                          {u.lastLogin && (
+                            <span>Last Login: {new Date(u.lastLogin).toLocaleDateString()}</span>
+                          )}
+                          <span>Role: <span className="capitalize font-semibold text-stone-900">{u.role}</span></span>
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </motion.div>
         )}
       </div>
