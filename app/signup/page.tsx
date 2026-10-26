@@ -183,12 +183,15 @@ function SignupForm() {
       });
       const json = await res.json();
       if (json.success) {
-        // Store token and redirect
-        if (typeof window !== "undefined" && json.data?.token) {
-          localStorage.setItem("authToken", json.data.token);
-          if (json.data.refreshToken) localStorage.setItem("refreshToken", json.data.refreshToken);
-        }
-        router.replace("/dashboard");
+        // Use Supabase setSession so AuthContext picks it up via onAuthStateChange
+        const { supabase: sb } = await import("../../lib/supabase");
+        await sb.auth.setSession({
+          access_token: json.data.token,
+          refresh_token: json.data.refreshToken,
+        });
+        // AuthContext will detect SIGNED_IN via onAuthStateChange and load profile
+        // Give it a moment then redirect
+        setTimeout(() => router.replace("/dashboard"), 300);
       } else {
         setOtpError(json.message || "Invalid OTP");
         if (json.needsNewOtp) {
