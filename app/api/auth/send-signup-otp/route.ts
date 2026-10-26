@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Generate and store OTP using email as the "userId" key
-    const { otp, expiresAt } = createOtpSession({
+    const { otp, expiresAt } = await createOtpSession({
       userId: `${SIGNUP_OTP_PREFIX}${email}`,
       context: 'signup',
       metadata: { email, name },

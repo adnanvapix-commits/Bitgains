@@ -13,11 +13,11 @@ export async function POST(req: NextRequest) {
     const v = validateTransactionAmount(num, 'withdrawal');
     if (!v.valid) return NextResponse.json({ success: false, message: v.message }, { status: 400 });
     if (!otp) return NextResponse.json({ success: false, message: 'OTP required' }, { status: 400 });
-    const verification = verifyOtpSession({ userId: user!.id, context: OTP_CONTEXTS.WITHDRAWAL, code: otp });
+    const verification = await verifyOtpSession({ userId: user!.id, context: OTP_CONTEXTS.WITHDRAWAL, code: otp });
     if (!verification.success) return NextResponse.json({ success: false, message: verification.message, requiresNewOTP: verification.needsNewOtp, attemptsRemaining: verification.attemptsRemaining }, { status: 400 });
     const meta = verification.metadata || {};
     if (meta.amount !== num || meta.toAddress !== toAddress) {
-      invalidateOtpSession({ userId: user!.id, context: OTP_CONTEXTS.WITHDRAWAL });
+      await invalidateOtpSession({ userId: user!.id, context: OTP_CONTEXTS.WITHDRAWAL });
       return NextResponse.json({ success: false, message: 'Withdrawal details do not match OTP request.', requiresNewOTP: true }, { status: 400 });
     }
     const sb = getSupabaseAdmin();

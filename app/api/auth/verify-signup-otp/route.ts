@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Verify OTP
-    const result = verifyOtpSession({
+    const result = await verifyOtpSession({
       userId: `${SIGNUP_OTP_PREFIX}${email}`,
       context: 'signup',
       code: otp,
