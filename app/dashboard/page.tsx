@@ -4405,15 +4405,11 @@ function WithdrawTab({
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Withdraw Amount:</span>
-                  <span className="text-foreground font-semibold">
-                    {amount.toLocaleString()} {selectedToken}
-                  </span>
-                     -{feeAmount.toFixed(4)} {selectedToken} (5%)
+                  <span className="text-foreground font-semibold">{amount.toLocaleString()} {selectedToken}</span>
+                </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Network Fee:</span>
-                  <span className="text-destructive">
-                     -{feeAmount.toFixed(4)} {selectedToken} (5%)
-                  </span>
+                  <span className="text-destructive">-{feeAmount.toFixed(4)} {selectedToken} (5%)</span>
                 </div>
                 <div className="border-t border-border pt-3">
                   <div className="flex justify-between">
