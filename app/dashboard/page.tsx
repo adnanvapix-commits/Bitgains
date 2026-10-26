@@ -3332,7 +3332,7 @@ function StakingTab({
       label: "12-Month Stake",
       apr: "Up to 15%/mo",
       description: "Earn up to 15% per month over 12 months",
-      minStake: 100,
+      minStake: 500,
       lockPeriod: "12 months",
       icon: Award,
       color: "purple",

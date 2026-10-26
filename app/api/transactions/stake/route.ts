@@ -3,9 +3,9 @@ import { getSupabaseAdmin } from '../../../../lib/supabase-server';
 import { getAuthUser } from '../../../../lib/api-auth';
 
 // Package definitions
-const STAKING_PACKAGES: Record<string, { days: number; maxMonthlyRate: number; label: string }> = {
-  '6-month': { days: 180, maxMonthlyRate: 0.12, label: '6-Month Stake' },
-  '12-month': { days: 360, maxMonthlyRate: 0.15, label: '12-Month Stake' },
+const STAKING_PACKAGES: Record<string, { days: number; maxMonthlyRate: number; label: string; minStake: number }> = {
+  '6-month':  { days: 180, maxMonthlyRate: 0.12, label: '6-Month Stake',  minStake: 100 },
+  '12-month': { days: 360, maxMonthlyRate: 0.15, label: '12-Month Stake', minStake: 500 },
 };
 
 export async function POST(req: NextRequest) {
@@ -19,8 +19,8 @@ export async function POST(req: NextRequest) {
     const pkg = STAKING_PACKAGES[packageType];
     if (!pkg) return NextResponse.json({ success: false, message: 'Invalid package. Choose 6-month or 12-month.' }, { status: 400 });
 
-    const minStake = 100;
-    if (num < minStake) return NextResponse.json({ success: false, message: `Minimum stake is ${minStake} USDT` }, { status: 400 });
+    const minStake = pkg.minStake;
+    if (num < minStake) return NextResponse.json({ success: false, message: `Minimum stake for ${pkg.label} is ${minStake} USDT` }, { status: 400 });
 
     const sb = getSupabaseAdmin();
     const { data: wallet } = await sb.from('wallets').select('*').eq('user_id', user!.id).single();

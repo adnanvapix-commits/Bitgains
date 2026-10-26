@@ -232,6 +232,28 @@ export default function AdminPage() {
     });
   };
 
+  // Safe date formatter — returns fallback if date is invalid
+  const formatDate = (val?: string | null, opts?: Intl.DateTimeFormatOptions) => {
+    if (!val) return "—";
+    const d = new Date(val);
+    if (isNaN(d.getTime())) return "—";
+    return d.toLocaleDateString(undefined, opts);
+  };
+
+  const formatDateTime = (val?: string | null) => {
+    if (!val) return "—";
+    const d = new Date(val);
+    if (isNaN(d.getTime())) return "—";
+    return d.toLocaleString();
+  };
+
+  const formatTime = (val?: string | null) => {
+    if (!val) return "—";
+    const d = new Date(val);
+    if (isNaN(d.getTime())) return "—";
+    return d.toLocaleTimeString();
+  };
+
   const getStatusBadgeClass = (status?: string) => {
     switch (status?.toLowerCase()) {
       case "completed":
@@ -329,11 +351,13 @@ export default function AdminPage() {
       ]);
 
       if (transactionsResponse.success) {
-        // Supabase returns `id`, but the UI uses `_id` — normalize here
+        // Supabase returns `id`/`created_at`, but the UI uses `_id`/`submittedAt` — normalize here
         setPendingTransactions(
           (transactionsResponse.data.transactions || []).map((tx: any) => ({
             ...tx,
             _id: tx._id || tx.id,
+            submittedAt: tx.submittedAt || tx.created_at || tx.createdAt,
+            createdAt: tx.createdAt || tx.created_at,
           }))
         );
       }
@@ -376,7 +400,14 @@ export default function AdminPage() {
       const response = await adminApi.getStakingTransactions({ limit: 50 });
 
       if (response.success) {
-        setStakingTransactions(response.data.transactions || []);
+        setStakingTransactions(
+          (response.data.transactions || []).map((tx: any) => ({
+            ...tx,
+            _id: tx._id || tx.id,
+            createdAt: tx.createdAt || tx.created_at,
+            submittedAt: tx.submittedAt || tx.created_at || tx.createdAt,
+          }))
+        );
       }
     } catch (error) {
       console.error("Error fetching staking transactions:", error);
@@ -459,7 +490,14 @@ export default function AdminPage() {
       const response = await issueApi.getAllIssues(params);
 
       if (response && response.success && response.data) {
-        setIssues(response.data.issues || []);
+        setIssues(
+          (response.data.issues || []).map((i: any) => ({
+            ...i,
+            _id: i._id || i.id,
+            createdAt: i.createdAt || i.created_at,
+            updatedAt: i.updatedAt || i.updated_at,
+          }))
+        );
         setIssueStats(response.data.stats || null);
       } else {
         setIssues([]);
@@ -708,7 +746,13 @@ export default function AdminPage() {
       setIsLoadingAuditLogs(true);
       const response = await adminApi.getAuditLogs({ limit: 50 });
       if (response.success) {
-        setAuditLogs(response.data.logs);
+        setAuditLogs(
+          (response.data.logs || []).map((l: any) => ({
+            ...l,
+            _id: l._id || l.id,
+            createdAt: l.createdAt || l.created_at,
+          }))
+        );
         setAuditLogStats(response.data.stats);
       }
     } catch (error) {
@@ -766,8 +810,15 @@ export default function AdminPage() {
       const response = await adminApi.getReferralHierarchy(userId);
       if (response.success) {
         setReferralHierarchy(response.data);
-        // Expand first level by default
-        setExpandedNodes(new Set([userId]));
+        // Auto-expand ALL nodes so L1, L2, L3 are all visible by default
+        const allIds = new Set<string>([userId]);
+        for (const u of (response.data?.downline?.level1?.users || [])) {
+          if (u.id || u._id) allIds.add(u.id || u._id);
+        }
+        for (const u of (response.data?.downline?.level2?.users || [])) {
+          if (u.id || u._id) allIds.add(u.id || u._id);
+        }
+        setExpandedNodes(allIds);
       }
     } catch (error) {
       console.error("Error fetching referral hierarchy:", error);
@@ -795,7 +846,14 @@ export default function AdminPage() {
       setIsLoadingNotifications(true);
       const response = await adminApi.getAllNotifications({ limit: 50 });
       if (response.success) {
-        setSentNotifications(response.data.notifications);
+        setSentNotifications(
+          (response.data.notifications || []).map((n: any) => ({
+            ...n,
+            _id: n._id || n.id,
+            createdAt: n.createdAt || n.created_at,
+            isBroadcast: n.isBroadcast ?? n.is_broadcast,
+          }))
+        );
       }
     } catch (error) {
       console.error("Error fetching notifications:", error);
@@ -1568,10 +1626,10 @@ export default function AdminPage() {
                           <td className="p-3 sm:p-4">
                             <div className="text-stone-900/80">
                               <p className="text-sm">
-                                {new Date(tx.submittedAt).toLocaleDateString()}
+                                {formatDate(tx.submittedAt)}
                               </p>
                               <p className="text-xs text-stone-900/60">
-                                {new Date(tx.submittedAt).toLocaleTimeString()}
+                                {formatTime(tx.submittedAt)}
                               </p>
                             </div>
                           </td>
@@ -1745,10 +1803,10 @@ export default function AdminPage() {
                         <td className="p-3 sm:p-4">
                           <div>
                             <p className="text-stone-900 text-sm">
-                              {new Date(tx.createdAt).toLocaleDateString()}
+                              {formatDate(tx.createdAt)}
                             </p>
                             <p className="text-stone-900/60 text-xs">
-                              {new Date(tx.createdAt).toLocaleTimeString()}
+                              {formatTime(tx.createdAt)}
                             </p>
                           </div>
                         </td>
@@ -2191,10 +2249,10 @@ export default function AdminPage() {
                         <td className="p-3 sm:p-4">
                           <div className="text-stone-900/80">
                             <p className="text-sm">
-                              {new Date(issue.createdAt).toLocaleDateString()}
+                              {formatDate(issue.createdAt)}
                             </p>
                             <p className="text-xs text-stone-900/60">
-                              {new Date(issue.createdAt).toLocaleTimeString()}
+                              {formatTime(issue.createdAt)}
                             </p>
                           </div>
                         </td>
@@ -2567,10 +2625,10 @@ export default function AdminPage() {
                         <td className="p-3 sm:p-4">
                           <div className="text-stone-900/80">
                             <p className="text-sm">
-                              {new Date(tx.deletedAt).toLocaleDateString()}
+                              {formatDate(tx.deletedAt || tx.created_at || tx.createdAt)}
                             </p>
                             <p className="text-xs text-stone-900/60">
-                              {new Date(tx.deletedAt).toLocaleTimeString()}
+                              {formatTime(tx.deletedAt || tx.created_at || tx.createdAt)}
                             </p>
                           </div>
                         </td>
@@ -2751,10 +2809,10 @@ export default function AdminPage() {
                           <td className="p-3">
                             <div className="text-stone-900/80 text-xs">
                               <p>
-                                {new Date(log.createdAt).toLocaleDateString()}
+                                {formatDate(log.createdAt)}
                               </p>
                               <p className="text-stone-900/60">
-                                {new Date(log.createdAt).toLocaleTimeString()}
+                                {formatTime(log.createdAt)}
                               </p>
                             </div>
                           </td>
@@ -3155,23 +3213,27 @@ export default function AdminPage() {
                         setNotificationType(e.target.value as any)
                       }
                       className="w-full px-4 py-3 bg-cream-200/60 border border-stone-300/50 rounded-xl text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                      style={{ colorScheme: "light" }}
                     >
-                      <option value="announcement" className="bg-gray-800">
-                        📢 Announcement
-                      </option>
-                      <option value="info" className="bg-gray-800">
-                        ℹ️ Information
-                      </option>
-                      <option value="success" className="bg-gray-800">
-                        ✅ Success
-                      </option>
-                      <option value="warning" className="bg-gray-800">
-                        ⚠️ Warning
-                      </option>
-                      <option value="error" className="bg-gray-800">
-                        ❌ Error
-                      </option>
+                      <option value="announcement">📢 Announcement</option>
+                      <option value="info">ℹ️ Information</option>
+                      <option value="success">✅ Success</option>
+                      <option value="warning">⚠️ Warning</option>
+                      <option value="error">❌ Error</option>
                     </select>
+                    {/* Color preview badge */}
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className={`px-2 py-1 rounded-lg text-xs font-medium ${
+                        notificationType === "announcement" ? "bg-purple-500/20 text-purple-700"
+                        : notificationType === "success"      ? "bg-green-500/20 text-green-700"
+                        : notificationType === "warning"      ? "bg-yellow-500/20 text-yellow-700"
+                        : notificationType === "error"        ? "bg-red-500/20 text-red-700"
+                        : "bg-blue-500/20 text-blue-700"
+                      }`}>
+                        {notificationType.toUpperCase()}
+                      </span>
+                      <span className="text-stone-900/50 text-xs">Preview badge color</span>
+                    </div>
                   </div>
 
                   {/* Title */}
@@ -3319,7 +3381,7 @@ export default function AdminPage() {
                               </span>
                             )}
                             <span>
-                              {new Date(notif.createdAt).toLocaleString()}
+                              {formatDateTime(notif.createdAt)}
                             </span>
                           </div>
                         </div>
@@ -3622,7 +3684,7 @@ export default function AdminPage() {
                           </td>
                           <td className="p-4">
                             <span className="text-stone-900/60 text-sm">
-                              {new Date(payout.completed_at).toLocaleString()}
+                              {formatDateTime(payout.completed_at)}
                             </span>
                           </td>
                           <td className="p-4">
@@ -3708,7 +3770,7 @@ export default function AdminPage() {
                         <div>
                           <p className="text-stone-900 font-semibold text-sm">{u.name || "—"}</p>
                           <p className="text-stone-900/60 text-xs">{u.email}</p>
-                          <p className="text-stone-900/40 text-xs">Joined {new Date(u.createdAt).toLocaleDateString()}</p>
+                          <p className="text-stone-900/40 text-xs">Joined {formatDate(u.createdAt)}</p>
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-2 text-xs">
@@ -3783,7 +3845,7 @@ export default function AdminPage() {
                             <span>Ref Code: <span className="text-stone-900 font-mono font-semibold">{u.referralCode}</span></span>
                           )}
                           {u.lastLogin && (
-                            <span>Last Login: {new Date(u.lastLogin).toLocaleDateString()}</span>
+                            <span>Last Login: {formatDate(u.lastLogin)}</span>
                           )}
                           <span>Role: <span className="capitalize font-semibold text-stone-900">{u.role}</span></span>
                         </div>
@@ -4081,8 +4143,8 @@ export default function AdminPage() {
                                 {stake.packageType} package
                               </p>
                               <p className="text-stone-900/40 text-xs">
-                                {new Date(stake.startDate).toLocaleDateString()}{" "}
-                                - {new Date(stake.endDate).toLocaleDateString()}
+                                {formatDate(stake.startDate)}{" "}
+                                - {formatDate(stake.endDate)}
                               </p>
                             </div>
                             <div className="text-right">
