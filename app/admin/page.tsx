@@ -158,6 +158,7 @@ export default function AdminPage() {
   const [allUsersDetailed, setAllUsersDetailed] = useState<any[]>([]);
   const [allUsersDetailedLoading, setAllUsersDetailedLoading] = useState(false);
   const [allUsersDetailedSearch, setAllUsersDetailedSearch] = useState("");
+  const [allUsersDetailedError, setAllUsersDetailedError] = useState<string | null>(null);
   const [selectedUserDetail, setSelectedUserDetail] = useState<any>(null);
   const [processingTx, setProcessingTx] = useState<string | null>(null);
   const [commentModal, setCommentModal] = useState<{
@@ -599,19 +600,29 @@ export default function AdminPage() {
   // Fetch all users with full details for Total Users tab
   const fetchAllUsersDetailed = useCallback(async (search = "") => {
     setAllUsersDetailedLoading(true);
+    setAllUsersDetailedError(null);
     try {
       const { supabase: sb } = await import("../../lib/supabase");
       const { data: { session } } = await sb.auth.getSession();
-      if (!session?.access_token) return;
+      if (!session?.access_token) {
+        setAllUsersDetailedError("Not authenticated");
+        return;
+      }
       const params = new URLSearchParams({ limit: "100" });
       if (search) params.set("search", search);
       const res = await fetch(`/api/admin/users/all?${params.toString()}`, {
         headers: { Authorization: `Bearer ${session.access_token}` },
       });
       const json = await res.json();
-      if (json.success) setAllUsersDetailed(json.data.users || []);
-    } catch (err) {
-      console.error("Error fetching detailed users:", err);
+      if (json.success) {
+        setAllUsersDetailed(json.data.users || []);
+      } else {
+        setAllUsersDetailedError(json.message || "Failed to load users");
+        setAllUsersDetailed([]);
+      }
+    } catch (err: any) {
+      setAllUsersDetailedError(err.message || "Network error");
+      setAllUsersDetailed([]);
     } finally {
       setAllUsersDetailedLoading(false);
     }
@@ -3953,6 +3964,20 @@ export default function AdminPage() {
             {allUsersDetailedLoading ? (
               <div className="flex items-center justify-center py-16">
                 <Loader2 className="w-6 h-6 animate-spin text-emerald-500" />
+              </div>
+            ) : allUsersDetailedError ? (
+              <div className="p-8 text-center">
+                <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <AlertTriangle className="w-6 h-6 text-red-500" />
+                </div>
+                <p className="text-stone-900 font-semibold mb-1">Failed to load users</p>
+                <p className="text-stone-900/60 text-sm mb-4">{allUsersDetailedError}</p>
+                <button
+                  onClick={() => fetchAllUsersDetailed(allUsersDetailedSearch)}
+                  className="px-4 py-2 bg-emerald-500 text-black rounded-xl text-sm font-semibold hover:bg-emerald-600 transition-colors"
+                >
+                  Retry
+                </button>
               </div>
             ) : allUsersDetailed.length === 0 ? (
               <div className="p-8 text-center text-stone-900/50">No users found.</div>

@@ -16,10 +16,10 @@ export async function GET(req: NextRequest) {
   try {
     const sb = getSupabaseAdmin();
 
-    // Fetch profiles with optional search
+    // Use * to avoid breaking if KYC columns don't exist yet
     let q = sb
       .from('profiles')
-      .select('id, name, email, role, is_active, referral_code, referral_count, created_at, last_login, aadhar_number, pan_number, permanent_address, date_of_birth', { count: 'exact' })
+      .select('*', { count: 'exact' })
       .order('created_at', { ascending: false })
       .range((page - 1) * limit, page * limit - 1);
 
@@ -27,47 +27,33 @@ export async function GET(req: NextRequest) {
       q = q.or(`email.ilike.%${search}%,name.ilike.%${search}%`);
     }
 
-    const { data: profiles, count } = await q;
+    const { data: profiles, count, error: profilesError } = await q;
+
+    if (profilesError) {
+      console.error('Profiles fetch error:', profilesError);
+      return NextResponse.json({ success: false, message: profilesError.message }, { status: 500 });
+    }
+
     const ids = (profiles || []).map((u: any) => u.id);
 
     if (!ids.length) {
       return NextResponse.json({
         success: true,
-        data: { users: [], total: 0, page, limit },
+        data: { users: [], total: count || 0, page, limit },
       });
     }
 
     // Fetch wallets + active stakes for all users
-    const { data: wallets } = await sb
-      .from('wallets')
-      .select('user_id, balance, staked_amount, total_earnings, total_deposited, total_withdrawn')
-      .in('user_id', ids);
-
-    const { data: stakes } = await sb
-      .from('stakes')
-      .select('user_id, stake_id, amount, package_type, status, start_date, end_date')
-      .in('user_id', ids)
-      .eq('status', 'active');
-
-    // Fetch transactions count per user
-    const { data: txCounts } = await sb
-      .from('transactions')
-      .select('user_id, type, amount, status')
-      .in('user_id', ids);
-
-    // For referral business: find all level-1 referrals for each user
-    // and sum their staked_amount
-    const { data: allReferrals } = await sb
-      .from('profiles')
-      .select('id, referred_by')
-      .in('referred_by', ids);
+    const [{ data: wallets }, { data: stakes }, { data: txCounts }, { data: allReferrals }] = await Promise.all([
+      sb.from('wallets').select('user_id, balance, staked_amount, total_earnings, total_deposited, total_withdrawn').in('user_id', ids),
+      sb.from('stakes').select('user_id, stake_id, amount, package_type, status, start_date, end_date').in('user_id', ids).eq('status', 'active'),
+      sb.from('transactions').select('user_id, type, amount, status').in('user_id', ids),
+      sb.from('profiles').select('id, referred_by').in('referred_by', ids),
+    ]);
 
     const referralIds = (allReferrals || []).map((r: any) => r.id);
     const { data: referralWallets } = referralIds.length
-      ? await sb
-          .from('wallets')
-          .select('user_id, staked_amount')
-          .in('user_id', referralIds)
+      ? await sb.from('wallets').select('user_id, staked_amount').in('user_id', referralIds)
       : { data: [] };
 
     // Build maps
@@ -85,7 +71,6 @@ export async function GET(req: NextRequest) {
       txMap.get(tx.user_id)!.push(tx);
     }
 
-    // referredBy[userId] = array of referred user ids
     const referredByMap = new Map<string, string[]>();
     for (const r of (allReferrals || [])) {
       if (!referredByMap.has(r.referred_by)) referredByMap.set(r.referred_by, []);
@@ -100,7 +85,6 @@ export async function GET(req: NextRequest) {
       const userTxs = txMap.get(u.id) || [];
       const referredUserIds = referredByMap.get(u.id) || [];
 
-      // Total business = sum of staked amounts of level-1 referrals
       const totalBusiness = referredUserIds.reduce((sum: number, rid: string) => {
         const rw = referralWalletMap.get(rid);
         return sum + (rw ? Number(rw.staked_amount) : 0);
@@ -119,7 +103,7 @@ export async function GET(req: NextRequest) {
         referralCount: u.referral_count || referredUserIds.length,
         createdAt: u.created_at,
         lastLogin: u.last_login,
-        // KYC fields
+        // KYC fields — may be null if columns not yet migrated
         aadharNumber: u.aadhar_number || null,
         panNumber: u.pan_number || null,
         permanentAddress: u.permanent_address || null,
@@ -160,6 +144,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (err: any) {
+    console.error('Admin users/all error:', err);
     return NextResponse.json({ success: false, message: err.message }, { status: 500 });
   }
 }
