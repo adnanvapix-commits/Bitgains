@@ -11,8 +11,15 @@ const SITE = () => process.env.FRONTEND_URL || 'https://bitgains.cc';
 
 const send = async (to: string, subject: string, html: string) => {
   try {
-    await getClient().emails.send({ from: FROM(), to, subject, html });
-  } catch (e) { console.error('Email error:', e); }
+    const result = await getClient().emails.send({ from: FROM(), to, subject, html });
+    if (result.error) {
+      console.error('Resend error:', result.error);
+    }
+    return result;
+  } catch (e: any) {
+    console.error('Email send failed:', e?.message || e);
+    throw e; // Re-throw so the API returns a real error instead of silently failing
+  }
 };
 
 export const sendPasswordResetEmail = async (email: string, token: string, name: string) =>
