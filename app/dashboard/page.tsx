@@ -4643,7 +4643,7 @@ function WithdrawTab({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Network Fee:</span>
-                  <span className="text-destructive">-{feeAmount.toFixed(4)} {selectedToken} (5%)</span>
+                  <span className="text-destructive">Fixed</span>
                 </div>
                 <div className="border-t border-border pt-3">
                   <div className="flex justify-between">
@@ -6981,10 +6981,10 @@ function AffiliateTab({
           <div className="flex items-center space-x-2 sm:space-x-3 bg-card border border-border rounded-xl sm:rounded-2xl p-3 sm:p-4">
             <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             <div>
-              <p className="text-foreground font-semibold text-sm sm:text-base">${totalEarnings.toFixed(2)}</p>
+              <p className="text-foreground font-semibold text-sm sm:text-base">Fixed</p>
               <p className="text-muted-foreground text-xs sm:text-sm">Total earnings</p>
               {earningsByLevel.firstDeposit > 0 && (
-                <p className="text-primary text-[11px] sm:text-xs mt-1">+${earningsByLevel.firstDeposit.toFixed(2)} first deposit bonus</p>
+                <p className="text-primary text-[11px] sm:text-xs mt-1">Fixed</p>
               )}
             </div>
           </div>
@@ -7072,7 +7072,7 @@ function AffiliateTab({
               <p className="text-muted-foreground text-sm">
                 You have referred {referredUsersList.length} user{referredUsersList.length !== 1 ? "s" : ""}
               </p>
-              <div className="text-primary text-sm font-semibold">Total Earned: ${totalEarnings.toFixed(2)}</div>
+              <div className="text-primary text-sm font-semibold">Fixed</div>
             </div>
             {referredUsersList.map((referredUser: any, index: number) => (
               <motion.div
@@ -7326,7 +7326,7 @@ function SettingsTab() {
               ? "bg-emerald-50 border-emerald-200 text-emerald-700"
               : "bg-destructive/8 border-destructive/25 text-destructive"
           }`}>
-            {msg.type === "success" ? "âœ… " : "âŒ "}{msg.text}
+            {msg.text}
           </div>
         )}
       </div>
@@ -7396,7 +7396,7 @@ function SettingsTab() {
               <div className="flex-1 px-3 py-2.5 rounded-xl bg-secondary border border-border text-foreground text-sm truncate">
                 {user?.email || "â€”"}
               </div>
-              <span className="px-2 py-1 text-xs text-muted-foreground bg-secondary rounded-lg border border-border flex-shrink-0">ðŸ”’ Fixed</span>
+              <span className="px-2 py-1 text-xs text-muted-foreground bg-secondary rounded-lg border border-border flex-shrink-0">Fixed</span>
             </div>
             <p className="text-xs text-muted-foreground/70 mt-1">Contact support to change email.</p>
           </div>
@@ -7435,7 +7435,7 @@ function SettingsTab() {
               </div>
               <div>
                 <div className="font-bold text-foreground text-sm">Personal Details</div>
-                <div className="text-xs text-muted-foreground">KYC information â€” kept private and secure</div>
+                <div className="text-xs text-muted-foreground">KYC information - kept private and secure</div>
               </div>
             </div>
           </div>
@@ -7446,7 +7446,7 @@ function SettingsTab() {
                 ? "bg-emerald-50 border-emerald-200 text-emerald-700"
                 : "bg-destructive/8 border-destructive/25 text-destructive"
             }`}>
-              {kycMsg.type === "success" ? "âœ… " : "âŒ "}{kycMsg.text}
+              {kycMsg.text}
             </div>
           )}
 
@@ -7699,7 +7699,7 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
               </div>
               <div>
                 <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                  <span>Earnings</span><span>${earning.toFixed(2)}</span>
+                  <span>Earnings</span><span>Fixed</span>
                 </div>
                 <div className="h-2 bg-border rounded-full overflow-hidden">
                   <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${total > 0 ? (earning / total) * 100 : 0}%` }} />
@@ -7739,10 +7739,10 @@ function StakingCalculatorTab({ walletData }: { walletData: any }) {
                 return (
                   <tr key={m} className="border-t border-border">
                     <td className="py-3 text-foreground font-medium">Month {m}</td>
-                    <td className="py-3 text-foreground">${bal.toFixed(2)}</td>
-                    <td className="py-3 text-emerald-600 font-medium">+${earn.toFixed(2)}</td>
-                    <td className="py-3 text-foreground">${(num + earn).toFixed(2)}</td>
-                    <td className="py-3 text-primary font-medium">{num > 0 ? ((earn / num) * 100).toFixed(2) : "0"}%</td>
+                    <td className="py-3 text-foreground">Fixed</td>
+                    <td className="py-3 text-emerald-600 font-medium">Fixed</td>
+                    <td className="py-3 text-foreground">Fixed</td>
+                    <td className="py-3 text-primary font-medium">Fixed</td>
                   </tr>
                 );
               })}
@@ -7943,14 +7943,14 @@ function AutoCompoundTab({ walletData }: { walletData: any }) {
                   <div className="text-xs font-semibold text-primary mb-2">{p.months} Month{p.months > 1 ? "s" : ""}</div>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="text-foreground">Simple</span>
-                    <span className="font-medium text-foreground">+${p.simple.toFixed(1)}</span>
+                    <span className="font-medium text-foreground">Fixed</span>
                   </div>
                   <div className="h-1.5 bg-border rounded-full mb-2">
                     <div className="h-full bg-primary/60 rounded-full" style={{ width: `${Math.min((p.simple / maxVal) * 100, 100)}%` }} />
                   </div>
                   <div className="flex justify-between text-xs mb-1">
                     <span className="text-emerald-600 dark:text-emerald-400 font-medium">Compound</span>
-                    <span className="font-bold text-emerald-600 dark:text-emerald-400">+${p.compound.toFixed(1)}</span>
+                    <span className="font-bold text-emerald-600 dark:text-emerald-400">Fixed</span>
                   </div>
                   <div className="h-1.5 bg-border rounded-full">
                     <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${Math.min((p.compound / maxVal) * 100, 100)}%` }} />
@@ -8282,7 +8282,7 @@ function PortfolioAnalyticsTab({ walletData }: { walletData: any }) {
                 <div key={d.name}>
                   <div className="flex justify-between text-sm mb-1">
                     <span className="font-medium text-foreground">{d.name}</span>
-                    <span className="text-muted-foreground">${d.value.toFixed(2)} ({((d.value / totalAlloc) * 100).toFixed(1)}%)</span>
+                    <span className="text-muted-foreground">Fixed</span>
                   </div>
                   <div className="h-3 bg-border rounded-full overflow-hidden">
                     <div className="h-full rounded-full transition-all duration-500"
