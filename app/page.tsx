@@ -101,8 +101,8 @@ export default function Home() {
             </h1>
 
             <p className="text-lg sm:text-xl md:text-2xl text-warm-700 max-w-4xl mx-auto leading-relaxed px-4 sm:px-0">
-              Lock your USDT for one month and earn{" "}
-              <span className="font-bold text-emerald-400">5% - 15% APM</span>.
+              Lock your USDT for a minimum of 6 months and earn up to{" "}
+              <span className="font-bold text-emerald-400">15% APM</span>.
               <br className="hidden sm:block" />
               <span className="sm:hidden"> </span>
               Your appreciation is paid once your lock period ends.
@@ -212,14 +212,14 @@ export default function Home() {
                 icon: TrendingUp,
                 title: "Attractive Earnings",
                 description:
-                  "Earn between 5% and 15% APM depending on your stake amount. Bigger stakes bring higher rates.",
+                  "Earn up to 15% APM depending on your stake plan. Longer stakes bring higher rates.",
                 color: "from-cyan-500 to-blue-400",
               },
               {
                 icon: Lock,
                 title: "One-Month Lock",
                 description:
-                  "Your USDT stays locked for one month. Get your deposit back plus earned appreciation.",
+                  "Your USDT stays locked for a minimum of 6 months. Get your deposit back plus earned appreciation.",
                 color: "from-yellow-500 to-orange-400",
               },
               {
@@ -284,9 +284,9 @@ export default function Home() {
               },
               {
                 step: "2",
-                title: "Lock for 1 Month",
+                title: "Lock for 6-12 Months",
                 description:
-                  "Your deposit is locked for exactly one calendar month.",
+                  "Choose a 6-month or 12-month plan. Your deposit stays locked for the selected period.",
                 color: "from-cyan-500 to-blue-400",
               },
               {
@@ -445,9 +445,9 @@ export default function Home() {
           >
             {[
               { value: "$5M+", label: "Total USDT Staked", icon: DollarSign },
-              { value: "5-15%", label: "Monthly APM", icon: TrendingUp },
+              { value: "Up to 15%", label: "Monthly APM", icon: TrendingUp },
               { value: "10K+", label: "Active Stakers", icon: Users },
-              { value: "30 Days", label: "Lock Period", icon: Lock },
+              { value: "6 Months", label: "Min Lock Period", icon: Lock },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -568,28 +568,10 @@ export default function Home() {
               </h3>
               <ul className="space-y-2 text-warm-700 text-sm sm:text-base">
                 <li>
-                  <Link
-                    href="/support"
-                    className="hover:text-warm-900 transition-colors"
-                  >
-                    Help & Support
-                  </Link>
+                  <Link href="/support" className="hover:text-warm-900 transition-colors">Help & Support</Link>
                 </li>
                 <li>
-                  <Link
-                    href="/support"
-                    className="hover:text-warm-900 transition-colors"
-                  >
-                    Contact Us
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="#features"
-                    className="hover:text-warm-900 transition-colors"
-                  >
-                    Documentation
-                  </Link>
+                  <Link href="/support" className="hover:text-warm-900 transition-colors">Contact Us</Link>
                 </li>
               </ul>
             </div>
@@ -600,26 +582,17 @@ export default function Home() {
               </h3>
               <ul className="space-y-2 text-warm-700 text-sm sm:text-base">
                 <li>
-                  <Link href="#" className="hover:text-warm-900 transition-colors">
-                    Terms of Service
-                  </Link>
+                  <Link href="#" className="hover:text-warm-900 transition-colors">Terms of Service</Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-warm-900 transition-colors">
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-warm-900 transition-colors">
-                    Security
-                  </Link>
+                  <Link href="#" className="hover:text-warm-900 transition-colors">Privacy Policy</Link>
                 </li>
               </ul>
             </div>
           </div>
 
           <div className="border-t border-warm-600/20 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-warm-700 text-sm sm:text-base">
-            <p>&copy; 2024 USDT Staking Platform. All rights reserved.</p>
+            <p>&copy; 2026 BitGains. All rights reserved.</p>
           </div>
         </div>
       </footer>
